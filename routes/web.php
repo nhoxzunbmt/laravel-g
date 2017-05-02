@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//social auth
+Route::get('/social/{provider}', ['as' => 'social.auth', 'uses' => 'SocialController@login']);
+Route::get('/social/{provider}/callback', 'SocialController@callback');
+
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });

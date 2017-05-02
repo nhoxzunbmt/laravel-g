@@ -9,7 +9,10 @@
         "dingo/api": "1.0.x@dev",
         "filp/whoops": "^2.1",
         "laravel/framework": "5.4.*",
+        "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
+        "socialiteproviders/steam": "^1.0",
+        "socialiteproviders/vkontakte": "^3.0",
         "tcg/voyager": "^0.11.9"
     },
     "require-dev": {
