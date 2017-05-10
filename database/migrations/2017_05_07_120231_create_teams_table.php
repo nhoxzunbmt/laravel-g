@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGanresTable extends Migration
+class CreateTeamsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateGanresTable extends Migration
      */
     public function up()
     {
-        Schema::create('ganres', function (Blueprint $table) {
+        Schema::create('teams', function (Blueprint $table) {
             $table->increments('id');
-            $table->boolean('active')->default(1);
             $table->string('title')->unique();
             $table->string('image')->nullable();
-            $table->integer('video_count')->default(0)->unsigned();
+            $table->integer('capt_id')->unsigned();
+            $table->timestamps();
+            $table->foreign('capt_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -29,6 +30,6 @@ class CreateGanresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ganres');
+        Schema::dropIfExists('teams');
     }
 }

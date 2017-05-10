@@ -170,6 +170,8 @@ return [
         TCG\Voyager\VoyagerServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
+        Cmgmyr\Messenger\MessengerServiceProvider::class,
+        Hootlex\Friendships\FriendshipsServiceProvider::class,
 
         /*
          * Application Service Providers...

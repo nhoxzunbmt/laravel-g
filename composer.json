@@ -6,8 +6,10 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "cmgmyr/messenger": "^2.14",
         "dingo/api": "1.0.x@dev",
         "filp/whoops": "^2.1",
+        "hootlex/laravel-friendships": "^1.0",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",

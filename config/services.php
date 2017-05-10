@@ -57,13 +57,13 @@ return [
         'client_id' => env('TWITTER_KEY'),
         'client_secret' => env('TWITTER_SECRET'),
         'redirect' => env('TWITTER_REDIRECT_URI'),  
-    ],
+    ],*/
     
     'steam' => [
         // the client_id key is required, even though it isn't utilised by the Steam provider
         'client_id' => null,
         'client_secret' => env('STEAM_KEY'),
         'redirect' => env('STEAM_REDIRECT_URI'),  
-    ],*/
+    ],
 
 ];
