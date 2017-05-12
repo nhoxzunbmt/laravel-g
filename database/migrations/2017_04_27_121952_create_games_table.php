@@ -18,7 +18,7 @@ class CreateGamesTable extends Migration
             $table->boolean('active')->default(1);
             $table->integer('ganre_id')->unsigned();
             $table->string('title')->unique();
-            $table->text('image')->nullable();
+            $table->text('images')->nullable();
             $table->string('logo')->nullable();
             $table->text('body')->nullable();
             $table->string('site_url')->nullable();
@@ -26,7 +26,7 @@ class CreateGamesTable extends Migration
             $table->integer('video_count')->default(0)->unsigned();
             $table->boolean('online')->default(1);
         
-            $table->foreign('ganre_id')->references('id')->on('ganres')->onDelete('cascade');
+            $table->foreign('ganre_id')->references('id')->on('ganres');
         });
     }
 
