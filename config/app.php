@@ -172,6 +172,7 @@ return [
         SocialiteProviders\Manager\ServiceProvider::class,
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Hootlex\Friendships\FriendshipsServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -231,6 +232,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

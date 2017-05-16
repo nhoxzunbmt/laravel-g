@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d6b788c0b87b2f9a642cd1225e3881de",
-    "content-hash": "23b66e1915faeaa2438ff053b13967a9",
+    "hash": "e0e354b2232fd94290f0315ae022044f",
+    "content-hash": "99b970ac010c96ac12010049ace42c24",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -846,6 +846,144 @@
                 "zf2"
             ],
             "time": "2017-03-07 09:04:45"
+        },
+        {
+            "name": "giantbomb/giantbomb-php-api",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/giantbomb/giantbomb-php-api.git",
+                "reference": "53abd25dd9f11c51ab3ce0ceebeb7ab83b27b39d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/giantbomb/giantbomb-php-api/zipball/53abd25dd9f11c51ab3ce0ceebeb7ab83b27b39d",
+                "reference": "53abd25dd9f11c51ab3ce0ceebeb7ab83b27b39d",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/cache": "~1.3",
+                "guzzle/guzzle": "~3.7",
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GiantBomb": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache v2"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Scherer",
+                    "email": "aequasi@gmail.com"
+                }
+            ],
+            "description": "A PHP library for interacting with the GiantBomb API",
+            "homepage": "http://www.giantbomb.com/api/",
+            "keywords": [
+                "giantbomb"
+            ],
+            "time": "2014-10-06 04:31:56"
+        },
+        {
+            "name": "guzzle/guzzle",
+            "version": "v3.8.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/guzzle.git",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "reference": "4de0618a01b34aa1c8c33a3f13f396dcd3882eba",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.3.3",
+                "symfony/event-dispatcher": ">=2.1"
+            },
+            "replace": {
+                "guzzle/batch": "self.version",
+                "guzzle/cache": "self.version",
+                "guzzle/common": "self.version",
+                "guzzle/http": "self.version",
+                "guzzle/inflection": "self.version",
+                "guzzle/iterator": "self.version",
+                "guzzle/log": "self.version",
+                "guzzle/parser": "self.version",
+                "guzzle/plugin": "self.version",
+                "guzzle/plugin-async": "self.version",
+                "guzzle/plugin-backoff": "self.version",
+                "guzzle/plugin-cache": "self.version",
+                "guzzle/plugin-cookie": "self.version",
+                "guzzle/plugin-curlauth": "self.version",
+                "guzzle/plugin-error-response": "self.version",
+                "guzzle/plugin-history": "self.version",
+                "guzzle/plugin-log": "self.version",
+                "guzzle/plugin-md5": "self.version",
+                "guzzle/plugin-mock": "self.version",
+                "guzzle/plugin-oauth": "self.version",
+                "guzzle/service": "self.version",
+                "guzzle/stream": "self.version"
+            },
+            "require-dev": {
+                "doctrine/cache": "*",
+                "monolog/monolog": "1.*",
+                "phpunit/phpunit": "3.7.*",
+                "psr/log": "1.0.*",
+                "symfony/class-loader": "*",
+                "zendframework/zend-cache": "<2.3",
+                "zendframework/zend-log": "<2.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.8-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Guzzle": "src/",
+                    "Guzzle\\Tests": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                },
+                {
+                    "name": "Guzzle Community",
+                    "homepage": "https://github.com/guzzle/guzzle/contributors"
+                }
+            ],
+            "description": "Guzzle is a PHP HTTP client library and framework for building RESTful web service clients",
+            "homepage": "http://guzzlephp.org/",
+            "keywords": [
+                "client",
+                "curl",
+                "framework",
+                "http",
+                "http client",
+                "rest",
+                "web service"
+            ],
+            "abandoned": "guzzlehttp/guzzle",
+            "time": "2014-01-28 22:29:15"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1942,6 +2080,54 @@
                 "time"
             ],
             "time": "2017-01-16 07:55:07"
+        },
+        {
+            "name": "nicklaw5/twitch-api-php",
+            "version": "v0.1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicklaw5/twitch-api-php.git",
+                "reference": "39a461c93cdca4030a0b849a7434342cdf8a3901"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicklaw5/twitch-api-php/zipball/39a461c93cdca4030a0b849a7434342cdf8a3901",
+                "reference": "39a461c93cdca4030a0b849a7434342cdf8a3901",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6.0",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TwitchApi\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicholas Law",
+                    "homepage": "https://github.com/nicklaw5"
+                }
+            ],
+            "description": "A Twitch API client for PHP.",
+            "homepage": "http://github.com/nicklaw5/twitch-api-php",
+            "keywords": [
+                "api",
+                "twitch",
+                "twitch-api",
+                "twitch-tv",
+                "twitch.tv"
+            ],
+            "time": "2017-04-26 19:04:41"
         },
         {
             "name": "nikic/php-parser",
@@ -4826,7 +5012,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "dingo/api": 20
+        "dingo/api": 20,
+        "giantbomb/giantbomb-php-api": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -86,7 +86,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeActive(Builder $query)
+    public function scopeActive($query)
     {
         return $query->where('active', '=', 1);
     }
@@ -98,7 +98,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopePlayer(Builder $query)
+    public function scopePlayer($query)
     {
         return $query->where('type', '=', 'player');
     }
@@ -110,7 +110,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSponsor(Builder $query)
+    public function scopeSponsor($query)
     {
         return $query->where('type', '=', 'sponsor');
     }
@@ -122,7 +122,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeCommentator(Builder $query)
+    public function scopeCommentator($query)
     {
         return $query->where('type', '=', 'commentator');
     }    

@@ -15,7 +15,7 @@ class Game extends Model
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeActive(Builder $query)
+    public function scopeActive($query)
     {
         return $query->where('active', '=', 1);
     }
@@ -23,8 +23,18 @@ class Game extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function ganre()
+    public function genre()
     {
-        return $this->hasOne(Ganre::class, 'id', 'ganre_id');
+        return $this->hasOne('App\Models\Genre', 'id', 'genre_id');
+    }
+    
+    /**
+     * Get the fights that owns the game.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function fight()
+    {
+        return $this->belongsTo('App\Models\Fight');
     }
 }

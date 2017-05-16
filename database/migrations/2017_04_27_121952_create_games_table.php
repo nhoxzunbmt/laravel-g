@@ -16,7 +16,9 @@ class CreateGamesTable extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->increments('id');
             $table->boolean('active')->default(1);
-            $table->integer('ganre_id')->unsigned();
+            $table->integer('giantbomb_id')->unsigned();
+            $table->integer('twitch_id')->unsigned();
+            $table->integer('genre_id')->unsigned();
             $table->string('title')->unique();
             $table->text('images')->nullable();
             $table->string('logo')->nullable();
@@ -26,7 +28,7 @@ class CreateGamesTable extends Migration
             $table->integer('video_count')->default(0)->unsigned();
             $table->boolean('online')->default(1);
         
-            $table->foreign('ganre_id')->references('id')->on('ganres');
+            $table->foreign('genre_id')->references('id')->on('genres');
         });
     }
 

@@ -34,3 +34,8 @@ $api->version('v1', function ($api) {
 });
 
 Route::get('/home', 'HomeController@index');
+
+//Route::get('/genre/import', 'GanreController@importByGiantbomb');
+//Route::get('/game/import', 'GameController@importByTwitchGiantbomb');
+
+//Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');

@@ -9,10 +9,13 @@
         "cmgmyr/messenger": "^2.14",
         "dingo/api": "1.0.x@dev",
         "filp/whoops": "^2.1",
+        "giantbomb/giantbomb-php-api": "dev-master",
         "hootlex/laravel-friendships": "^1.0",
+        "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
+        "nicklaw5/twitch-api-php": "^0.1.5",
         "socialiteproviders/steam": "^1.0",
         "socialiteproviders/vkontakte": "^3.0",
         "tcg/voyager": "^0.11.9"

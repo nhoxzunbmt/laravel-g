@@ -10,9 +10,16 @@ use TCG\Voyager\Models\MenuItem;
 use TCG\Voyager\Models\Permission;
 
 use App\User;
-use App\Models\Ganre;
+use App\Models\Genre;
 use App\Models\Game;
 use App\Models\UserSocialAccount;
+use App\Models\Team;
+use App\Models\TeamUser;
+use App\Models\Fight;
+use App\Models\FightTeam;
+use App\Models\FightUser;
+
+use App\Acme\Helpers\TwitchHelper;
 
 use Faker\Factory as Faker;
 
@@ -30,8 +37,16 @@ class DatabaseSeeder extends Seeder
 		$this->call('UserTableSeeder');
         $this->call('UserSocialAccountTableSeeder');
         
-        $this->call('GanreTableSeeder');
+        $this->call('GenreTableSeeder');
         $this->call('GameTableSeeder');
+        
+        $this->call('TeamUserTableSeeder'); //Team and TeamUser
+        $this->call('FightTableSeeder');
+        /*$this->call('FightTeamTableSeeder');
+        $this->call('FightUserTableSeeder');
+        $this->call('FightFeeTableSeeder');
+        $this->call('FightClaimTableSeeder');*/
+        
         $this->call('DataTypesTableSeeder');
         $this->call('DataRowTableSeeder');
         $this->call('MenuTableSeeder');
@@ -52,7 +67,7 @@ class RoleTableSeeder extends Seeder
         if (!$role->exists) 
         {
             $role->fill([
-                    'display_name' => 'Администратор',
+                    'display_name' => 'Administrator',
                 ])->save();
         }
 
@@ -60,7 +75,7 @@ class RoleTableSeeder extends Seeder
         if (!$role->exists) 
         {
             $role->fill([
-                    'display_name' => 'Пользователь',
+                    'display_name' => 'User',
                 ])->save();
         }
     }
@@ -105,7 +120,7 @@ class UserTableSeeder extends Seeder
 	            'email'             => $faker->unique()->email,
 	            'password'          => 'secret',
                 'remember_token'    => str_random(60),
-                'role_id'           => $faker->randomElement([1, 2]),
+                'role_id'           => 2, //$faker->randomElement([1, 2]),
                 'type'              => $faker->randomElement(['player', 'commentator', 'sponsor']),
                 'phone'             => $faker->phoneNumber,
                 'rating'            => $faker->randomFloat(2, 0, 1000),
@@ -133,7 +148,7 @@ class UserSocialAccountTableSeeder extends Seeder
     {
         DB::table('user_social_account')->delete();
         
-        $faker = Faker::create('ru_RU');
+        $faker = Faker::create();
         
     	foreach (range(1, 10) as $index) 
         {
@@ -146,7 +161,7 @@ class UserSocialAccountTableSeeder extends Seeder
     }
 }
 
-class GanreTableSeeder extends Seeder
+class GenreTableSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -155,17 +170,20 @@ class GanreTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('ganres')->delete();
-        $faker = Faker::create('ru_RU');
+        DB::table('genres')->delete();
+        /*$faker = Faker::create();
         
     	foreach (range(1, 20) as $index) 
         {
-	        Ganre::create([
+	        Genre::create([
                 'active'            => $faker->boolean,
                 'title'             => $faker->unique()->company,
                 'image'             => $faker->imageUrl($width = 300, $height = 300),
 	        ]);
-        }
+        }*/
+        
+        $Genres = new App\Http\Controllers\GenreController();
+        $Genres->importByGiantbomb();
     }
 }
 
@@ -179,7 +197,7 @@ class GameTableSeeder extends Seeder
     public function run()
     {
         DB::table('games')->delete();
-        $faker = Faker::create('ru_RU');
+        /*$faker = Faker::create();
         
     	foreach (range(1, 20) as $index) 
         {
@@ -192,7 +210,7 @@ class GameTableSeeder extends Seeder
 	        Game::create([
                 'active'      => $faker->boolean,
                 'title'       => $faker->unique()->company,
-                'ganre_id'    => $faker->numberBetween(1, 20),
+                'genre_id'    => $faker->numberBetween(1, 20),
                 'images'      => json_encode($images),
                 'logo'        => $faker->imageUrl($width = 300, $height = 300),
                 'body'        => $faker->paragraph(4),
@@ -200,7 +218,190 @@ class GameTableSeeder extends Seeder
                 'rules'       => $faker->paragraph(4),
                 'online'      => $faker->boolean,
 	        ]);
+        }*/
+        
+        $Games = new App\Http\Controllers\GameController();
+        $Games->importByTwitchGiantbomb();
+    }
+}
+
+
+class TeamUserTableSeeder extends Seeder
+{
+    /**
+     * Auto generated seed file.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('teams')->delete();
+        DB::table('team_user')->delete();
+        
+        $arUsers = User::active()->player()->pluck('id')->all();
+        
+        $faker = Faker::create();
+        
+    	foreach (range(1, 20) as $index) 
+        {
+            $user_key = array_rand($arUsers, 1);
+            $capt_id = $arUsers[$user_key];
+            
+	        $Team = Team::create([
+                'title'      => $faker->unique()->company,
+                'capt_id'    => $capt_id,
+                'image'      => $faker->imageUrl($width = 300, $height = 300),
+	        ])->toArray();
+            
+            if(intval($Team['id'])>0)
+            {
+                $user_keys = array_rand($arUsers, rand(3, 4));
+                $user_keys[] = $user_key;
+                $user_keys = array_unique($user_keys);
+                
+                foreach($user_keys as $user_key)
+                {
+                    $user_id = $arUsers[$user_key];
+                    TeamUser::create([
+                        'team_id'    => $Team['id'],
+                        'user_id'    => $user_id,
+        	        ]);
+                }
+            }
         }
+    }
+}
+
+class FightTableSeeder extends Seeder
+{
+    /**
+     * Auto generated seed file.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('fights')->delete();
+
+        //Get info from other models
+        $arPlayers = User::active()->player()->pluck('id')->all();
+        $arCommentators = User::active()->commentator()->pluck('id')->all();
+        $arGames = Game::active()->pluck('title', 'id')->all();
+        $arTeams = Team::pluck('id')->all();
+        
+        $faker = Faker::create();
+        
+    	foreach (range(1, 20) as $index) 
+        {
+            $created_key = array_rand($arPlayers, 1);
+            $created_id = $arPlayers[$created_key];
+            
+            $user_key = array_rand($arCommentators, 1);
+            $commentator_id = $arCommentators[$user_key];
+            
+            $game_id = array_rand($arGames, 1);
+            $type = $faker->randomElement(['personal', 'team']);
+            $countParts = rand(2, 4);
+            
+            $countTeamUsers = 0;
+            if($type=='team')
+            {
+                $countTeamUsers = rand(2, 3); 
+            }
+            
+            $minFeeTotal = $faker->randomFloat(2, 2000, 10000);
+            
+            $fightData = [
+                'active'            => $faker->boolean,
+                'game_id'           => $game_id,
+                'title'             => "Fight by the game: ". $arGames[$game_id],
+                'created_id'        => $created_id,
+                'type'              => $type,
+                'count_parts'       => $countParts,
+                'count_team_users'  => $countTeamUsers,
+                'min_fee_total'     => $minFeeTotal,
+                'changed_fee'       => $faker->boolean,
+                'commentator_id'    => $commentator_id,
+                'changed_time'      => $faker->boolean,
+                //'min_fee'           => 1, 
+                //'judge_id'          => null,
+                //'winner_id'         => winner_id
+                //'result'
+            ];
+            
+            //Generate ended fight or not
+            $ended_flag = $faker->boolean;
+            if($ended_flag)
+            {
+                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('- 2 days', '- 1 days');
+                $fightData['end_at'] = $endt_at = $faker->dateTimeInInterval('- 20 hours', '- 2 hours');
+            }else{
+                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('+ 1 days', '+ 5 days');
+            }
+            
+            //Generate canceled fight or not
+            $fightData['canceled'] = $canceled_flag = $faker->boolean;
+            if($ended_flag)
+            {
+                $fightData['cancel_user_id'] = $faker->randomElement([1, $created_id]);
+                $fightData['cancel_text'] = $faker->paragraph(1);
+            }
+            
+	        $Fight = Fight::create($fightData)->toArray();
+            
+            if($type=='team')
+            {
+                $team_keys = array_rand($arTeams, $countParts);
+                
+                foreach($team_keys as $team_key)
+                {
+                    $FightTeam = FightTeam::create([
+                        'fight_id'    => $Fight['id'],
+                        'team_id'     => $arTeams[$team_key],
+        	        ])->toArray();
+                }
+                
+                //TODO: Get users for every team
+            }else{
+                
+                //If personal
+                $arPlayersExceptCreated = $arPlayers;
+                unset($arPlayersExceptCreated[$created_key]);
+                $player_keys = array_rand($arPlayersExceptCreated, $countParts);
+                $player_keys[] = $created_key;
+                
+                $arBroadcasts = TwitchHelper::searchStreamsByGame($arGames[$game_id]);
+            
+                foreach($player_keys as $player_key)
+                {
+                    $fightUserData = [
+                        'fight_id'  => $Fight['id'],
+                        'user_id'   => $arPlayers[$player_key] 
+        	        ];
+                    
+                    if(count($arBroadcasts)>0)
+                    {
+                        $broadcast_key = array_rand($arBroadcasts, 1);
+                        $fightUserData['broadcast_url'] = 'http://player.twitch.tv/?channel='.$arBroadcasts[$broadcast_key];
+                    }
+                    
+                    if($ended_flag)
+                    {
+                        $fightUserData['confirm_end'] = true;
+                        $fightUserData['end_at'] = $faker->dateTimeInInterval('- 22 hours', '- 21 hours');
+                    }
+
+                    $FightUser = FightUser::create($fightUserData)->toArray();
+                }
+            }
+            
+            //TODO: Get judge from users
+            //Set winners
+            //Add boolean winner to FightUser
+            
+            
+            //print_r($Fight); die();
+         }
     }
 }
 
@@ -215,8 +416,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'posts',
-                'display_name_singular' => 'Пост',
-                'display_name_plural'   => 'Посты',
+                'display_name_singular' => 'Post',
+                'display_name_plural'   => 'Posts',
                 'icon'                  => 'voyager-news',
                 'model_name'            => 'TCG\\Voyager\\Models\\Post',
                 'controller'            => '',
@@ -225,14 +426,14 @@ class DataTypesTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataType = $this->dataType('slug', 'ganres');
+        $dataType = $this->dataType('slug', 'genres');
         if (!$dataType->exists) {
             $dataType->fill([
-                'name'                  => 'ganres',
-                'display_name_singular' => 'Жанр игры',
-                'display_name_plural'   => 'Жанры игр',
+                'name'                  => 'genres',
+                'display_name_singular' => 'Genre',
+                'display_name_plural'   => 'Genres',
                 'icon'                  => '',
-                'model_name'            => 'App\\Models\\Ganre',
+                'model_name'            => 'App\\Models\\Genre',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',
@@ -243,8 +444,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'games',
-                'display_name_singular' => 'Игра',
-                'display_name_plural'   => 'Игры',
+                'display_name_singular' => 'Game',
+                'display_name_plural'   => 'Games',
                 'icon'                  => '',
                 'model_name'            => 'App\\Models\\Game',
                 'controller'            => '',
@@ -257,8 +458,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'pages',
-                'display_name_singular' => 'Страница',
-                'display_name_plural'   => 'Страницы',
+                'display_name_singular' => 'Page',
+                'display_name_plural'   => 'Pages',
                 'icon'                  => 'voyager-file-text',
                 'model_name'            => 'TCG\\Voyager\\Models\\Page',
                 'controller'            => '',
@@ -271,10 +472,80 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'users',
-                'display_name_singular' => 'Пользователь',
-                'display_name_plural'   => 'Пользователи',
+                'display_name_singular' => 'User',
+                'display_name_plural'   => 'Users',
                 'icon'                  => 'voyager-person',
                 'model_name'            => 'TCG\\Voyager\\Models\\User',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'teams');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'teams',
+                'display_name_singular' => 'Team',
+                'display_name_plural'   => 'Teams',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\Team',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'team-user');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'team_user',
+                'display_name_singular' => 'Team and user',
+                'display_name_plural'   => 'Teams and users',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\TeamUser',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'fights');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'fights',
+                'display_name_singular' => 'Fight',
+                'display_name_plural'   => 'Fights',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\Fight',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'fight-team');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'fight_team',
+                'display_name_singular' => 'Team of fight',
+                'display_name_plural'   => 'Teams of fight',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\FightTeam',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'fight-user');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'fight_user',
+                'display_name_singular' => 'Fight\'s user',
+                'display_name_plural'   => 'Fight\'s users',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\FightUser',
                 'controller'            => '',
                 'generate_permissions'  => 1,
                 'description'           => '',
@@ -285,8 +556,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'slug'                  => 'categories',
-                'display_name_singular' => 'Категория',
-                'display_name_plural'   => 'Категории',
+                'display_name_singular' => 'Category',
+                'display_name_plural'   => 'Categories',
                 'icon'                  => 'voyager-categories',
                 'model_name'            => 'TCG\\Voyager\\Models\\Category',
                 'controller'            => '',
@@ -299,8 +570,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'menus',
-                'display_name_singular' => 'Меню',
-                'display_name_plural'   => 'Меню',
+                'display_name_singular' => 'Menu',
+                'display_name_plural'   => 'Menu',
                 'icon'                  => 'voyager-list',
                 'model_name'            => 'TCG\\Voyager\\Models\\Menu',
                 'controller'            => '',
@@ -313,8 +584,8 @@ class DataTypesTableSeeder extends Seeder
         if (!$dataType->exists) {
             $dataType->fill([
                 'name'                  => 'roles',
-                'display_name_singular' => 'Роль',
-                'display_name_plural'   => 'Роли',
+                'display_name_singular' => 'Role',
+                'display_name_plural'   => 'Roles',
                 'icon'                  => 'voyager-lock',
                 'model_name'            => 'TCG\\Voyager\\Models\\Role',
                 'controller'            => '',
@@ -349,8 +620,10 @@ class DataRowTableSeeder extends Seeder
         $userDataType = DataType::where('slug', 'users')->firstOrFail();
         $menuDataType = DataType::where('slug', 'menus')->firstOrFail();
         $roleDataType = DataType::where('slug', 'roles')->firstOrFail();
-        $ganreDataType = DataType::where('slug', 'ganres')->firstOrFail();
+        $genreDataType = DataType::where('slug', 'genres')->firstOrFail();
         $gameDataType = DataType::where('slug', 'games')->firstOrFail();
+        $teamDataType = DataType::where('slug', 'teams')->firstOrFail();
+        $fightDataType = DataType::where('slug', 'fights')->firstOrFail();
 
         $dataRow = $this->dataRow($pageDataType, 'id');
         if (!$dataRow->exists) {
@@ -819,9 +1092,9 @@ class DataRowTableSeeder extends Seeder
         
         
         /**
-         * Ganre
+         * Genre
          */
-        $dataRow = $this->dataRow($ganreDataType, 'id');
+        $dataRow = $this->dataRow($genreDataType, 'id');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
@@ -836,11 +1109,11 @@ class DataRowTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataRow = $this->dataRow($ganreDataType, 'active');
+        $dataRow = $this->dataRow($genreDataType, 'active');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'checkbox',
-                'display_name' => 'Активность',
+                'display_name' => 'Active',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -851,11 +1124,11 @@ class DataRowTableSeeder extends Seeder
             ])->save();
         }
 
-        $dataRow = $this->dataRow($ganreDataType, 'title');
+        $dataRow = $this->dataRow($genreDataType, 'title');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => 'Название',
+                'display_name' => 'Title',
                 'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
@@ -866,11 +1139,11 @@ class DataRowTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataRow = $this->dataRow($ganreDataType, 'image');
+        $dataRow = $this->dataRow($genreDataType, 'image');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'image',
-                'display_name' => 'Картинка',
+                'display_name' => 'Image',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -881,11 +1154,26 @@ class DataRowTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataRow = $this->dataRow($ganreDataType, 'video_count');
+        $dataRow = $this->dataRow($genreDataType, 'desc');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Description',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($genreDataType, 'video_count');
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => 'Количество трансляций',
+                'display_name' => 'Broadcasts number',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -919,7 +1207,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'checkbox',
-                'display_name' => 'Активность',
+                'display_name' => 'Active',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -930,11 +1218,11 @@ class DataRowTableSeeder extends Seeder
             ])->save();
         }
         
-        $dataRow = $this->dataRow($gameDataType, 'role_id');
+        $dataRow = $this->dataRow($gameDataType, 'genre_id');
         if (!$dataRow->exists) {
             $dataRow->fill([
-                'type'         => 'text',
-                'display_name' => 'ganre_id',
+                'type'         => 'number',
+                'display_name' => 'Genre ID',
                 'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
@@ -949,7 +1237,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => 'Название',
+                'display_name' => 'Title',
                 'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
@@ -964,9 +1252,9 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'multiple_images',
-                'display_name' => 'Картинки',
+                'display_name' => 'Images',
                 'required'     => 0,
-                'browse'       => 1,
+                'browse'       => 0,
                 'read'         => 1,
                 'edit'         => 1,
                 'add'          => 1,
@@ -979,7 +1267,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'image',
-                'display_name' => 'Логотип',
+                'display_name' => 'Logo',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -994,7 +1282,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'rich_text_box',
-                'display_name' => 'Описание',
+                'display_name' => 'Description',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1009,7 +1297,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'text',
-                'display_name' => 'Ссылка на сайт',
+                'display_name' => 'Site url',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1024,7 +1312,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'rich_text_box',
-                'display_name' => 'Правила',
+                'display_name' => 'Rules',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1039,7 +1327,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => 'Количество трансляций',
+                'display_name' => 'Broadcasts number',
                 'required'     => 0,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1054,8 +1342,165 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'checkbox',
-                'display_name' => 'Онлайн',
+                'display_name' => 'Online',
                 'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        
+        /**
+         * Team
+         */
+        $dataRow = $this->dataRow($teamDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'id',
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($teamDataType, 'capt_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Captain id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($teamDataType, 'title');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Title',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($teamDataType, 'image');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'image',
+                'display_name' => 'Logo',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        /**
+         * Fight
+         */
+        $dataRow = $this->dataRow($fightDataType, 'id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'id',
+                'required'     => 1,
+                'browse'       => 0,
+                'read'         => 0,
+                'edit'         => 0,
+                'add'          => 0,
+                'delete'       => 0,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'active');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Active',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'game_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Game id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+
+        $dataRow = $this->dataRow($fightDataType, 'title');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Title',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'created_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Created id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }        
+        
+        $dataRow = $this->dataRow($fightDataType, 'type');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'select_dropdown',
+                'display_name' => 'Type',
+                'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
                 'edit'         => 1,
@@ -1114,7 +1559,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Рабочий стол',
+                'title'      => 'Dashboard',
                 'url'        => route('voyager.dashboard', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1129,8 +1574,8 @@ class MenuItemTableSeeder extends Seeder
             
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Жанры',
-                'url'        => '/admin/ganres',
+                'title'      => 'Genres',
+                'url'        => '/admin/genres',
             ]);
             if (!$menuItem->exists) {
                 $menuItem->fill([
@@ -1144,7 +1589,7 @@ class MenuItemTableSeeder extends Seeder
             
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Игры',
+                'title'      => 'Games',
                 'url'        => '/admin/games',
             ]);
             if (!$menuItem->exists) {
@@ -1159,7 +1604,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Медиа',
+                'title'      => 'Media',
                 'url'        => route('voyager.media.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1174,7 +1619,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Роли',
+                'title'      => 'Roles',
                 'url'        => route('voyager.roles.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1189,7 +1634,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Пользователи',
+                'title'      => 'Users',
                 'url'        => route('voyager.users.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1204,7 +1649,37 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Страницы',
+                'title'      => 'Teams',
+                'url'        => '/admin/teams',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
+                    'icon_class' => '',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+            
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Fights',
+                'url'        => '/admin/fights',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
+                    'icon_class' => '',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Pages',
                 'url'        => route('voyager.pages.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1219,7 +1694,7 @@ class MenuItemTableSeeder extends Seeder
 
             $toolsMenuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Инструменты',
+                'title'      => 'Tools',
                 'url'        => '',
             ]);
             if (!$toolsMenuItem->exists) {
@@ -1234,7 +1709,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Конструктор меню',
+                'title'      => 'Menu builder',
                 'url'        => route('voyager.menus.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1249,7 +1724,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'База данных',
+                'title'      => 'Database',
                 'url'        => route('voyager.database.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1264,7 +1739,7 @@ class MenuItemTableSeeder extends Seeder
 
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
-                'title'      => 'Настройки',
+                'title'      => 'Settings',
                 'url'        => route('voyager.settings.index', [], false),
             ]);
             if (!$menuItem->exists) {
@@ -1302,19 +1777,16 @@ class PermissionsTableSeeder extends Seeder
         }
 
         Permission::generateFor('menus');
-
         Permission::generateFor('pages');
-
         Permission::generateFor('roles');
-
         Permission::generateFor('users');
-
         Permission::generateFor('posts');
-
         Permission::generateFor('categories');
-        
-        Permission::generateFor('ganres');
+        Permission::generateFor('genres');
         Permission::generateFor('games');
+        Permission::generateFor('teams');
+        Permission::generateFor('team_user');
+        Permission::generateFor('fights');
     }
 }
 
