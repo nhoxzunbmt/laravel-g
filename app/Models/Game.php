@@ -25,7 +25,7 @@ class Game extends Model
      */
     public function genre()
     {
-        return $this->hasOne('App\Models\Genre', 'id', 'genre_id');
+        return $this->belongsTo('App\Models\Genre');
     }
     
     /**
@@ -33,8 +33,8 @@ class Game extends Model
      * 
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function fight()
+    public function fights()
     {
-        return $this->belongsTo('App\Models\Fight');
+        return $this->hasMany('App\Models\Fight');
     }
 }

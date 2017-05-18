@@ -74,6 +74,7 @@
                                 <a href="{!! route('social.auth', 'google') !!}" class="btn btn-social-icon btn-google"><i class="fa fa-google"></i></a>
                                 <a href="{!! route('social.auth', 'facebook') !!}" class="btn btn-social-icon btn-facebook"><i class="fa fa-facebook"></i></a>
                                 <a href="{!! route('social.auth', 'steam') !!}" class="btn btn-social-icon btn-facebook"><i class="fa fa-steam"></i></a>
+                                <a href="{!! route('social.auth', 'twitch') !!}" class="btn btn-social-icon btn-facebook"><i class="fa fa-twitch"></i></a>
                             </div>
                         </div>
                         

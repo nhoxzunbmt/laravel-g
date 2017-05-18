@@ -76,7 +76,39 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function fights()
     {
-        return $this->belongsToMany('App\Models\Fight', 'fight_user', 'fight_id', 'user_id');
+        return $this->belongsToMany('App\Models\FightUser', 'fight_user', 'fight_id', 'user_id');
+    }
+    
+    /**
+     * Fights which are created by user
+     */
+    public function createdFights()
+    {
+        return $this->hasMany('App\Models\Fight', 'created_id');
+    }
+    
+    /**
+     * User is judge of fights
+     */
+    public function judgeOfFights()
+    {
+        return $this->hasMany('App\Models\Fight', 'judge_id');
+    }
+    
+    /**
+     * User is commentator of fights
+     */
+    public function commentatorOfFights()
+    {
+        return $this->belongsTo('App\Models\Fight', 'commentator_id');
+    }
+    
+    /**
+     * Figths canceled by user
+     */
+    public function canceledFights()
+    {
+        return $this->belongsTo('App\Models\Fight', 'cancel_user_id');
     }
     
     /**

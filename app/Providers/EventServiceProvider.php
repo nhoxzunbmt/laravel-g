@@ -20,6 +20,7 @@ class EventServiceProvider extends ServiceProvider
             // Прописываем здесь обработку события провайдерами от SocialiteProviders
             'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',
             'SocialiteProviders\Steam\SteamExtendSocialite@handle',
+            'SocialiteProviders\Twitch\TwitchExtendSocialite@handle',
         ],
     ];
 

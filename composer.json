@@ -17,7 +17,9 @@
         "laravel/tinker": "~1.0",
         "nicklaw5/twitch-api-php": "^0.1.5",
         "socialiteproviders/steam": "^1.0",
+        "socialiteproviders/twitch": "^3.0",
         "socialiteproviders/vkontakte": "^3.0",
+        "symfony/event-dispatcher": "^3.2",
         "tcg/voyager": "^0.11.9"
     },
     "require-dev": {

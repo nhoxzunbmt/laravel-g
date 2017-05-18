@@ -19,7 +19,9 @@ class CreateFightUsersTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('broadcast_url')->nullable();
             $table->boolean('confirm_end')->default(false);
+            $table->boolean('winner')->default(false);
             $table->timestamp('end_at')->nullable();
+            
             $table->foreign('fight_id')->references('id')->on('fights');
             $table->foreign('user_id')->references('id')->on('users');
         });

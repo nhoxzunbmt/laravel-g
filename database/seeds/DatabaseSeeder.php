@@ -17,6 +17,8 @@ use App\Models\Team;
 use App\Models\TeamUser;
 use App\Models\Fight;
 use App\Models\FightTeam;
+use App\Models\FightClaim;
+use App\Models\FightFee;
 use App\Models\FightUser;
 
 use App\Acme\Helpers\TwitchHelper;
@@ -47,7 +49,7 @@ class DatabaseSeeder extends Seeder
         $this->call('FightFeeTableSeeder');
         $this->call('FightClaimTableSeeder');*/
         
-        $this->call('DataTypesTableSeeder');
+        $this->call('DataTypeTableSeeder');
         $this->call('DataRowTableSeeder');
         $this->call('MenuTableSeeder');
         $this->call('MenuItemTableSeeder');
@@ -341,7 +343,7 @@ class FightTableSeeder extends Seeder
             
             //Generate canceled fight or not
             $fightData['canceled'] = $canceled_flag = $faker->boolean;
-            if($ended_flag)
+            if($canceled_flag)
             {
                 $fightData['cancel_user_id'] = $faker->randomElement([1, $created_id]);
                 $fightData['cancel_text'] = $faker->paragraph(1);
@@ -405,7 +407,7 @@ class FightTableSeeder extends Seeder
     }
 }
 
-class DataTypesTableSeeder extends Seeder
+class DataTypeTableSeeder extends Seeder
 {
     /**
      * Auto generated seed file.
@@ -552,6 +554,34 @@ class DataTypesTableSeeder extends Seeder
             ])->save();
         }
         
+        $dataType = $this->dataType('slug', 'fight-fee');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'fight_fee',
+                'display_name_singular' => 'Fight\'s fee',
+                'display_name_plural'   => 'Fight\'s fees',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\FightFee',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
+        $dataType = $this->dataType('slug', 'fight-claim');
+        if (!$dataType->exists) {
+            $dataType->fill([
+                'name'                  => 'fight_claim',
+                'display_name_singular' => 'Fight\'s claim',
+                'display_name_plural'   => 'Fight\'s claims',
+                'icon'                  => '',
+                'model_name'            => 'App\\Models\\FightClaim',
+                'controller'            => '',
+                'generate_permissions'  => 1,
+                'description'           => '',
+            ])->save();
+        }
+        
         $dataType = $this->dataType('name', 'categories');
         if (!$dataType->exists) {
             $dataType->fill([
@@ -624,6 +654,11 @@ class DataRowTableSeeder extends Seeder
         $gameDataType = DataType::where('slug', 'games')->firstOrFail();
         $teamDataType = DataType::where('slug', 'teams')->firstOrFail();
         $fightDataType = DataType::where('slug', 'fights')->firstOrFail();
+        
+        $fightUserDataType = DataType::where('slug', 'fight-user')->firstOrFail();
+        $fightTeamDataType = DataType::where('slug', 'fight-team')->firstOrFail();
+        $fightFeeDataType = DataType::where('slug', 'fight-fee')->firstOrFail();
+        $fightClaimDataType = DataType::where('slug', 'fight-claim')->firstOrFail();
 
         $dataRow = $this->dataRow($pageDataType, 'id');
         if (!$dataRow->exists) {
@@ -1222,7 +1257,7 @@ class DataRowTableSeeder extends Seeder
         if (!$dataRow->exists) {
             $dataRow->fill([
                 'type'         => 'number',
-                'display_name' => 'Genre ID',
+                'display_name' => 'Genre id',
                 'required'     => 1,
                 'browse'       => 1,
                 'read'         => 1,
@@ -1232,6 +1267,26 @@ class DataRowTableSeeder extends Seeder
                 'details'      => '',
             ])->save();
         }
+        
+        /*$dataRow = $this->dataRow($gameDataType, 'genre');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'select_dropdown',
+                'display_name' => 'Genre',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => json_encode([
+                    'relationship' => [
+                        'key' => 'id',
+                        'label'   => 'title',
+                    ],
+                ]),
+            ])->save();
+        }*/
 
         $dataRow = $this->dataRow($gameDataType, 'title');
         if (!$dataRow->exists) {
@@ -1506,9 +1561,358 @@ class DataRowTableSeeder extends Seeder
                 'edit'         => 1,
                 'add'          => 1,
                 'delete'       => 1,
+                'details'      => '
+                {
+                    "default": "personal",
+                    "options": {
+                        "personal": "personal",
+                        "team": "team"
+                    }
+                }',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'count_parts');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Count parts',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        } 
+        
+        $dataRow = $this->dataRow($fightDataType, 'count_team_users');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Count user in the team',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
                 'details'      => '',
             ])->save();
         }
+        
+        $dataRow = $this->dataRow($fightDataType, 'start_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => 'Datetime start',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'end_at');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'timestamp',
+                'display_name' => 'Datetime end',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'min_fee_total');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Min total fee',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'min_fee');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Min fee',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'changed_fee');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Changed fee',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'judge_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Judge',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'commentator_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Commentator',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'winner_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Winner',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'result');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text_area',
+                'display_name' => 'Result',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'changed_time');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Changed time',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'canceled');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Canceled',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'cancel_text');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text_area',
+                'display_name' => 'Cancel text',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightDataType, 'cancel_user_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'User canceled',
+                'required'     => 0,
+                'browse'       => 0,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        /**
+         * FightUser
+         */       
+        $dataRow = $this->dataRow($fightUserDataType, 'fight_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Fight id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightUserDataType, 'user_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'User id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        } 
+        
+        $dataRow = $this->dataRow($fightUserDataType, 'broadcast_url');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'text',
+                'display_name' => 'Broadcasts url',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        } 
+        
+        $dataRow = $this->dataRow($fightUserDataType, 'confirm_end');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Confirm end',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        } 
+        
+        $dataRow = $this->dataRow($fightUserDataType, 'winner');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'checkbox',
+                'display_name' => 'Is winner',
+                'required'     => 0,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        
+        /**
+         * FightTeam
+         */       
+        $dataRow = $this->dataRow($fightTeamDataType, 'fight_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Fight id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+        $dataRow = $this->dataRow($fightTeamDataType, 'team_id');
+        if (!$dataRow->exists) {
+            $dataRow->fill([
+                'type'         => 'number',
+                'display_name' => 'Team id',
+                'required'     => 1,
+                'browse'       => 1,
+                'read'         => 1,
+                'edit'         => 1,
+                'add'          => 1,
+                'delete'       => 1,
+                'details'      => '',
+            ])->save();
+        }
+        
+                 
+        //$fightFeeDataType = DataType::where('slug', 'fight-fee')->firstOrFail();
+        //$fightClaimDataType = DataType::where('slug', 'fight-claim')->firstOrFail(); 
+
     }
 
     /**
@@ -1580,10 +1984,10 @@ class MenuItemTableSeeder extends Seeder
             if (!$menuItem->exists) {
                 $menuItem->fill([
                     'target'     => '_self',
-                    'icon_class' => '',
+                    'icon_class' => 'voyager-puzzle',
                     'color'      => null,
                     'parent_id'  => null,
-                    'order'      => 4,
+                    'order'      => 3,
                 ])->save();
             }
             
@@ -1595,10 +1999,10 @@ class MenuItemTableSeeder extends Seeder
             if (!$menuItem->exists) {
                 $menuItem->fill([
                     'target'     => '_self',
-                    'icon_class' => '',
+                    'icon_class' => 'voyager-controller',
                     'color'      => null,
                     'parent_id'  => null,
-                    'order'      => 5,
+                    'order'      => 3,
                 ])->save();
             }
 
@@ -1643,7 +2047,7 @@ class MenuItemTableSeeder extends Seeder
                     'icon_class' => 'voyager-person',
                     'color'      => null,
                     'parent_id'  => null,
-                    'order'      => 3,
+                    'order'      => 2,
                 ])->save();
             }
 
@@ -1655,7 +2059,7 @@ class MenuItemTableSeeder extends Seeder
             if (!$menuItem->exists) {
                 $menuItem->fill([
                     'target'     => '_self',
-                    'icon_class' => '',
+                    'icon_class' => 'voyager-group',
                     'color'      => null,
                     'parent_id'  => null,
                     'order'      => 3,
@@ -1670,13 +2074,73 @@ class MenuItemTableSeeder extends Seeder
             if (!$menuItem->exists) {
                 $menuItem->fill([
                     'target'     => '_self',
+                    'icon_class' => 'voyager-pirate-swords',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+            
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Fight\'s users',
+                'url'        => '/admin/fight-user',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
                     'icon_class' => '',
                     'color'      => null,
                     'parent_id'  => null,
                     'order'      => 3,
                 ])->save();
             }
-
+            
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Fight\'s teams',
+                'url'        => '/admin/fight-team',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
+                    'icon_class' => '',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+            
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Fight\'s fees',
+                'url'        => '/admin/fight-fee',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
+                    'icon_class' => '',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+            
+            $menuItem = MenuItem::firstOrNew([
+                'menu_id'    => $menu->id,
+                'title'      => 'Fight\'s claims',
+                'url'        => '/admin/fight-claim',
+            ]);
+            if (!$menuItem->exists) {
+                $menuItem->fill([
+                    'target'     => '_self',
+                    'icon_class' => '',
+                    'color'      => null,
+                    'parent_id'  => null,
+                    'order'      => 3,
+                ])->save();
+            }
+            
             $menuItem = MenuItem::firstOrNew([
                 'menu_id'    => $menu->id,
                 'title'      => 'Pages',
@@ -1787,6 +2251,11 @@ class PermissionsTableSeeder extends Seeder
         Permission::generateFor('teams');
         Permission::generateFor('team_user');
         Permission::generateFor('fights');
+        
+        Permission::generateFor('fight-user');
+        Permission::generateFor('fight-team');
+        Permission::generateFor('fight-fee');
+        Permission::generateFor('fight-claim');
     }
 }
 

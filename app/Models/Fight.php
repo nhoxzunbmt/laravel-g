@@ -27,7 +27,7 @@ class Fight extends Model
      */
     public function game()
     {
-        return $this->hasOne('App\Models\Game', 'id', 'game_id');
+        return $this->belongsTo('App\Models\Game', 'game_id');
     }
        
     /**
@@ -35,7 +35,7 @@ class Fight extends Model
      */
     public function createdBy()
     {
-        return $this->hasOne('App\User', 'id', 'created_id');
+        return $this->belongsTo('App\User', 'created_id');
     }
     
     /**
@@ -43,7 +43,7 @@ class Fight extends Model
      */
     public function judge()
     {
-        return $this->hasOne('App\User', 'id', 'judge_id');
+        return $this->belongsTo('App\User', 'judge_id');
     }
     
     /**
@@ -51,7 +51,7 @@ class Fight extends Model
      */
     public function commentator()
     {
-        return $this->hasOne('App\User', 'id', 'commentator_id');
+        return $this->belongsTo('App\User', 'commentator_id');
     }
     
     /**
@@ -59,6 +59,6 @@ class Fight extends Model
      */
     public function canceledBy()
     {
-        return $this->hasOne('App\User', 'id', 'cancel_user_id');
+        return $this->belongsTo('App\User', 'cancel_user_id');
     }
 }

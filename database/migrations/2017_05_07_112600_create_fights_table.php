@@ -41,7 +41,7 @@ class CreateFightsTable extends Migration
             $table->foreign('created_id')->references('id')->on('users');
             $table->foreign('judge_id')->references('id')->on('users');
             $table->foreign('commentator_id')->references('id')->on('users');
-            $table->foreign('cancel_user_id')->references('id')->on('users');
+            $table->foreign('cancel_user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

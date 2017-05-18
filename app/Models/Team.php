@@ -13,4 +13,12 @@ class Team extends Model
     {
         return $this->belongsToMany('App\User', 'team_user');
     }
+    
+    /**
+     * Fight which belongs to the team
+     */
+    public function fights()
+    {
+        return $this->belongsToMany('App\Models\Fight', 'fight_team');
+    }
 }

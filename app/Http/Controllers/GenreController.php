@@ -113,6 +113,7 @@ class GenreController extends Controller
                 if(!empty($image))
                 {
                     $image_path = 'genres/'.basename($image);
+                    $image_path = str_replace("%20", "", $image_path);
                     Image::make($path)->save(public_path("storage/".$image_path));
                 }else{
                     $image_path = null;
