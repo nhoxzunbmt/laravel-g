@@ -7,10 +7,12 @@
     "require": {
         "php": ">=5.6.4",
         "cmgmyr/messenger": "^2.14",
+        "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "dingo/api": "1.0.x@dev",
         "filp/whoops": "^2.1",
         "giantbomb/giantbomb-php-api": "dev-master",
         "hootlex/laravel-friendships": "^1.0",
+        "illuminate/html": "^5.0",
         "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",

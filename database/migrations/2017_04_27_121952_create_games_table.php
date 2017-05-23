@@ -20,6 +20,7 @@ class CreateGamesTable extends Migration
             $table->integer('twitch_id')->unsigned();
             $table->integer('genre_id')->unsigned();
             $table->string('title')->unique();
+            $table->string('alias')->nullable();
             $table->text('images')->nullable();
             $table->string('logo')->nullable();
             $table->text('body')->nullable();

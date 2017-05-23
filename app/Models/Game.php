@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Requests;
 
 class Game extends Model
 {
@@ -36,5 +37,22 @@ class Game extends Model
     public function fights()
     {
         return $this->hasMany('App\Models\Fight');
+    }
+    
+    public function scopeSearch($query, $request)
+    {
+        if(!empty($request['id']))
+        {
+            $query->where('id', (int)$request['id']);
+        }
+        if(!empty($request['title']))
+        {
+            $query->where('title', 'like', "%".$request['title']."%");
+        }
+        if(!empty($request['genre_id']))
+        {
+            $query->where('genre_id', $request['genre_id']);
+        }
+        return $query;
     }
 }

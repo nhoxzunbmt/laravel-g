@@ -372,8 +372,14 @@ class FightTableSeeder extends Seeder
                 $player_keys = array_rand($arPlayersExceptCreated, $countParts);
                 $player_keys[] = $created_key;
                 
-                $arBroadcasts = TwitchHelper::searchStreamsByGame($arGames[$game_id]);
-            
+                $arBroadcasts = [];
+                $arStreams = TwitchHelper::searchStreamsByGame($arGames[$game_id]);
+                foreach($arStreams as $arStream)
+                {
+                    if(!empty($arStream))
+                        $arBroadcasts[] = $arStream['channel']['display_name'];
+                }
+                
                 foreach($player_keys as $player_key)
                 {
                     $fightUserData = [
