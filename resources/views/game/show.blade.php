@@ -134,7 +134,9 @@
                                         					<div class="panel-body pa-0">
                                         						<article class="col-item">
                                         							<div class="photo">
-                                        								<img src="{{ $stream['preview']['medium'] }}" class="img-responsive"/>
+                                                                        <a href="{!! url('twitch/'.$stream['channel']['display_name']) !!}">
+                                        								    <img src="{{ $stream['preview']['medium'] }}" class="img-responsive"/>
+                                                                        </a>
                                         							</div>
                                         						</article>
                                         					</div>

@@ -170,12 +170,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return self::create([
             'email' => $email,
             'nickname' => $providerUser->getNickname(),
-            'name' => $providerUser->getName(),
+            'name' => $providerUser->getName() ? $providerUser->getName() : $providerUser->getNickname(),
+            'password' => self::generatePassword()
         ]);
     }
     
     public static function generateEmail($providerUser)
     {
-        
+        $email = $providerUser->getNickname()."@games.dev";
+        return $email;
+    }
+    
+    public static function generatePassword()
+    {
+        return str_random(10);
     }
 }

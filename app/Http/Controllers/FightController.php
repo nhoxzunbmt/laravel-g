@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use App\Models\Fight;
+use App\Models\Game;
+use Request;
+use Cache;
 
 class FightController extends Controller
 {
@@ -12,8 +16,16 @@ class FightController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
+    {    
+        $id = Str::slug(implode(Request::all()));
+        $figths = Cache::remember('figths' . $id, 60, function(){
+            return Fight::published()->orderBy('id', 'asc')->paginate(12);
+        });       
+        
+        $figths = Fight::published()->orderBy('id', 'asc')->paginate(12);
+        
+        dd($figths);
+        return view('fight.index')->with(compact('fights'));
     }
 
     /**
@@ -23,7 +35,8 @@ class FightController extends Controller
      */
     public function create()
     {
-        //
+        $games = Game::orderBy('title', 'asc')->pluck('title', 'id');
+        return view('fight.create')->with(compact('games'));
     }
 
     /**

@@ -34,12 +34,13 @@ Route::get('/games/search/{q}', 'GameController@search');
 
 
 //Fights
-/*Route::get('/fights', 'FightController@index')->name('fights');
-Route::get('/fights/{id}', 'FightController@show')->name('fight');
+Route::get('/fights', 'FightController@index')->name('fights');
+Route::get('/fights/create', 'FightController@create');
+/*Route::get('/fights/{id}', 'FightController@show')->name('fight');
 Route::get('/fights/{id}', 'FightController@show')->name('fight');
 Route::get('/games/search/{q}', 'GameController@search');*/
 
-Route::resource('fights','FightController');
+//Route::resource('fights','FightController');
 
 //Api routes
 $api = app('Dingo\Api\Routing\Router');
@@ -50,3 +51,7 @@ $api->version('v1', function ($api) {
 //Route::get('/genre/import', 'GanreController@importByGiantbomb');
 //Route::get('/game/import', 'GameController@importByTwitchGiantbomb');
 Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
+Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
+Route::get('/steam/search/{steam_id}', '\App\Acme\Helpers\SteamHelper@getFriends');
+
+Route::get('/{vue?}', function () { return view('welcome'); })->where('vue', '[\/\w\.-]*');

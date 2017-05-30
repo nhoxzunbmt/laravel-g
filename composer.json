@@ -12,7 +12,6 @@
         "filp/whoops": "^2.1",
         "giantbomb/giantbomb-php-api": "dev-master",
         "hootlex/laravel-friendships": "^1.0",
-        "illuminate/html": "^5.0",
         "intervention/image": "^2.3",
         "laravel/framework": "5.4.*",
         "laravel/socialite": "^3.0",
@@ -22,7 +21,10 @@
         "socialiteproviders/twitch": "^3.0",
         "socialiteproviders/vkontakte": "^3.0",
         "symfony/event-dispatcher": "^3.2",
-        "tcg/voyager": "^0.11.9"
+        "tcg/voyager": "^0.11.9",
+        "tymon/jwt-auth": "^0.5.11",
+        "zyberspace/steam-web-api-client": "^0.5.0",
+        "laravelcollective/html": "~5.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -62,5 +64,6 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "optimize-autoloader": true
-    }
+    },
+    "minimum-stability": "dev"
 }

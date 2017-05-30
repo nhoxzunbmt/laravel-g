@@ -16,18 +16,8 @@
 	<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 	<link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 	
-	<!-- Morris Charts CSS -->
-    <link href="{{ asset('vendors/bower_components/morris.js/morris.css') }}" rel="stylesheet" type="text/css"/>
-	
-	<!-- Data table CSS -->
-	<link href="{{ asset('vendors/bower_components/datatables/media/css/jquery.dataTables.min.css') }}" rel="stylesheet" type="text/css"/>
-	<link href="{{ asset('vendors/bower_components/jquery-toast-plugin/dist/jquery.toast.min.css') }}" rel="stylesheet" type="text/css">
-	
-    <!-- bootstrap-select CSS -->
-    <link href="{{ asset('vendors/bower_components/bootstrap-select/dist/css/bootstrap-select.min.css') }}" rel="stylesheet" type="text/css"/>
-	
-	<!-- Custom CSS -->
-	<link href="{{ asset('dist/css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css"/>
+    <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css" rel="stylesheet" >
     
@@ -40,13 +30,6 @@
 </head>
 
 <body>
-
-    <!-- Preloader -->
-	<div class="preloader-it">
-		<div class="la-anim-1"></div>
-	</div>
-	<!-- /Preloader -->
-
     <div class="wrapper theme-5-active pimary-color-blue">
         
         @include('_partials.nav')
@@ -56,6 +39,7 @@
 		<div class="page-wrapper">
             <div class="container-fluid">
                 @yield('content')
+                <?/*<router-view class="view"></router-view>*/?>
             </div>
 			
 			<!-- Footer -->
@@ -70,42 +54,12 @@
 			
 		</div>
         <!-- /Main Content -->
-
     </div>
     <!-- /#wrapper -->
 
-
-    <!-- jQuery -->
-    <script src="{{ asset('vendors/bower_components/jquery/dist/jquery.min.js') }}"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ asset('vendors/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/bower_components/jasny-bootstrap/dist/js/jasny-bootstrap.min.js') }}"></script>
-	<!-- Slimscroll JavaScript -->
-	<script src="{{ asset('dist/js/jquery.slimscroll.js') }}"></script>
-	<!-- Fancy Dropdown JS -->
-	<script src="{{ asset('dist/js/dropdown-bootstrap-extended.js') }}"></script>
-    
-    <!-- Bootstrap Select JavaScript -->
-	<script src="{{ asset('vendors/bower_components/bootstrap-select/dist/js/bootstrap-select.min.js') }}"></script>
-		
-    
-    <!-- Gallery JavaScript -->
-    <script src="{{ asset('dist/js/isotope.js') }}"></script>
-	<script src="{{ asset('dist/js/lightgallery-all.js') }}"></script>
-	<script src="{{ asset('dist/js/froogaloop2.min.js') }}"></script>
-	<script src="{{ asset('dist/js/gallery-data.js') }}"></script>
-    
-	<!-- Init JavaScript -->
-	<script src="{{ asset('dist/js/init.js') }}"></script>
-    
-    <style>
-    .col-item .photo img {
-        width: 100%;
-    }
-    .product-detail-wrap .gallery-wrap{
-        margin-left: -22px;
-    }
-    </style>
+    <script src="{{ asset('/js/app.js') }}"></script>
+    <script src="{{ asset('/js/vendor.js') }}"></script>
+    <script src="{{ asset('/js/custom.js') }}"></script>	
 </body>
 
 </html>

@@ -173,6 +173,10 @@ return [
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Hootlex\Friendships\FriendshipsServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        //Illuminate\Html\HtmlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -183,9 +187,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
-        Illuminate\Html\HtmlServiceProvider::class,
-
     ],
 
     /*
@@ -237,8 +238,11 @@ return [
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
-        'Html' => Illuminate\Html\HtmlFacade::class,
-        'Form' => Illuminate\Html\FormFacade::class,
+        //'Html' => Illuminate\Html\HtmlFacade::class,
+        //'Form' => Illuminate\Html\FormFacade::class,
+        'Form' => Collective\Html\FormFacade::class,
+        'Html' => Collective\Html\HtmlFacade::class,
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
     ],
 
 ];

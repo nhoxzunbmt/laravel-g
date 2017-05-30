@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
         $this->call('DataRowTableSeeder');
         $this->call('MenuTableSeeder');
         $this->call('MenuItemTableSeeder');
-        $this->call('PermissionsTableSeeder');
+        $this->call('PermissionTableSeeder');
         $this->call('PermissionsRoleTableSeeder');
     }
 }
@@ -2225,7 +2225,7 @@ class MenuItemTableSeeder extends Seeder
     }
 }
 
-class PermissionsTableSeeder extends Seeder
+class PermissionTableSeeder extends Seeder
 {
     /**
      * Auto generated seed file.

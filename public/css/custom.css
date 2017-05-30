@@ -1,0 +1,10 @@
+.col-item .photo img {
+    width: 100%;
+}
+.product-detail-wrap .gallery-wrap{
+    margin-left: -22px;
+}
+.fixed-sidebar-left .right-nav-text {
+    /*line-height: 24px;*/
+    vertical-align: top;
+}

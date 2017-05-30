@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Fight extends Model
 {
+    protected $dates = ['start_at'];
+    
     /**
      * Пользователи, которые принадлежат данному бою.
      */
@@ -60,5 +63,15 @@ class Fight extends Model
     public function canceledBy()
     {
         return $this->belongsTo('App\User', 'cancel_user_id');
+    }
+    
+    public function scopePublished($query)
+    {
+        $query->where('start_at', '>=', Carbon::now())->where('active', true)->where('canceled', false);
+    }
+    
+    public function setStartAtAttribute($date)
+    {
+        $this->attributes['start_at'] = Carbon::createFromFormat('Y-m-d H:i:s', $date);
     }
 }

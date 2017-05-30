@@ -247,4 +247,14 @@ class GameController extends Controller
             
         } while ($count<$total);
     }
+    
+    /**
+     * Popular games.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function popular()
+    {
+        return Game::orderBy('id', 'asc')->limit(5)->get();
+    }
 }

@@ -4,7 +4,7 @@
 		<div class="nav-header pull-left">
 			<div class="logo-wrap">
                 <a href="{{ url('/') }}">
-                    <img class="brand-img" src="{{ asset('dist/img/logo.png') }}" alt="brand"/>
+                    <img class="brand-img" src="{{ asset('img/logo.png') }}" alt="brand"/>
 					<span class="brand-text">{{ config('app.name', 'Laravel') }}</span>
                 </a>
 			</div>
@@ -141,7 +141,7 @@
 								<div class="sl-item">
 									<a href="javascript:void(0)">
 										<div class="sl-avatar">
-											<img class="img-responsive" src="dist/img/avatar.jpg" alt="avatar"/>
+											<img class="img-responsive" src="{{ Auth::user()->avatar }}" alt="avatar"/>
 										</div>
 										<div class="sl-content">
 											<span class="inline-block capitalize-font  pull-left truncate head-notifications">Sandy Doe</span>

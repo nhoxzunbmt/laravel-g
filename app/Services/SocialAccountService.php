@@ -21,6 +21,8 @@ class SocialAccountService
         } 
         else 
         {
+            $user = [];
+            
             $account = new UserSocialAccount([
                 'provider_user_id' => $providerUser->getId(),
                 'provider' => $providerName
