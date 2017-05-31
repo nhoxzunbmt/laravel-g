@@ -1,59 +1,60 @@
 <template>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <nav>
-                <ul class="list-inline">
-                    <li>
-                        <router-link :to="{ name: 'home' }">Home</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/foo" class="">Foo</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/bar" class="">Bar</router-link>
-                    </li>
-                    <li>
-                        <router-link to="/rooms" class="">Rooms</router-link>
-                    </li>
-                    <li class="pull-right" v-if="!auth.user.authenticated">
-                        <router-link :to="{ name: 'register' }">Register</router-link>
-                    </li>
-                    <li class="pull-right" v-if="!auth.user.authenticated">
-                        <router-link :to="{ name: 'signin' }">Sign in</router-link>
-                    </li>
-                    <li class="pull-right" v-if="auth.user.authenticated">
-                        <a href="javascript:void(0)" v-on:click="signout">Sign out</a>
-                    </li>
-                    <li class="pull-right" v-if="auth.user.authenticated">
-                        Hi, {{ auth.user.profile.name }}
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="panel-body">
-            <router-view></router-view>
-        </div>
+    <div class="wrapper theme-5-active pimary-color-blue">
+        <navigation></navigation>
+        <sidebar></sidebar>
+        <!-- Main Content -->
+		<div class="page-wrapper">
+            <div class="container-fluid">
+                <router-view></router-view>
+            </div>
+			
+			<!-- Footer -->
+			<footer class="footer container-fluid pl-30 pr-30">
+				<div class="row">
+					<div class="col-sm-12">
+						<p>2017 &copy; {{siteName}}.</p>
+					</div>
+				</div>
+			</footer>
+			<!-- /Footer -->
+		</div>
     </div>
 </template>
 
 <script>
 import auth from '../auth.js'
+import Navigation from './Shared/Navigation.vue';
+import Sidebar from './Shared/Sidebar.vue';
 
 export default {
+    components: { Navigation, Sidebar },
+    created() {
+        this.loadPopularGames();
+    },
     data() {
-            return {
-                auth: auth
-            }
-        },
-        methods: {
-            signout() {
-                auth.signout()
-            }
-        },
-        mounted: function () {
-            this.$nextTick(function () {
-                auth.check()
-            })
+        return {
+            auth: auth,
+            siteName: "ToPlay.tv",
+            logo: '/img/logo.png',
+            popularGames : []
         }
+    },
+    methods: {
+        signout() {
+            auth.signout()
+        },
+        loadPopularGames()
+        {
+            this.$http.get('/api/games/popular').then((response) => {
+                console.log(response.data);
+                this.$set(this, 'popularGames', response.data.games )
+            });
+        }
+    },
+    mounted: function () {
+        this.$nextTick(function () {
+            auth.check()
+        })
+    }
 }
 </script>

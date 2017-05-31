@@ -1,5 +1,10 @@
 <template>
     <div>
+        <div class="row heading-bg">
+        	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Sign in</h5>
+        	</div>
+        </div>
         <div class="alert alert-danger" v-if="error">
             <p>There was an error, unable to sign in with those credentials.</p>
         </div>

@@ -1,11 +1,12 @@
 import VueRouter from 'vue-router'
 
-//Define route components
-const Foo = { template: '<div>Foo</div>' }
-const Bar = { template: '<div>Bar</div>' }
-
 // lazy load components
-const Room = require('./components/Room.vue')
+const Games = require('./components/Games.vue')
+const Game = require('./components/Game.vue')
+
+const NotFoundComponent = {
+    template: '<div>Route Was Not Found</div>'
+};
 
 import App from './components/App.vue';
 import Home from './components/Home.vue';
@@ -15,25 +16,48 @@ import Signin from './components/Signin.vue';
 export default new VueRouter({
     mode: 'history',
     base: __dirname,
-    saveScrollPosition: true,
     routes: [
         {
             path: '/',
             name: 'home',
-            component: Home
+            component: Home,
+            meta: {
+                title: 'Home Page'
+            }
         },
-        { path: '/foo', component: Foo },
-        { path: '/bar', component: Bar },
-        { path: '/rooms', component: Room }, // example of route with a seperate component
         {
             path: '/register',
             name: 'register',
-            component: Register
+            component: Register,
+            meta: {
+                title: 'Register Page'
+            }
         },
         {
             path: '/signin',
             name: 'signin',
-            component: Signin
+            component: Signin,
+            meta: {
+                title: 'Sigin Page'
+            }
+        },
+        {
+            path: '/games',
+            name: 'games',
+            component: Games,
+            meta: {
+                title: 'Games list',
+                requiresAuth: true
+            }
+        },
+        {
+          path: '/games/:gameId',
+          name: 'game',
+          component: Game
+        },
+        { 
+            path: '*',
+            component: NotFoundComponent 
         }
     ]
 });

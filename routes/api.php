@@ -17,9 +17,8 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
+Route::get('/games', 'GameController@index');
 Route::get('/games/popular', 'GameController@popular');
-Route::get('/users', 'UserController@index');
-
 
 Route::post('/register', [
     'uses' => 'Auth\AuthController@register',
@@ -34,6 +33,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         $data = [];
         $data['name'] = $request->user()->name;
         $data['email'] = $request->user()->email;
+        $data['avatar'] = $request->user()->avatar;
         return response()->json([
             'data' => $data,
         ]);

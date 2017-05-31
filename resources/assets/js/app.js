@@ -17,6 +17,19 @@ Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementsByName('csrf-token
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token');
 Vue.http.options.root = 'http://games.dev';
 
+/**
+**  Filters
+***/
+var truncateFilter = function(text, length, clamp){
+    clamp = clamp || '...';
+    var node = document.createElement('div');
+    node.innerHTML = text;
+    var content = node.textContent;
+    return content.length > length ? content.slice(0, length) + clamp : content;
+};
+
+Vue.filter('truncate', truncateFilter);
+
 export default Vue;
 
 import App from './components/App.vue';
@@ -25,28 +38,49 @@ import Register from './components/Register.vue';
 import Signin from './components/Signin.vue';
 
 // lazy load components
-const Room = require('./components/Room.vue')
-const PopularGame = require('./components/PopularGame.vue')
+const Games = require('./components/Games.vue')
+
+//Meta change
+router.beforeEach((to, from, next) => {
+    
+    if(to.meta.title!==undefined)
+    {
+        document.title = to.meta.title;
+    }
+    
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (to.matched.some(record => record.meta.requiresAuth)) 
+    {
+        let token = localStorage.getItem('id_token')
+        if (token === null) {
+            next({
+                path: '/signin',
+                query: { redirect: to.fullPath }
+            })
+        } else {
+            next()
+        }
+    } else {
+        next() // make sure to always call next()!
+    }
+});
 
 // Create and mount root instance.
 // Make sure to inject the router.
 // Route components will be rendered inside <router-view>.
-/*new Vue({
+new Vue({
     
     router,
     
     components : {
-        Room,
-        PopularGame
+        Games
     },
     
     data : {
     
-    }
- 
-}).$mount('#app')*/
-new Vue({
-    el: '#app',
-    router: router,
+    },
+    
     render: app => app(App)
-});
+ 
+}).$mount('#app')

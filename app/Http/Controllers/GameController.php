@@ -21,17 +21,30 @@ class GameController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $genres = Genre::orderBy('title', 'asc')->pluck('title', 'id');
-        //$games = Game::search(Request::all())->active()->orderBy('id', 'asc')->paginate(12);
-                
+        $genres = Genre::orderBy('title', 'asc')->select(['id', 'title'])->get();//->pluck('title', 'id');
+      
         $id = Str::slug(implode(Request::all()));
-        $games = Cache::remember('games' . $id, 60, function(){
+        $items = Cache::remember('games' . $id, 60, function(){
             return Game::search(Request::all())->active()->orderBy('id', 'asc')->paginate(12);
         });       
         
-        return view('game.index')->with(compact('games', 'genres'));
+        $response = [
+            'pagination' => [
+                'total' => $items->total(),
+                'per_page' => $items->perPage(),
+                'current_page' => $items->currentPage(),
+                'last_page' => $items->lastPage(),
+                'from' => $items->firstItem(),
+                'to' => $items->lastItem()
+            ],
+            'genres' => $genres,
+            'data' => $items
+        ];
+        
+        return response()->json($response);
+        //return view('game.index')->with(compact('games', 'genres'));
     }
 
     /**

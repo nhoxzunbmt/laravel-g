@@ -11,27 +11,30 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
-//Register and auth by email
-Auth::routes();
-
-//social auth
-Route::get('/social/{provider}', 'SocialController@login')->name('social.auth');
-Route::get('/social/{provider}/callback', 'SocialController@callback');
-
 //Admin routes
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
 
+//social auth
+Route::get('/social/{provider}', 'SocialController@login')->name('social.auth');
+Route::get('/social/{provider}/callback', 'SocialController@callback');
+
+Route::get('{path}', function () {
+    return view('index');
+})->where('path', '(.*)');
+
+Route::get('password/reset/{token}', function () {
+    return view('index');
+})->name('password.reset');
+
+//Register and auth by email
+Auth::routes();
+
 //Games
 Route::get('/games', 'GameController@index')->name('games');
 Route::get('/games/{id}', 'GameController@show')->name('game');
 Route::get('/games/search/{q}', 'GameController@search');
-
 
 //Fights
 Route::get('/fights', 'FightController@index')->name('fights');
@@ -50,8 +53,6 @@ $api->version('v1', function ($api) {
 
 //Route::get('/genre/import', 'GanreController@importByGiantbomb');
 //Route::get('/game/import', 'GameController@importByTwitchGiantbomb');
-Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
+/*Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
 Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
-Route::get('/steam/search/{steam_id}', '\App\Acme\Helpers\SteamHelper@getFriends');
-
-Route::get('/{vue?}', function () { return view('welcome'); })->where('vue', '[\/\w\.-]*');
+Route::get('/steam/search/{steam_id}', '\App\Acme\Helpers\SteamHelper@getFriends');*/

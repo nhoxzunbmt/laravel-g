@@ -30,32 +30,7 @@
 </head>
 
 <body>
-    <div class="wrapper theme-5-active pimary-color-blue">
-        
-        @include('_partials.nav')
-        @include('_partials.left_sidebar')
-        		
-        <!-- Main Content -->
-		<div class="page-wrapper">
-            <div class="container-fluid">
-                @yield('content')
-            </div>
-			
-			<!-- Footer -->
-			<footer class="footer container-fluid pl-30 pr-30">
-				<div class="row">
-					<div class="col-sm-12">
-						<p>2017 &copy; {{ config('app.name', 'Laravel') }}.</p>
-					</div>
-				</div>
-			</footer>
-			<!-- /Footer -->
-			
-		</div>
-        <!-- /Main Content -->
-    </div>
-    <!-- /#wrapper -->
-
+    <div id="app"></div>
     <script src="{{ asset('/js/app.js') }}"></script>
     <script src="{{ asset('/js/vendor.js') }}"></script>
     <script src="{{ asset('/js/custom.js') }}"></script>	
