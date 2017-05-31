@@ -20,10 +20,9 @@ class TwitchHelper{
         if (Cache::has($cache_key)){
             return Cache::get($cache_key);
         } else {
-            
             $twitchClient = new \TwitchApi\TwitchApi([
-                'client_id' => env('TWITCH_API_CLIENT_ID'),
-            ]);
+                'client_id' => env('TWITCH_API_CLIENT_ID')
+            ]);            
             $channels = [];
             $limit = 10;
             $offset = 0;
@@ -33,14 +32,6 @@ class TwitchHelper{
             
             Cache::put($cache_key, $streams, 60);
             
-            /*foreach($streams as $arStream)
-            {
-                $channels[] = $arStream['channel']['name'];
-            }*/
-            
-            //return view('home', [ 'channels' => $channels]);
-            //return $channels;
-                
             return $streams;
         }
     }
@@ -52,9 +43,9 @@ class TwitchHelper{
         if (Cache::has($cache_key)){
             $channel = Cache::get($cache_key);
         } else {
-        
+
             $twitchClient = new \TwitchApi\TwitchApi([
-                'client_id' => env('TWITCH_API_CLIENT_ID'),
+                'client_id' => env('TWITCH_API_CLIENT_ID')
             ]);
             $twitchClient->setApiVersion(4);
             $channel = $twitchClient->getChannel($channel);
@@ -62,6 +53,6 @@ class TwitchHelper{
             Cache::put($cache_key, $channel, 60);
         }
         
-        return view('twitch.show', [ 'channel' => $channel]);
+        return $channel;
     }
 }

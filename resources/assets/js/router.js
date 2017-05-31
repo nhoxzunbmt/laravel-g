@@ -4,14 +4,13 @@ import VueRouter from 'vue-router'
 const Games = require('./components/Games.vue')
 const Game = require('./components/Game.vue')
 
-const NotFoundComponent = {
-    template: '<div>Route Was Not Found</div>'
-};
+const NotFoundComponent = require('./pages/errors/404.vue')
 
 import App from './components/App.vue';
 import Home from './components/Home.vue';
 import Register from './components/Register.vue';
 import Signin from './components/Signin.vue';
+import StreamDetail from './components/StreamDetail.vue';
 
 export default new VueRouter({
     mode: 'history',
@@ -47,13 +46,18 @@ export default new VueRouter({
             component: Games,
             meta: {
                 title: 'Games list',
-                requiresAuth: true
+                //requiresAuth: true
             }
         },
         {
-          path: '/games/:gameId',
-          name: 'game',
-          component: Game
+            path: '/games/:gameId',
+            name: 'game',
+            component: Game
+        },
+        {
+            path: '/streams/:stream',
+            name: 'stream',
+            component: StreamDetail
         },
         { 
             path: '*',

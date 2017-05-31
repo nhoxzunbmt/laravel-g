@@ -90,7 +90,9 @@ class GameController extends Controller
         {
             abort(404);
         }
-        return view('game.show', compact('game', 'streams'));
+        
+        return response()->json(compact('game', 'streams'));
+        //return view('game.show', compact('game', 'streams'));
     }
 
     /**

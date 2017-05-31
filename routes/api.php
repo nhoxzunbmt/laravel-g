@@ -19,6 +19,10 @@ use Illuminate\Http\Request;
 
 Route::get('/games', 'GameController@index');
 Route::get('/games/popular', 'GameController@popular');
+Route::get('/games/{id}', 'GameController@show')->name('game');
+
+Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
+Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
 
 Route::post('/register', [
     'uses' => 'Auth\AuthController@register',

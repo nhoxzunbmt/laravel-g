@@ -35,7 +35,7 @@ export default {
         return {
             auth: auth,
             siteName: "ToPlay.tv",
-            logo: '/img/logo.png',
+            logo: '/images/logo.png',
             popularGames : []
         }
     },

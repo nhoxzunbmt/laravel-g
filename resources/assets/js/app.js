@@ -10,6 +10,12 @@ import router     from './router'
 import Vue        from 'vue'
 import VueResource from 'vue-resource';
 
+
+import { HasError4, AlertError, AlertSuccess } from 'vform';
+Vue.component(HasError4.name, HasError4)
+Vue.component(AlertError.name, AlertError)
+Vue.component(AlertSuccess.name, AlertSuccess)
+
 Vue.use(VueRouter);
 Vue.use(VueResource);
 
@@ -70,17 +76,12 @@ router.beforeEach((to, from, next) => {
 // Make sure to inject the router.
 // Route components will be rendered inside <router-view>.
 new Vue({
-    
     router,
-    
     components : {
         Games
     },
-    
     data : {
     
     },
-    
     render: app => app(App)
- 
 }).$mount('#app')

@@ -17,7 +17,7 @@
         								<div class="col-md-3">
         									<div class="form-group">
         										<label class="control-label mb-10">Select genre</label>
-                                                <select name="genre_id" class='selectpicker' data-style="form-control btn-default btn-outline">
+                                                <select name="genre_id" class='' data-style="form-control btn-default btn-outline">
                                                     <option v-for="genre in genres" v-bind:value="genre.id">
                                                         {{ genre.title }}
                                                     </option>
