@@ -18,6 +18,7 @@ require('bootstrap-sass');
 
 window.Vue = require('vue');
 require('vue-resource');
+require('select2');
 
 /**
  * We'll register a HTTP interceptor to attach the "CSRF" header to each of

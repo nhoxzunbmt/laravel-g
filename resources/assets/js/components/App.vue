@@ -29,25 +29,25 @@ import Sidebar from './Shared/Sidebar.vue';
 export default {
     components: { Navigation, Sidebar },
     created() {
-        this.loadPopularGames();
+        this.getPopularGames();
     },
     data() {
         return {
             auth: auth,
             siteName: "ToPlay.tv",
             logo: '/images/logo.png',
-            popularGames : []
+            popularGames : [],
+            genres: []
         }
     },
     methods: {
         signout() {
             auth.signout()
         },
-        loadPopularGames()
+        getPopularGames()
         {
             this.$http.get('/api/games/popular').then((response) => {
-                console.log(response.data);
-                this.$set(this, 'popularGames', response.data.games )
+                this.$set(this, 'popularGames', response.data )
             });
         }
     },

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use \GiantBomb\Client\GiantBombClient;
 use App\Acme\Helpers\TwitchHelper;
 use Illuminate\Support\Str;
@@ -11,7 +11,7 @@ use App\Models\Game;
 use Storage;
 use Image;
 use File;
-use Request;
+//use Request;
 use Cache;
 
 class GameController extends Controller
@@ -23,27 +23,13 @@ class GameController extends Controller
      */
     public function index(Request $request)
     {
-        $genres = Genre::orderBy('title', 'asc')->select(['id', 'title'])->get();//->pluck('title', 'id');
-      
-        $id = Str::slug(implode(Request::all()));
-        $items = Cache::remember('games' . $id, 60, function(){
-            return Game::search(Request::all())->active()->orderBy('id', 'asc')->paginate(12);
-        });       
+        $id = Str::slug(implode($request->all()));
+        /*$items = Cache::remember('games' . $id, 60, function(){
+            return Game::search(Request::all())->active()->orderBy('id', 'asc')->paginate(12)->appends($request);
+        });*/  
         
-        $response = [
-            'pagination' => [
-                'total' => $items->total(),
-                'per_page' => $items->perPage(),
-                'current_page' => $items->currentPage(),
-                'last_page' => $items->lastPage(),
-                'from' => $items->firstItem(),
-                'to' => $items->lastItem()
-            ],
-            'genres' => $genres,
-            'data' => $items
-        ];
-        
-        return response()->json($response);
+        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6)->appends($request->except('page'));        
+        return response()->json($items);
         //return view('game.index')->with(compact('games', 'genres'));
     }
 
@@ -82,17 +68,14 @@ class GameController extends Controller
                 $game = Game::findOrFail($id);
                 $game->images = json_decode($game->images, true);
                 return $game;
-            });
-            
-            $streams = TwitchHelper::searchStreamsByGame($game->title); 
+            }); 
         }
         catch(ModelNotFoundException $e)
         {
             abort(404);
         }
         
-        return response()->json(compact('game', 'streams'));
-        //return view('game.show', compact('game', 'streams'));
+        return response()->json($game);
     }
 
     /**
@@ -270,6 +253,6 @@ class GameController extends Controller
      */
     public function popular()
     {
-        return Game::orderBy('id', 'asc')->limit(5)->get();
+        return response()->json(Game::orderBy('id', 'asc')->limit(5)->get());
     }
 }

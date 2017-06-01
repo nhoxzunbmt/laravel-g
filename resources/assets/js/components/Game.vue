@@ -130,7 +130,7 @@
         methods : {
             getGame: function(id){
                 this.$http.get('/api/games/' + id).then((response) => {
-                    this.$set(this, 'game', response.data.game);
+                    this.$set(this, 'game', response.data);
                 });
                 this.$http.get('/api/twitch/search/' + id).then((response) => {
                     this.$set(this, 'streams', response.data);

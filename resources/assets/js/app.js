@@ -10,7 +10,6 @@ import router     from './router'
 import Vue        from 'vue'
 import VueResource from 'vue-resource';
 
-
 import { HasError4, AlertError, AlertSuccess } from 'vform';
 Vue.component(HasError4.name, HasError4)
 Vue.component(AlertError.name, AlertError)

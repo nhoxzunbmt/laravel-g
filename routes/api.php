@@ -17,13 +17,29 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
+
+/**
+ *Genres
+ */
+Route::get('/genres', 'GenreController@index');
+Route::get('/genres/{id}', 'GenreController@show');
+
+/**
+ * Games
+ */
 Route::get('/games', 'GameController@index');
 Route::get('/games/popular', 'GameController@popular');
 Route::get('/games/{id}', 'GameController@show')->name('game');
 
+/**
+ * Twitch & streams
+ */
 Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
 Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
 
+/**
+ * Login & register
+ */
 Route::post('/register', [
     'uses' => 'Auth\AuthController@register',
 ]);

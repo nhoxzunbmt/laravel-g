@@ -7,6 +7,7 @@ use \GiantBomb\Client\GiantBombClient;
 use App\Models\Genre;
 use Storage;
 use Image;
+use Cache;
 
 class GenreController extends Controller
 {
@@ -17,7 +18,11 @@ class GenreController extends Controller
      */
     public function index()
     {
-        return Genre::all();
+        $items = Cache::remember('genres', 3600, function(){
+            return Genre::all();
+        });
+        
+        return response()->json($items);
     }
 
     /**
@@ -49,7 +54,18 @@ class GenreController extends Controller
      */
     public function show($id)
     {
-        //
+        try
+        {
+            $genre = Cache::remember('genre' . $id, 3600, function() use ($id){
+                return Genre::findOrFail($id);
+            }); 
+        }
+        catch(ModelNotFoundException $e)
+        {
+            abort(404);
+        }
+        
+        return response()->json($genre);
     }
 
     /**

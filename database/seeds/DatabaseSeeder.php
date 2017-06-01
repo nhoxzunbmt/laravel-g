@@ -335,10 +335,10 @@ class FightTableSeeder extends Seeder
             $ended_flag = $faker->boolean;
             if($ended_flag)
             {
-                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('- 2 days', '- 1 days');
-                $fightData['end_at'] = $endt_at = $faker->dateTimeInInterval('- 20 hours', '- 2 hours');
+                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('- 2 days', '- 1 days')->format('Y-m-d H:i:s');
+                $fightData['end_at'] = $endt_at = $faker->dateTimeInInterval('- 20 hours', '- 2 hours')->format('Y-m-d H:i:s');
             }else{
-                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('+ 1 days', '+ 5 days');
+                $fightData['start_at'] = $start_at = $faker->dateTimeInInterval('+ 1 days', '+ 5 days')->format('Y-m-d H:i:s');
             }
             
             //Generate canceled fight or not
@@ -396,7 +396,7 @@ class FightTableSeeder extends Seeder
                     if($ended_flag)
                     {
                         $fightUserData['confirm_end'] = true;
-                        $fightUserData['end_at'] = $faker->dateTimeInInterval('- 22 hours', '- 21 hours');
+                        $fightUserData['end_at'] = $faker->dateTimeInInterval('- 22 hours', '- 21 hours')->format('Y-m-d H:i:s');
                     }
 
                     $FightUser = FightUser::create($fightUserData)->toArray();

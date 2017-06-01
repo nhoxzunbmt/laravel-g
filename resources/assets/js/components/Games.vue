@@ -5,31 +5,24 @@
                 <h5 class="txt-dark">Games</h5>
         	</div>
         </div>
-        
         <div class="row">
         	<div class="col-md-12">
         		<div class="panel panel-default card-view">
         			<div class="panel-wrapper collapse in">
         				<div class="panel-body">
                             <div class="form-wrap">
-                                <form autocomplete="off" v-on:submit="filterByGenre">
+                                <form autocomplete="off" id="genre-form">
                                     <div class="row">
         								<div class="col-md-3">
-        									<div class="form-group">
-        										<label class="control-label mb-10">Select genre</label>
-                                                <select name="genre_id" class='' data-style="form-control btn-default btn-outline">
+        									<!--<div class="form-group">
+        										<label class="control-label mb-10">Select genre</label>-->
+                                                <select v-model="genre_id" name="genre_id" class='form-control' data-style="form-control btn-default btn-outline" id="genre_list">
                                                     <option v-for="genre in genres" v-bind:value="genre.id">
                                                         {{ genre.title }}
                                                     </option>
                                                 </select>
-        									</div>	
+        									<!--</div>-->	
         								</div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label class="control-label mb-10">&nbsp;</label><br />
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                            </div>
-                                        </div>
                                     </div>
                                 </form>
         					</div>
@@ -65,21 +58,20 @@
                 <nav>
         	        <ul class="pagination">
         	            <li v-if="pagination.current_page > 1">
-        	                <a href="#" aria-label="Previous"
-        	                   @click.prevent="changePage(pagination.current_page - 1)">
-        	                    <span aria-hidden="true">«</span>
-        	                </a>
+                            <router-link :to="getLink(pagination.current_page - 1)" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </router-link>                            
         	            </li>
-        	            <li v-for="page in pagesNumber"
+        	            <li v-for="page in pagesNumber" v-if="pagination.last_page > 1"
         	                v-bind:class="[ page == isActived ? 'active' : '']">
-        	                <a href="#"
-        	                   @click.prevent="changePage(page)">{{ page }}</a>
+                            <router-link :to="getLink(page)">
+                                {{ page }}
+                            </router-link>
         	            </li>
         	            <li v-if="pagination.current_page < pagination.last_page">
-        	                <a href="#" aria-label="Next"
-        	                   @click.prevent="changePage(pagination.current_page + 1)">
-        	                    <span aria-hidden="true">»</span>
-        	                </a>
+                            <router-link :to="getLink(pagination.current_page + 1)" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </router-link>
         	            </li>
         	        </ul>
         	    </nav>
@@ -88,21 +80,40 @@
     </div>    
 </template>
 
-<script>
+<script>    
     export default {
         mounted() {
-            this.getVueItems(this.pagination.current_page);
+            this.getGenres();
+            this.getVueItems();
+            
+            var self = this;
+            Vue.nextTick(function(){
+                $("#genre_list").select2({
+                    placeholder: "Select genre",
+                    allowClear: true
+                }).on("select2:select", function(e) { 
+                    self.search();
+                });
+            
+                $("#genre_list").on("select2:unselecting", function (e) {
+                    self.$router.push(self.$route.path);
+                });
+            });
         },
         data : function() {
             return {
                 games: [],
                 genres: [],
+                genre_id: this.$route.query.genre_id || '',
+                queryString: '',
                 pagination: {
                     total: 0, 
                     per_page: 2,
                     from: 1, 
                     to: 0,
-                    current_page: 1
+                    current_page: 1,
+                    next_page_url: null,
+                    prev_page_url: null
                 },
                 offset: 12,
             }
@@ -131,24 +142,73 @@
                 return pagesArray;
             }
         },
-        ready : function(){
-        	this.getVueItems(this.pagination.current_page);
-        },
         methods : {
-            getVueItems: function(page){
-                this.$http.get('/api/games?page='+page).then((response) => {
-                    this.$set(this, 'games', response.data.data.data);
-                    this.$set(this, 'pagination', response.data.pagination);
-                    this.$set(this, 'genres', response.data.genres);
+            getVueItems: function(){
+                this.$http.get('/api/games'+location.search).then((response) => {
+                    this.$set(this, 'games', response.data.data);
+                    
+                    delete response.data.data;
+                    this.pagination = response.data;
                 });
             },
-            changePage: function (page) {
-                this.pagination.current_page = page;
-                this.getVueItems(page);
+            getGenres: function()
+            {
+                if(this.$parent.genres.length==0)
+                {
+                    this.$http.get('/api/genres').then((response) => {
+                        this.$set(this, 'genres', response.data);
+                        
+                        //put genres in app.genres
+                        this.$parent.genres = this.genres;
+                    });
+                }else{
+                    this.genres = this.$parent.genres;
+                }  
             },
-            filterByGenre: function()
+            getLink(page){
+                let link = location.search;
+                link = this.$route.path + this.updateUrlParameter(link, "page", page);
+                return link;
+            },
+            search: function(event)
+            {
+                this.$router.push(this.$route.path+"?"+$("#genre-form").serialize());
+            },
+            updateUrlParameter(urlQueryString, key, value)
             {
                 
+                var newParam = key + '=' + value,
+                    params = '?' + newParam;
+            
+                var updateRegex = new RegExp('([\?&])' + key + '[^&]*');
+                var removeRegex = new RegExp('([\?&])' + key + '=[^&;]+[&;]?');
+                
+                if(urlQueryString)
+                {
+                    if( typeof value == 'undefined' || value == null || value == '' ) { // Remove param if value is empty
+            
+                        params = urlQueryString.replace(removeRegex, "$1");
+                        params = params.replace( /[&;]$/, "" );
+            
+                    } else if (urlQueryString.match(updateRegex) !== null) { // If param exists already, update it
+            
+                        params = urlQueryString.replace(updateRegex, "$1" + newParam);
+            
+                    } else { // Otherwise, add it to end of query string
+                        
+                        params = urlQueryString + '&' + newParam;
+                    }
+                }else{
+                    params = '?' + newParam;
+                }
+                
+                
+                return params;
+            }
+        },
+        watch: {
+            '$route.query'(newPage, oldPage) {
+                this.getVueItems();
             }
         }
     }
