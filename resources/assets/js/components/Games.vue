@@ -80,12 +80,15 @@
     </div>    
 </template>
 
-<script>    
+<script> 
+    import swal from 'sweetalert2';
+       
     export default {
         mounted() {
             this.getGenres();
             this.getVueItems();
             
+            //Select2 for genres
             var self = this;
             Vue.nextTick(function(){
                 $("#genre_list").select2({
@@ -99,6 +102,20 @@
                     self.$router.push(self.$route.path);
                 });
             });
+            
+            //First on site
+            let wasOnGames = localStorage.getItem('was_on_games')
+            if (wasOnGames === null) 
+            {
+                swal({
+                    title: 'First time on Games?',
+                    html: '<p>You can search your favourite games using genres! <br />On each detail page you will find streams from tweach. <br />We hope you\'ll enjoy it!</p>',
+                    type: 'info',
+                    showCancelButton: false
+                });
+                
+                localStorage.setItem('was_on_games', true)
+            }
         },
         data : function() {
             return {

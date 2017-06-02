@@ -9,8 +9,8 @@
 							<div class="col-md-8">
                                 <iframe
                                     :src="'http://player.twitch.tv/?channel='+stream_name+'&autoplay=false'"
-                                    height="720"
-                                    width="1280"
+                                    height="360"
+                                    width="640"
                                     frameborder="0"
                                     scrolling="no"
                                     allowfullscreen="true">
@@ -20,9 +20,9 @@
                                 <iframe frameborder="0" 
                                         scrolling="no" 
                                         id="chat_embed" 
-                                        :src="'http://www.twitch.tv/'+stream_name+'/chat'" 
-                                        height="500" 
-                                        width="350">
+                                        :src="'http://www.twitch.tv/'+stream_name+'/chat'"
+                                        height="360"
+                                        width="300">
                                 </iframe>
                             </div>
 						</div>

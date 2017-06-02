@@ -22,7 +22,8 @@ export default new VueRouter({
             component: Home,
             meta: {
                 title: 'Home Page'
-            }
+            },
+            redirect: { name: 'games' }
         },
         {
             path: '/register',

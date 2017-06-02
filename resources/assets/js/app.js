@@ -9,6 +9,7 @@ import VueRouter  from 'vue-router'
 import router     from './router'
 import Vue        from 'vue'
 import VueResource from 'vue-resource';
+import swal from 'sweetalert2'
 
 import { HasError4, AlertError, AlertSuccess } from 'vform';
 Vue.component(HasError4.name, HasError4)
@@ -17,6 +18,7 @@ Vue.component(AlertSuccess.name, AlertSuccess)
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
+Vue.use(swal)
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementsByName('csrf-token')[0].getAttribute('content');
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token');

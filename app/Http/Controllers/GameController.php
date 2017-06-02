@@ -11,7 +11,6 @@ use App\Models\Game;
 use Storage;
 use Image;
 use File;
-//use Request;
 use Cache;
 
 class GameController extends Controller
@@ -24,13 +23,12 @@ class GameController extends Controller
     public function index(Request $request)
     {
         $id = Str::slug(implode($request->all()));
-        /*$items = Cache::remember('games' . $id, 60, function(){
-            return Game::search(Request::all())->active()->orderBy('id', 'asc')->paginate(12)->appends($request);
-        });*/  
-        
-        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6)->appends($request->except('page'));        
+        /*$items = Cache::remember('games'.$id, 60, function() use ($request){
+            return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
+        });*/
+
+        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6)->appends('page');        
         return response()->json($items);
-        //return view('game.index')->with(compact('games', 'genres'));
     }
 
     /**

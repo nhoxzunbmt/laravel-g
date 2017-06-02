@@ -376,12 +376,12 @@ $(window).on("resize", function () {
 	boxLayout();
 	chatApp();
     
-    $iframes.each( function() {
+    /*$iframes.each( function() {
         // Get the parent container&#x27;s width
         var width = $( this ).parent().width()-10;
         $( this ).width( width )
             .height( width * $( this ).data( "ratio" ) );
-    });
+    });*/
     
 }).resize();
 /***** Resize function end *****/
