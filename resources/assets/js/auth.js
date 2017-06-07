@@ -49,7 +49,7 @@ export default {
 
             this.user.authenticated = true
             this.user.profile = response.data.data
-
+            
             router.push({
                 name: 'home'
             })

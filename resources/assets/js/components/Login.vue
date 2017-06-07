@@ -31,7 +31,7 @@
                                         </div>
                                         <div class="form-group row">
                                             <div class="col-xs-6 col-sm-6">
-                                                <button type="submit" class="btn btn-primary">Login in</button>
+                                                <button type="submit" class="btn btn-primary">Login</button>
                                             </div>
                                             <div class="col-xs-6 col-sm-6 text-right mt-10">
                                                 <small>

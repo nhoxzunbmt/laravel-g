@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use JWTAuth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Cache;
 
 class AuthController extends Controller
 {
@@ -40,6 +41,10 @@ class AuthController extends Controller
                 'error' => 'Could not create token',
             ], 500);
         }
+        
+        //Add user online status
+        $expiresAt = Carbon::now()->addMinutes(5);
+        Cache::put('user-is-online-' . $request->user()->id, true, $expiresAt);
 
         $data = User::getApiUserData($request->user(), $token);
         return response()->json($data);

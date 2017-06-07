@@ -49,8 +49,11 @@ Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
 //});
 
 Route::group(['middleware' => 'jwt.auth'], function () {
+    
     Route::get('/user', function (Request $request) {
         $data = App\User::getApiUserData($request->user());
         return response()->json($data);
     });
+    
+    Route::post('/user', 'UserController@store');
 });

@@ -25,9 +25,10 @@
 import auth from '../auth.js'
 import Navigation from './Shared/Navigation.vue';
 import Sidebar from './Shared/Sidebar.vue';
+import Profile from './Personal/Profile.vue';
 
 export default {
-    components: { Navigation, Sidebar },
+    components: { Navigation, Sidebar, Profile },
     created() {
         this.getPopularGames();
     },

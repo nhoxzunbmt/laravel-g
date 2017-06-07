@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Hootlex\Friendships\Traits\Friendable;
+use Cache;
   
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract 
 {
@@ -159,6 +160,11 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('type', '=', 'commentator');
     }    
     
+    public function isOnline()
+    {
+        return Cache::has('user-is-online-' . $this->id);
+    }
+    
     public static function createBySocialProvider($providerUser)
     {
         $email = $providerUser->getEmail();
@@ -194,6 +200,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $data['name'] = $user->name;
         $data['avatar'] = $user->avatar;
         $data['type'] = $user->type;
+        $data['online'] = $user->isOnline();
+        
+        $data = $user;
         
         if($token)
             $meta['token'] = $token;

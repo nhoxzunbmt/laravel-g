@@ -78,6 +78,15 @@ export default new VueRouter({
             name: 'stream',
             component: StreamDetail
         },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: require('./components/Personal/Profile.vue'),
+            meta: {
+                title: 'Profile',
+                requiresAuth: true
+            }
+        },
         { 
             path: '*',
             component: NotFoundComponent 

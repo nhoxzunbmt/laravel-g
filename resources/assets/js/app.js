@@ -21,7 +21,7 @@ Vue.use(VueResource);
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementsByName('csrf-token')[0].getAttribute('content');
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token');
-Vue.http.options.root = 'http://games.dev';
+//Vue.http.options.root = 'http://games.dev';
 
 /**
 **  Filters
@@ -57,9 +57,7 @@ import App from './components/App.vue';
 import Home from './components/Home.vue';
 import Register from './components/Register.vue';
 import Login from './components/Login.vue';
-
-// lazy load components
-const Games = require('./components/Games.vue')
+import Games from './components/Games.vue';
 
 //Meta change
 router.beforeEach((to, from, next) => {
@@ -88,8 +86,6 @@ router.beforeEach((to, from, next) => {
 });
 
 // Create and mount root instance.
-// Make sure to inject the router.
-// Route components will be rendered inside <router-view>.
 new Vue({
     router,
     components : {
