@@ -25,7 +25,7 @@
     		<ul class="nav navbar-right top-nav pull-right">
             
                 <li v-if="!this.$parent.auth.user.authenticated">
-                    <router-link :to="{ name: 'signin' }">Login</router-link>
+                    <router-link :to="{ name: 'login' }">Login</router-link>
                 </li>
                 <li v-if="!this.$parent.auth.user.authenticated">
                     <router-link :to="{ name: 'register' }">Register</router-link>

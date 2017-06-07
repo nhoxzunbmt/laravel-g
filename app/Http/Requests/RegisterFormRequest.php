@@ -15,6 +15,20 @@ class RegisterFormRequest extends FormRequest
     {
         return true;
     }
+    
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'A name is required',
+            'email.required'  => 'A email is required',
+            'password.required'  => 'A email is required'
+        ];
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -26,7 +40,7 @@ class RegisterFormRequest extends FormRequest
         return [
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required',
+            'password' => 'required|min:6',
         ];
     }
 }

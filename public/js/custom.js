@@ -18,29 +18,6 @@ $(document).ready(function(){
 });
 /*****Ready function end*****/
 
-/*****Load function start*****/
-$(window).load(function(){
-	$(".preloader-it").delay(500).fadeOut("slow");
-	/*Progress Bar Animation*/
-	var progressAnim = $('.progress-anim');
-	if( progressAnim.length > 0 ){
-		for(var i = 0; i < progressAnim.length; i++){
-			var $this = $(progressAnim[i]);
-			$this.waypoint(function() {
-			var progressBar = $(".progress-anim .progress-bar");
-			for(var i = 0; i < progressBar.length; i++){
-				$this = $(progressBar[i]);
-				$this.css("width", $this.attr("aria-valuenow") + "%");
-			}
-			}, {
-			  triggerOnce: true,
-			  offset: 'bottom-in-view'
-			});
-		}
-	}
-});
-/*****Load function* end*****/
-
 /***** Full height function start *****/
 var setHeightWidth = function () {
 	var height = $(window).height();
@@ -160,6 +137,13 @@ var doodle = function(){
 	});
 	
 	$(document).on('show.bs.dropdown', '.nav.navbar-right.top-nav .dropdown', function (e) {
+        alert(2);
+		$wrapper.removeClass('open-right-sidebar open-setting-panel');
+		return;
+	});
+    
+    $('show.bs.dropdown', '.nav.navbar-right.top-nav .dropdown').on('click', function (e) {
+        alert(1);
 		$wrapper.removeClass('open-right-sidebar open-setting-panel');
 		return;
 	});

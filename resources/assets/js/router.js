@@ -9,8 +9,11 @@ const NotFoundComponent = require('./pages/errors/404.vue')
 import App from './components/App.vue';
 import Home from './components/Home.vue';
 import Register from './components/Register.vue';
-import Signin from './components/Signin.vue';
+import Login from './components/Login.vue';
+import SocialCallback from './components/SocialCallback.vue';
+
 import StreamDetail from './components/StreamDetail.vue';
+
 
 export default new VueRouter({
     mode: 'history',
@@ -34,12 +37,27 @@ export default new VueRouter({
             }
         },
         {
-            path: '/signin',
-            name: 'signin',
-            component: Signin,
+            path: '/login',
+            name: 'login',
+            component: Login,
             meta: {
-                title: 'Sigin Page'
+                title: 'Login Page'
             }
+        },
+        {
+            path: '/social/:socialId/callback',
+            name: 'social.callback',
+            component: SocialCallback
+        },
+        { 
+            path: '/password/email', 
+            name: 'password.request', 
+            component: require('./components/Password/Email.vue')
+        },
+        { 
+            path: '/password/reset/:token', 
+            name: 'password.reset', 
+            component: require('./components/Password/Reset.vue') 
         },
         {
             path: '/games',

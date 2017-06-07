@@ -4,3 +4,7 @@
 .fixed-sidebar-left .right-nav-text {
     vertical-align: top;
 }
+.button-list .btn{
+    margin-right: 7px;
+    margin-left: 7px;
+}

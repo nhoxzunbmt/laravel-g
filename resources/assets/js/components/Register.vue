@@ -12,6 +12,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
+                            <socials></socials>
                     		<div class="panel-wrapper collapse in">
                     			<div class="panel-body">
                                     <div class="alert alert-danger" v-if="error && !success">
@@ -29,14 +30,14 @@
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.email }">
                                             <label for="email">E-mail</label>
                                             <input type="email" id="email" class="form-control" v-model="email" required>
-                                            <span class="help-block" v-if="error && response.email">{{ response.email }}</span>
+                                            <span class="help-block" v-if="error && response.email">{{ response.email[0] }}</span>
                                         </div>
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.password }">
                                             <label for="password">Password</label>
                                             <input type="password" id="password" class="form-control" v-model="password" required>
-                                            <span class="help-block" v-if="error && response.password">{{ response.password }}</span>
+                                            <span class="help-block" v-if="error && response.password">{{ response.password[0] }}</span>
                                         </div>
-                                        <button type="submit" class="btn btn-default">Submit</button>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
                                     </form>
                                 </div>
                             </div>
@@ -51,8 +52,10 @@
 
 <script>
 import auth from '../auth.js';
+import Socials from './Shared/Socials.vue';
 
 export default {
+    components: { Socials },
     data() {
         return {
             name: null,
@@ -66,7 +69,7 @@ export default {
     methods: {
         register(event) {
             event.preventDefault()
-            auth.register(this, this.name, this.email, this.password)
+            auth.register(this)
         }
     }
 }

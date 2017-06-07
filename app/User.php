@@ -166,23 +166,41 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         {
             $email = self::generateEmail($providerUser);
         }
-        
-        return self::create([
+                              
+        $data = [
             'email' => $email,
             'nickname' => $providerUser->getNickname(),
             'name' => $providerUser->getName() ? $providerUser->getName() : $providerUser->getNickname(),
-            'password' => self::generatePassword()
-        ]);
+            'password' => str_random(10),
+            'avatar' => $providerUser->getAvatar()            
+        ];                               
+        
+        return self::create($data);
     }
     
     public static function generateEmail($providerUser)
     {
-        $email = $providerUser->getNickname()."@games.dev";
+        $site = env('APP_URL', "games.dev");
+        $site = str_replace(["http://", "https://"], "", $site);
+        $email = $providerUser->getNickname()."@".$site;
         return $email;
     }
     
-    public static function generatePassword()
+    public static function getApiUserData($user, $token = false)
     {
-        return str_random(10);
+        $data = [];
+        $meta = [];
+
+        $data['name'] = $user->name;
+        $data['avatar'] = $user->avatar;
+        $data['type'] = $user->type;
+        
+        if($token)
+            $meta['token'] = $token;
+        
+        return [
+            'data' => $data,
+            'meta' => $meta
+        ];
     }
 }

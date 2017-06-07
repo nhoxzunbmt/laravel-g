@@ -168,7 +168,7 @@ return [
          */
         Laravel\Tinker\TinkerServiceProvider::class,
         TCG\Voyager\VoyagerServiceProvider::class,
-        Dingo\Api\Provider\LaravelServiceProvider::class,
+        //Dingo\Api\Provider\LaravelServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         Cmgmyr\Messenger\MessengerServiceProvider::class,
         Hootlex\Friendships\FriendshipsServiceProvider::class,

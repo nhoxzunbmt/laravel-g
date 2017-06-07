@@ -9,16 +9,15 @@ import VueRouter  from 'vue-router'
 import router     from './router'
 import Vue        from 'vue'
 import VueResource from 'vue-resource';
-import swal from 'sweetalert2'
-
 import { HasError4, AlertError, AlertSuccess } from 'vform';
+export default Vue;
+
 Vue.component(HasError4.name, HasError4)
 Vue.component(AlertError.name, AlertError)
 Vue.component(AlertSuccess.name, AlertSuccess)
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
-Vue.use(swal)
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementsByName('csrf-token')[0].getAttribute('content');
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token');
@@ -34,15 +33,30 @@ var truncateFilter = function(text, length, clamp){
     var content = node.textContent;
     return content.length > length ? content.slice(0, length) + clamp : content;
 };
-
 Vue.filter('truncate', truncateFilter);
 
-export default Vue;
+window.Event = new class {
+    
+    constructor() {
+        this.vue = new Vue()
+    }
+    
+    fire(event, data = null) {
+        this.vue.$emit(event, data)
+    }
+    
+    listen(event, callback) {
+        this.vue.$on(event, callback)
+    }
+}
+
+//Event.fire('applied')
+//Event.listen('applied', () => alert('Handling it')))
 
 import App from './components/App.vue';
 import Home from './components/Home.vue';
 import Register from './components/Register.vue';
-import Signin from './components/Signin.vue';
+import Login from './components/Login.vue';
 
 // lazy load components
 const Games = require('./components/Games.vue')
@@ -62,7 +76,7 @@ router.beforeEach((to, from, next) => {
         let token = localStorage.getItem('id_token')
         if (token === null) {
             next({
-                path: '/signin',
+                path: '/login',
                 query: { redirect: to.fullPath }
             })
         } else {

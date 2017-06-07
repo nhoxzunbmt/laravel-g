@@ -53,8 +53,8 @@ export default {
     },
     mounted: function () {
         this.$nextTick(function () {
-            auth.check()
-        })
+            auth.check();
+        });
     }
 }
 </script>

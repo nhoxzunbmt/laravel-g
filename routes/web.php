@@ -18,7 +18,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 //social auth
 Route::get('/social/{provider}', 'SocialController@login')->name('social.auth');
-Route::get('/social/{provider}/callback', 'SocialController@callback');
+//Route::get('/social/{provider}/callback', 'SocialController@callback');
 
 Route::get('{path}', function () {
     return view('index');
@@ -46,10 +46,10 @@ Route::get('/games/search/{q}', 'GameController@search');*/
 //Route::resource('fights','FightController');
 
 //Api routes
-$api = app('Dingo\Api\Routing\Router');
+/*$api = app('Dingo\Api\Routing\Router');
 $api->version('v1', function ($api) {
     $api->get('users/{id}', 'App\Http\Controllers\UserController@show');
-});
+});*/
 
 //Route::get('/genre/import', 'GanreController@importByGiantbomb');
 //Route::get('/game/import', 'GameController@importByTwitchGiantbomb');

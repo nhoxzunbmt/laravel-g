@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\UserSocialAccount;
 use App\User;
+use Illuminate\Http\Request;
 
 class SocialAccountService
 {
@@ -13,8 +14,7 @@ class SocialAccountService
 
         $account = UserSocialAccount::whereProvider($providerName)
                         ->whereProviderUserId($providerUser->getId())
-                            ->first();
-
+                            ->first();              
         if ($account) 
         {
             return $account->user;

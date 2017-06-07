@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterFormRequest;
+use App\Http\Requests\LoginFormRequest;
 use Carbon\Carbon;
 use JWTAuth;
 use Illuminate\Http\Request;
@@ -21,37 +22,26 @@ class AuthController extends Controller
         ]);
     }
     
-    public function signin(Request $request)
+    public function signin(LoginFormRequest $request)
     {
         // grab credentials from the request
         $credentials = $request->only('email', 'password');
         
         try {
-            $token = JWTAuth::attempt($credentials, [
+            if(! $token = JWTAuth::attempt($credentials, [
                 'exp' => Carbon::now()->addWeek()->timestamp,
-            ]);
+            ])){
+                return response()->json([
+                    'error' => 'Invalid credentials'
+                ], 401);
+            }
         } catch (JWTException $e) {
             return response()->json([
-                'error' => 'Could not authenticate',
+                'error' => 'Could not create token',
             ], 500);
         }
 
-        if (!$token) {
-            return response()->json([
-                'error' => 'Could not authenticate',
-            ], 401);
-        } else {
-            $data = [];
-            $meta = [];
-
-            $data['name'] = $request->user()->name;
-            $data['avatar'] = $request->user()->avatar;
-            $meta['token'] = $token;
-
-            return response()->json([
-                'data' => $data,
-                'meta' => $meta
-            ]);
-        }
+        $data = User::getApiUserData($request->user(), $token);
+        return response()->json($data);
     }
 }
