@@ -120,6 +120,7 @@
     export default {
         mounted() {
             this.getGame(this.$route.params.gameId);
+            this.getStreams(this.$route.params.gameId);
         },
         data : function() {
             return {
@@ -132,6 +133,8 @@
                 this.$http.get('/api/games/' + id).then((response) => {
                     this.$set(this, 'game', response.data);
                 });
+            },
+            getStreams: function(id){
                 this.$http.get('/api/twitch/search/' + id).then((response) => {
                     this.$set(this, 'streams', response.data);
                 });
@@ -139,6 +142,7 @@
         },
         watch: {
             '$route.params.gameId'(newId, oldId) {
+                this.getStreams(newId)
                 this.getGame(newId)
             }
         }

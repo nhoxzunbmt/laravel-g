@@ -56,6 +56,10 @@ import Socials from './Shared/Socials.vue';
 
 export default {
     components: { Socials },
+    metaInfo: {
+        title: 'Register Page',
+        titleTemplate: null
+    },
     data() {
         return {
             name: null,

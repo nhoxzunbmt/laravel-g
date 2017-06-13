@@ -55,5 +55,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         return response()->json($data);
     });
     
-    Route::post('/user', 'UserController@store');
+    Route::post('/user', 'UserController@update');
+    Route::post('/user/avatar', 'UserController@avatar');
+    Route::post('/user/overlay', 'UserController@overlay');
 });

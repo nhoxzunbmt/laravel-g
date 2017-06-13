@@ -6,18 +6,15 @@ require('./bootstrap');
  * the application, or feel free to tweak this setup for your needs.
  */
 import VueRouter  from 'vue-router'
+import Meta from 'vue-meta'
 import router     from './router'
 import Vue        from 'vue'
-import VueResource from 'vue-resource';
-import { HasError4, AlertError, AlertSuccess } from 'vform';
+import VueResource from 'vue-resource'
 export default Vue;
-
-Vue.component(HasError4.name, HasError4)
-Vue.component(AlertError.name, AlertError)
-Vue.component(AlertSuccess.name, AlertSuccess)
 
 Vue.use(VueRouter);
 Vue.use(VueResource);
+Vue.use(Meta)
 
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.getElementsByName('csrf-token')[0].getAttribute('content');
 Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token');
@@ -61,18 +58,10 @@ import Games from './components/Games.vue';
 
 //Meta change
 router.beforeEach((to, from, next) => {
-    
-    if(to.meta.title!==undefined)
-    {
-        document.title = to.meta.title;
-    }
-    
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
+
     if (to.matched.some(record => record.meta.requiresAuth)) 
     {
-        let token = localStorage.getItem('id_token')
-        if (token === null) {
+        if (localStorage.getItem('id_token') === null) {
             next({
                 path: '/login',
                 query: { redirect: to.fullPath }

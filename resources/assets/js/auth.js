@@ -11,17 +11,24 @@ export default {
         let token = localStorage.getItem('id_token')
         if (token !== null) {
             Vue.http.get(
-                'api/user?token=' + token
+                '/api/user?token=' + token
             ).then(response => {
                 this.user.authenticated = true
                 this.user.profile = response.data.data
-            })
+            }, response => {
+                localStorage.removeItem('id_token')
+                router.push({
+                    name: 'login'
+                });
+            }).catch(function(error){
+                console.log('REEEJECTED!');
+            });
         }
     },
     register(context) 
     {
         Vue.http.post(
-            'api/register',
+            '/api/register',
             {
                 name: context.name,
                 email: context.email,
@@ -37,7 +44,7 @@ export default {
     login(context) 
     {
         Vue.http.post(
-            'api/login',
+            '/api/login',
             {
                 email: context.email,
                 password: context.password
@@ -61,7 +68,7 @@ export default {
     forgotPassword(context) 
     {
         Vue.http.post(
-            'api/password/email',
+            '/api/password/email',
             {
                 email: context.email
             }
@@ -77,7 +84,7 @@ export default {
     resetPassword(context)
     {
         Vue.http.post(
-            'api/password/reset',
+            '/api/password/reset',
             {
                 token: context.token,
                 email: context.email,
@@ -97,7 +104,7 @@ export default {
     },
     socialAuth(context)
     {
-        Vue.http.get('api'+context.$route.fullPath).then(response => {
+        Vue.http.get('/api'+context.$route.fullPath).then(response => {
             context.error = false
             localStorage.setItem('id_token', response.data.meta.token)
             Vue.http.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('id_token')

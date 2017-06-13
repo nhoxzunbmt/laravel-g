@@ -57,6 +57,10 @@ import auth from '../auth.js';
 
 export default {
     components: { Socials },
+    metaInfo: {
+      title: 'Login Page',
+      titleTemplate: null
+    },
     data() {
             return {
                 email: null,

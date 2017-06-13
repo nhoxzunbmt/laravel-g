@@ -27,7 +27,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'nickname'
+        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type'
     ];
 
     /**
@@ -203,6 +203,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $data['online'] = $user->isOnline();
         
         $data = $user;
+        if($data->avatar)
+            $data->avatar = asset('storage/'.$data->avatar);
+        if($data->overlay)
+            $data->overlay = asset('storage/'.$data->overlay);
         
         if($token)
             $meta['token'] = $token;

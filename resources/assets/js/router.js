@@ -23,9 +23,6 @@ export default new VueRouter({
             path: '/',
             name: 'home',
             component: Home,
-            meta: {
-                title: 'Home Page'
-            },
             redirect: { name: 'games' }
         },
         {
@@ -39,10 +36,7 @@ export default new VueRouter({
         {
             path: '/login',
             name: 'login',
-            component: Login,
-            meta: {
-                title: 'Login Page'
-            }
+            component: Login
         },
         {
             path: '/social/:socialId/callback',
@@ -64,7 +58,6 @@ export default new VueRouter({
             name: 'games',
             component: Games,
             meta: {
-                title: 'Games list',
                 //requiresAuth: true
             }
         },
@@ -83,9 +76,13 @@ export default new VueRouter({
             name: 'profile',
             component: require('./components/Personal/Profile.vue'),
             meta: {
-                title: 'Profile',
                 requiresAuth: true
             }
+        },
+        {
+            path: '/faq',
+            name: 'fqa',
+            component: require('./components/Faq.vue')
         },
         { 
             path: '*',

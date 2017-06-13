@@ -56,6 +56,11 @@ export default {
         this.$nextTick(function () {
             auth.check();
         });
+        
+        Event.listen('changeAvatar', (avatar) => {
+            console.log('App (avatar changed listener) - '+avatar);
+            this.auth.user.profile.avatar = avatar;
+        });
     }
 }
 </script>

@@ -84,6 +84,10 @@
     import swal from 'sweetalert2';
        
     export default {
+        metaInfo: {
+            title: 'Games',
+            titleTemplate: null
+        },
         mounted() {
             this.getGenres();
             this.getVueItems();
