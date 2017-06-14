@@ -1,66 +1,56 @@
 <template>
-    <div class="wrapper theme-5-active pimary-color-blue">
-        <navigation></navigation>
-        <sidebar></sidebar>
-        <!-- Main Content -->
-		<div class="page-wrapper">
-            <div class="container-fluid">
-                <router-view></router-view>
-            </div>
-			
-			<!-- Footer -->
-			<footer class="footer container-fluid pl-30 pr-30">
-				<div class="row">
-					<div class="col-sm-12">
-						<p>2017 &copy; {{siteName}}.</p>
-					</div>
-				</div>
-			</footer>
-			<!-- /Footer -->
-		</div>
-    </div>
+  <div id="app">
+    <loading ref="loading"></loading>
+
+    <transition name="page" mode="out-in">
+      <component v-if="layout" :is="layout"></component>
+    </transition>
+  </div>
 </template>
 
 <script>
-import auth from '../auth.js'
-import Navigation from './Shared/Navigation.vue';
-import Sidebar from './Shared/Sidebar.vue';
-import Profile from './Personal/Profile.vue';
+const layouts = {
+  _app: require('../layouts/app.vue'),
+  _default: require('../layouts/app.vue')//require('../layouts/default.vue')
+}
 
 export default {
-    components: { Navigation, Sidebar, Profile },
-    created() {
-        this.getPopularGames();
-    },
-    data() {
-        return {
-            auth: auth,
-            siteName: "ToPlay.tv",
-            logo: '/images/logo.png',
-            popularGames : [],
-            genres: []
-        }
-    },
-    methods: {
-        signout() {
-            auth.signout()
-        },
-        getPopularGames()
-        {
-            this.$http.get('/api/games/popular').then((response) => {
-                this.$set(this, 'popularGames', response.data )
-            });
-        }
-    },
-    mounted: function () {
-        this.$nextTick(function () {
-            auth.check();
-        });
-        
-        Event.listen('changeAvatar', (avatar) => {
-            console.log('App (avatar changed listener) - '+avatar);
-            this.auth.user.profile.avatar = avatar;
-        });
+  name: 'App',
+
+  components: {
+    Loading: require('./Loading.vue')
+  },
+
+  metaInfo: {
+    title: 'Laravel'
+  },
+
+  data: () => ({
+    layout: null,
+    defaultLayout: 'app'
+  }),
+
+  created () {
+    this.$root.$loading = this
+  },
+
+  mounted () {
+    this.$loading = this.$refs.loading
+  },
+
+  methods: {
+    /**
+     * Set the application layout.
+     *
+     * @param {String} layout
+     */
+    setLayout (layout) {
+      if (!layout || !layouts['_' + layout]) {
+        layout = this.defaultLayout
+      }
+
+      this.layout = layouts['_' + layout]
     }
+  }
 }
 </script>

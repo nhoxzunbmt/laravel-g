@@ -13,11 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
-
 /**
  *Genres
  */
@@ -40,13 +35,14 @@ Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
 /**
  * Login & register
  */
-//Route::group(['middleware' => 'guest:api'], function () {
+Route::group(['middleware' => 'guest:api'], function () {
+    
     Route::post('/register', 'Auth\AuthController@register');
     Route::post('/login', 'Auth\AuthController@signin');
     Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'Auth\ResetPasswordController@postReset');
     Route::get('/social/{provider}/callback', 'SocialController@callback');
-//});
+});
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     
@@ -58,4 +54,5 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user', 'UserController@update');
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
+    Route::post('logout', 'Auth\AuthController@logout');
 });

@@ -1,14 +1,16 @@
 <template>
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <div class="card">
-        <div class="card-header">Dashboard</div>
-        <div class="card-block">
-          You are logged in!
+    <div>
+        <div class="row heading-bg">
+        	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h5 class="txt-dark">Beta {{this.$parent.siteName}}</h5>
+        	</div>
         </div>
-      </div>
+        <div class="jumbotron">
+            <h1>Site is under construction</h1>
+            <p class="lead">Developed using vue-2, npm &</p>
+            <p class="lead">Laravel, voyager, caching and other modern features.</p>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>

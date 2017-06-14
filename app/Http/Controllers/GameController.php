@@ -27,7 +27,7 @@ class GameController extends Controller
             return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
         });*/
 
-        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6)->appends('page');        
+        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(12)->appends('page');        
         return response()->json($items);
     }
 

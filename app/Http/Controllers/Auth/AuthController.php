@@ -25,7 +25,6 @@ class AuthController extends Controller
     
     public function signin(LoginFormRequest $request)
     {
-        // grab credentials from the request
         $credentials = $request->only('email', 'password');
         
         try {
@@ -48,5 +47,16 @@ class AuthController extends Controller
 
         $data = User::getApiUserData($request->user(), $token);
         return response()->json($data);
+    }
+    
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        return response()->json(null, 204);
     }
 }

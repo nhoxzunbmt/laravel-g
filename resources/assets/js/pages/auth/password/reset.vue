@@ -1,82 +1,90 @@
 <template>
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <div class="card">
-        <div class="card-header">Reset Password</div>
-        <div class="card-block">
-          <form @submit.prevent="reset" @keydown="form.errors.clear($event.target.name)">
-            <div v-if="status" class="alert alert-success">
-              {{ status }}
+<div class="table-struct full-width">
+	<div class="table-cell vertical-align-middle auth-form-wrap">
+		<div class="auth-form  ml-auto mr-auto no-float">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="panel panel-default card-view">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h6 class="panel-title txt-dark">Reset Password</h6>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div v-if="status" class="alert alert-success">
+                                {{ status }}
+                            </div>
+                    		<div class="panel-wrapper collapse in">
+                    			<div class="panel-body">
+                                    <form autocomplete="off" v-on:submit="resetPassword">
+                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.email }">
+                                            <label for="email">E-mail</label>
+                                            <input type="email" id="email" class="form-control" v-model="email" required>
+                                            <span class="help-block" v-if="error && response.email">{{ response.email }}</span>
+                                        </div>
+                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.password }">
+                                            <label for="password">Password</label>
+                                            <input type="password" id="password" class="form-control" v-model="password" required>
+                                            <span class="help-block" v-if="error && response.password">{{ response.password[0] }}</span>
+                                        </div>
+                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.password }">
+                                            <label for="password_confirmation">Confirm Password</label>
+                                            <input type="password" id="password_confirmation" class="form-control" v-model="password_confirmation" required>
+                                            <span class="help-block" v-if="error && response.password_confirmation">{{ response.password_confirmation[0] }}</span>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Reset Password</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!--card-view-->
+                </div>
             </div>
-
-            <!-- Email -->
-            <div class="form-group row" :class="{ 'has-danger': form.errors.has('email') }">
-              <label for="email" class="col-sm-3 col-form-label text-sm-right">Email</label>
-              <div class="col-sm-7">
-                <input v-model="form.email" type="text" name="email" id="email" class="form-control">
-                <has-error :form="form" field="email"></has-error>
-              </div>
-            </div>
-
-            <!-- Password -->
-            <div class="form-group row" :class="{ 'has-danger': form.errors.has('password') }">
-              <label for="password" class="col-sm-3 col-form-label text-sm-right">Password</label>
-              <div class="col-sm-7">
-                <input v-model="form.password" type="password" name="password" id="password" class="form-control">
-                <has-error :form="form" field="password"></has-error>
-              </div>
-            </div>
-
-            <!-- Password Confirmation -->
-            <div class="form-group row">
-              <label for="password_confirmation" class="col-sm-3 col-form-label text-sm-right">Confirm Password</label>
-              <div class="col-sm-7">
-                <input v-model="form.password_confirmation" type="password" name="password_confirmation" id="password_confirmation" class="form-control">
-              </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="form-group row">
-              <div class="col-sm-9 offset-sm-3">
-                <button :disabled="form.busy" type="submit" class="btn btn-primary">
-                  <icon v-if="form.busy" name="spinner"></icon>
-                  Reset Password
-                </button>
-              </div>
-            </div>
-          </form>
         </div>
-      </div>
     </div>
-  </div>
+</div>
 </template>
 
 <script>
-import Form from 'vform'
+import axios from 'axios'
 
 export default {
-  metaInfo: { titleTemplate: 'Reset Password | %s' },
-
-  data: () => ({
-    status: null,
-    form: new Form({
-      token: '',
-      email: '',
-      password: '',
-      password_confirmation: ''
-    })
-  }),
-
-  methods: {
-    reset () {
-      this.form.token = this.$route.params.token
-
-      this.form.post('/api/password/reset')
-        .then(({ data: { status }}) => {
-          this.form.reset()
-          this.status = status
-        })
+    metaInfo: { titleTemplate: 'Reset Password | %s' },
+    data() {
+        return {
+            token: null,
+            email: null,
+            password: null,
+            password_confirmation: null,
+            success: false,
+            error: false,
+            response: null,
+            status: null
+        }
+    },
+    methods: {
+        resetPassword(event) {
+            event.preventDefault()
+            
+            this.token = this.$route.params.token
+            axios.post(
+                '/api/password/reset',
+                {
+                    token: this.token,
+                    email: this.email,
+                    password: this.password,
+                    password_confirmation: this.password_confirmation
+                }
+            ).then(response => {
+                this.success = true
+                this.error = false
+                this.status = response.data.status
+            }).catch(error => {
+                this.response = error.response.data
+                this.error = true
+            });
+        }
     }
-  }
 }
 </script>
