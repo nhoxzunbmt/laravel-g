@@ -25,10 +25,6 @@
 import { mapGetters } from 'vuex'
 import api from '../api'
 import axios from 'axios'
-import Navigation from '../components/Navigation.vue';
-import Sidebar from '../components/Sidebar.vue';
-import Games from '../pages/games/index.vue';
-/*import Profile from './Personal/Profile.vue';*/
 
 export default {
     computed: mapGetters({
@@ -38,7 +34,6 @@ export default {
     created () {
         this.getPopularGames();
     },
-    components: { Navigation, Sidebar, Games},
     data() {
         return {
             siteName: "ToPlay.tv",

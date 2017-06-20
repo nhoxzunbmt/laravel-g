@@ -20,10 +20,22 @@
 			<i class="zmdi zmdi-more"></i>
 		</li>
         <li>
-            <router-link :to="{ name: 'games' }"><div class="pull-left"><i class="zmdi zmdi-book mr-20"></i><span class="right-nav-text">Games</span></div><div class="clearfix"></div></router-link>
+            <router-link :to="{ name: 'games' }"><div class="pull-left"><i class="fa fa-gamepad mr-20" aria-hidden="true"></i><span class="right-nav-text">Games</span></div><div class="clearfix"></div></router-link>
         </li>
         <li>
-            <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-book mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
+            <router-link :to="{ name: 'teams' }"><div class="pull-left"><i class="fa fa-users mr-20" aria-hidden="true"></i><span class="right-nav-text">Teams</span></div><div class="clearfix"></div></router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'players' }"><div class="pull-left"><i class="fa fa-user mr-20" aria-hidden="true"></i><span class="right-nav-text">Players</span></div><div class="clearfix"></div></router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'investors' }"><div class="pull-left"><i class="fa fa-user-secret mr-20" aria-hidden="true"></i><span class="right-nav-text">Investors</span></div><div class="clearfix"></div></router-link>
+        </li>
+        <li>
+            <router-link :to="{ name: 'fights' }"><div class="pull-left"><i class="ti-shield mr-20"></i><span class="right-nav-text">Fights</span></div><div class="clearfix"></div></router-link>
+        </li>
+        <li>
+            <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-info-outline mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
         </li>
 	</ul>
 </div>
@@ -32,6 +44,7 @@
 
 <script>
 export default {
+    name: 'sidebar',
     data() {
         return {
             storagePath: '/storage/'

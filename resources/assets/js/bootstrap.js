@@ -58,3 +58,13 @@ window.Event = new class {
         this.vue.$on(event, callback)
     }
 }
+
+import Echo from "laravel-echo"
+import Pusher from 'pusher-js'
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: 'd9bb5a86510edebf23af',
+    cluster: 'eu',
+    encrypted: true
+});

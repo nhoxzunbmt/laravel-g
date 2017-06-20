@@ -11,7 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
     {
         return User::all();
     }
@@ -19,6 +24,28 @@ class UserController extends Controller
     public function show($id)
     {
         return User::findOrFail($id);
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        
+        if($request->has('q')) 
+        {
+            $items = User::search($request->get('q'))->orderBy('id', 'asc')->paginate(12);
+            
+            if($items->count()==0)
+                return response()->json($error);
+
+            return response()->json($items);
+        }
+        
+        return response()->json($error);
     }
     
     /**

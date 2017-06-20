@@ -19,7 +19,7 @@ class AddUserConfirmationFields extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->enum('type', ['player', 'commentator', 'sponsor'])->nullable();
+            $table->enum('type', ['player', 'investor'])->nullable();
             $table->string('second_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('nickname')->unique();

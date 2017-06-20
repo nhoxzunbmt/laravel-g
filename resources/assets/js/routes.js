@@ -22,6 +22,36 @@ export default [
         name: 'faq',
         component: require('./pages/faq.vue')
     },
+    {
+        path: '/players',
+        name: 'players',
+        component: require('./pages/players/index.vue')
+    },
+    {
+        path: '/players/:id',
+        name: 'player',
+        component: require('./pages/players/detail.vue')
+    },
+    {
+        path: '/investors',
+        name: 'investors',
+        component: require('./pages/investors/index.vue')
+    },
+    {
+        path: '/investors/:id',
+        name: 'investor',
+        component: require('./pages/investors/detail.vue')
+    },
+    {
+        path: '/teams',
+        name: 'teams',
+        component: require('./pages/teams/index.vue')
+    },
+    {
+        path: '/fights',
+        name: 'fights',
+        component: require('./pages/fights/index.vue')
+    },
     
   ...authGuard([
     {
@@ -29,10 +59,13 @@ export default [
         name: 'profile',
         component: require('./pages/personal/profile.vue')
     },
-    { path: '/settings', component: require('./pages/settings/account.vue'), children: [
-      { path: '', redirect: { name: 'settings.profile' }},
-      { path: 'profile', name: 'settings.profile', component: require('./pages/settings/_profile.vue') },
-      { path: 'security', name: 'settings.security', component: require('./pages/settings/_security.vue') }
+    { path: '/friends', component: require('./pages/personal/friends/index.vue'), children: [
+        { path: '', redirect: { name: 'friends.all' }},
+        { path: 'all', name: 'friends.all', component: require('./pages/personal/friends/_all.vue') },
+        { path: 'online', name: 'friends.online', component: require('./pages/personal/friends/_online.vue') },
+        { path: 'requests-in', name: 'friends.request.in', component: require('./pages/personal/friends/_request_in.vue') },
+        { path: 'requests-out', name: 'friends.request.out', component: require('./pages/personal/friends/_request_out.vue') },
+        { path: 'search', name: 'friends.search', component: require('./pages/personal/friends/_search.vue') }
     ] }
   ]),
 

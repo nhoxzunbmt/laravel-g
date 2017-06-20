@@ -14,6 +14,13 @@ use Illuminate\Http\Request;
 */
 
 /**
+ * Countries
+ */
+Route::get('/countries', 'CountryController@index');
+//Route::get('/user/search', 'UserController@search');
+
+
+/**
  *Genres
  */
 Route::get('/genres', 'GenreController@index');
@@ -55,4 +62,16 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
     Route::post('logout', 'Auth\AuthController@logout');
+    
+    /**
+     * Friends
+     */
+    Route::post('/friends/befriend', 'FriendController@befriend');
+    Route::post('/friends/unfriend', 'FriendController@unfriend');
+    Route::post('/friends/acceptFriendRequest', 'FriendController@acceptFriendRequest');
+    Route::get('/friends/getPendingOutFriends', 'FriendController@getPendingOutFriends');
+    Route::get('/friends/getPendingInFriends', 'FriendController@getPendingInFriends');    
+    Route::get('/friends/getFriends', 'FriendController@getFriends');
+    Route::get('/friends/searchPotential', 'FriendController@searchPotentialFriends');
+    
 });

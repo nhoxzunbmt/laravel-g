@@ -31,11 +31,11 @@
                                 <vue-core-image-upload
                                     crop-ratio="1:1"
                                     class="fileupload btn btn-primary"
-                                    :crop="false"
+                                    :crop="true"
                                     :headers="header"
                                     text="edit"
                                     @imageuploaded="imageuploaded"
-                                    :maxWidth="100"
+                                    :maxWidth="150"
                                     url="/api/user/avatar">
                                 </vue-core-image-upload>
 							</div>
@@ -126,6 +126,18 @@
                                         </div>
                                     </div>
                                     <div class="row">
+                                        <div class="col-md-6">
+    										<div class="form-group">
+                                                <label class="control-label mb-10">Country</label>
+    											<select v-model="user.country_id" class='form-control' data-style="form-control btn-default btn-outline" id="country_list">
+                                                    <option v-for="country in countries" v-bind:value="country.id" v-bind:data-image="country.flag">
+                                                        {{ country.name }}
+                                                    </option>
+                                                </select>
+                                            </div>
+    									</div>
+                                    </div>
+                                    <div class="row">
     									<div class="col-md-12">
                                             <div class="form-group">
     											<label class="control-label mb-10 text-left">Description</label>
@@ -182,6 +194,9 @@ import Cookies from 'js-cookie'
 import VueCoreImageUpload from 'vue-core-image-upload'
 
 export default {
+    metaInfo: {
+        title: 'Personal settings'
+    },
     computed: mapGetters({
         user: 'authUser',
         authenticated: 'authCheck',
@@ -192,20 +207,55 @@ export default {
     data() {
         return {
             types: {
-                sponsor: 'sponsor',
-                commentator: 'commentator',
+                investor: 'investor',
                 player: 'player'
             },
             nickname: null,
             success: false,
             error: false,
             response: null,
+            countries: null,
             header: {
                 Authorization: 'Bearer ' + Cookies.get('token')
             }
         }
     },
+    mounted() {
+        this.getCountries();
+        
+        var self = this;
+        Vue.nextTick(function(){ 
+            
+            $("#country_list").select2({
+                placeholder: "Select country",
+                templateResult: formatState,
+                templateSelection: formatState,
+                allowClear: true
+            }).on("select2:select", function(e) { 
+                self.user.country_id = $(e.currentTarget).find("option:selected").val();
+            }).on("select2:unselecting", function (e) {
+                self.user.country_id = 0;
+            });
+            
+            function formatState (opt) 
+            {
+                if (!opt.id) {
+                    return opt.text;
+                }               
+                var optimage = $(opt.element).data('image'); 
+                if(!optimage){
+                    return opt.text;
+                } else {                    
+                    var $opt = $(
+                        '<span><img src="/images/flags/' + optimage + '" width="23px" /> ' + opt.text + '</span>'
+                    );
+                    return $opt;
+                }
+            };
+        });
+    },
     methods: {
+        
         save(event) {
             event.preventDefault()
             
@@ -225,7 +275,20 @@ export default {
         overlayuploaded(response) {
             this.user.overlay = response.data.overlay;
         },
-    }
+        getCountries: function()
+        {
+            if(this.$parent.countries==undefined || this.$parent.countries.length==0)
+            {
+                axios.get('/api/countries').then((response) => {
+                    this.$set(this, 'countries', response.data);
+                    this.$parent.countries = this.countries;
+                });
+            }else{
+                this.countries = this.$parent.countries;
+            }  
+        },
+        
+    },
 }
 </script>
 <style>

@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "992f55bb777a7df1fd4acfbf2f8479c4",
-    "content-hash": "1a2dd8f2241b79cd81e15ce28469ccb0",
+    "hash": "65a79094184a2b7c2196fe0b09e1ec99",
+    "content-hash": "1b6ea3c9960138aeb72344dfe8ea5e99",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -1099,6 +1099,61 @@
             "time": "2017-06-10 19:55:42"
         },
         {
+            "name": "highideas/laravel-users-online",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/highideas/laravel-users-online.git",
+                "reference": "6a5452ae123ec335978870968ce7cfa9463fa3a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/highideas/laravel-users-online/zipball/6a5452ae123ec335978870968ce7cfa9463fa3a7",
+                "reference": "6a5452ae123ec335978870968ce7cfa9463fa3a7",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codacy/coverage": "dev-master",
+                "illuminate/auth": "^5.4",
+                "illuminate/cache": "^5.4",
+                "illuminate/database": "^5.4",
+                "illuminate/session": "^5.4",
+                "illuminate/support": "^5.4",
+                "orchestra/testbench": "~3.4",
+                "phpunit/phpunit": "^5.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HighIdeas\\UsersOnline\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Gabriel Goncalves",
+                    "email": "gabrielll_07@hotmail.com",
+                    "homepage": "http://gabrieldeveloper.com.br",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Marco Araujo",
+                    "email": "marco.araujo.junior@gmail.com",
+                    "homepage": "http://marcojunior.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "This package will provide an online users management.",
+            "keywords": [
+                "Users",
+                "laravel"
+            ],
+            "time": "2017-02-22 23:00:41"
+        },
+        {
             "name": "hootlex/laravel-friendships",
             "version": "v1.0.22",
             "source": {
@@ -1404,12 +1459,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "c46eee10b3faf980e96e1d1647c7b7b8d81f304b"
+                "reference": "bd858cc8b18d26ce00a6c5dbf893c4e4f20d7b9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/c46eee10b3faf980e96e1d1647c7b7b8d81f304b",
-                "reference": "c46eee10b3faf980e96e1d1647c7b7b8d81f304b",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/bd858cc8b18d26ce00a6c5dbf893c4e4f20d7b9b",
+                "reference": "bd858cc8b18d26ce00a6c5dbf893c4e4f20d7b9b",
                 "shasum": ""
             },
             "require": {
@@ -1525,7 +1580,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2017-06-13 13:06:06"
+            "time": "2017-06-14 04:13:25"
         },
         {
             "name": "laravel/socialite",
@@ -2400,6 +2455,50 @@
             "time": "2017-06-08 11:13:16"
         },
         {
+            "name": "pusher/pusher-php-server",
+            "version": "2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pusher/pusher-http-php.git",
+                "reference": "9f721dd7b0ab88aa24197f43d34a83c8d2c5d13d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pusher/pusher-http-php/zipball/9f721dd7b0ab88aa24197f43d34a83c8d2c5d13d",
+                "reference": "9f721dd7b0ab88aa24197f43d34a83c8d2c5d13d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Library for interacting with the Pusher REST API",
+            "homepage": "https://github.com/pusher/pusher-php-server",
+            "keywords": [
+                "events",
+                "php-pusher-server",
+                "publish",
+                "pusher",
+                "realtime",
+                "rest",
+                "trigger"
+            ],
+            "time": "2016-03-16 19:51:22"
+        },
+        {
             "name": "ramsey/uuid",
             "version": "dev-master",
             "source": {
@@ -2634,6 +2733,108 @@
             ],
             "description": "VKontakte OAuth2 Provider for Laravel Socialite",
             "time": "2017-01-25 09:48:29"
+        },
+        {
+            "name": "sofa/eloquence",
+            "version": "5.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jarektkaczyk/eloquence.git",
+                "reference": "aa65465385635af86174bf71af7fd9df02bad4cc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jarektkaczyk/eloquence/zipball/aa65465385635af86174bf71af7fd9df02bad4cc",
+                "reference": "aa65465385635af86174bf71af7fd9df02bad4cc",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.4.*",
+                "php": ">=5.6.4",
+                "sofa/hookable": "5.4.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.4",
+                "phpunit/phpunit": "4.5.0",
+                "squizlabs/php_codesniffer": "2.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sofa\\Eloquence\\": "src"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarek Tkaczyk",
+                    "email": "jarek@softonsofa.com",
+                    "homepage": "http://softonsofa.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Flexible Searchable, Mappable, Metable, Validation and more extensions for Laravel Eloquent ORM.",
+            "keywords": [
+                "eloquent",
+                "laravel",
+                "mappable",
+                "metable",
+                "mutable",
+                "searchable"
+            ],
+            "time": "2017-04-23 00:48:59"
+        },
+        {
+            "name": "sofa/hookable",
+            "version": "5.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jarektkaczyk/hookable.git",
+                "reference": "1791d001bdf483136a11b3ea600462f446b82401"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jarektkaczyk/hookable/zipball/1791d001bdf483136a11b3ea600462f446b82401",
+                "reference": "1791d001bdf483136a11b3ea600462f446b82401",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "5.3.*|5.4.*",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "crysalead/kahlan": "~1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Sofa\\Hookable\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jarek Tkaczyk",
+                    "email": "jarek@softonsofa.com",
+                    "homepage": "http://softonsofa.com/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Laravel Eloquent hooks system.",
+            "keywords": [
+                "eloquent",
+                "laravel"
+            ],
+            "time": "2017-05-27 15:48:52"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -3124,12 +3325,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "f29dca382a6485c3cbe6379f0c61230167681937"
+                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/f29dca382a6485c3cbe6379f0c61230167681937",
-                "reference": "f29dca382a6485c3cbe6379f0c61230167681937",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
+                "reference": "7c8fae0ac1d216eb54349e6a8baa57d515fe8803",
                 "shasum": ""
             },
             "require": {
@@ -3141,7 +3342,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -3175,7 +3376,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-09 14:24:12"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/polyfill-php56",
@@ -3183,12 +3384,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php56.git",
-                "reference": "bc0b7d6cb36b10cfabb170a3e359944a95174929"
+                "reference": "e85ebdef569b84e8709864e1a290c40f156b30ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/bc0b7d6cb36b10cfabb170a3e359944a95174929",
-                "reference": "bc0b7d6cb36b10cfabb170a3e359944a95174929",
+                "url": "https://api.github.com/repos/symfony/polyfill-php56/zipball/e85ebdef569b84e8709864e1a290c40f156b30ca",
+                "reference": "e85ebdef569b84e8709864e1a290c40f156b30ca",
                 "shasum": ""
             },
             "require": {
@@ -3198,7 +3399,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -3231,7 +3432,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-09 08:25:21"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/polyfill-util",
@@ -3239,12 +3440,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-util.git",
-                "reference": "ebccbde4aad410f6438d86d7d261c6b4d2b9a51d"
+                "reference": "5d2fc887042ffa5617c28d362f0f114a4c6048bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/ebccbde4aad410f6438d86d7d261c6b4d2b9a51d",
-                "reference": "ebccbde4aad410f6438d86d7d261c6b4d2b9a51d",
+                "url": "https://api.github.com/repos/symfony/polyfill-util/zipball/5d2fc887042ffa5617c28d362f0f114a4c6048bf",
+                "reference": "5d2fc887042ffa5617c28d362f0f114a4c6048bf",
                 "shasum": ""
             },
             "require": {
@@ -3253,7 +3454,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.4-dev"
+                    "dev-master": "1.5-dev"
                 }
             },
             "autoload": {
@@ -3283,7 +3484,7 @@
                 "polyfill",
                 "shim"
             ],
-            "time": "2017-06-09 08:25:21"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/process",
@@ -3340,12 +3541,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "c8c437a4329bb0e56998e77ba271f933a7098f0e"
+                "reference": "06959a6e3dd5c3cf936ffa865472753326560edd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/c8c437a4329bb0e56998e77ba271f933a7098f0e",
-                "reference": "c8c437a4329bb0e56998e77ba271f933a7098f0e",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/06959a6e3dd5c3cf936ffa865472753326560edd",
+                "reference": "06959a6e3dd5c3cf936ffa865472753326560edd",
                 "shasum": ""
             },
             "require": {
@@ -3410,7 +3611,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-06-07 10:20:52"
+            "time": "2017-06-14 07:34:46"
         },
         {
             "name": "symfony/translation",
@@ -3761,6 +3962,58 @@
                 "environment"
             ],
             "time": "2017-02-03 22:05:04"
+        },
+        {
+            "name": "webpatser/laravel-countries",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webpatser/laravel-countries.git",
+                "reference": "bb5d5116d796a038bfb45f083998b25506d9a595"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webpatser/laravel-countries/zipball/bb5d5116d796a038bfb45f083998b25506d9a595",
+                "reference": "bb5d5116d796a038bfb45f083998b25506d9a595",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Webpatser\\Countries": "src/"
+                },
+                "classmap": [
+                    "src/commands"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Kempen",
+                    "email": "christoph@downsized.nl",
+                    "homepage": "http://downsized.nl/",
+                    "role": "developer"
+                },
+                {
+                    "name": "Paul Kievits",
+                    "role": "developer"
+                }
+            ],
+            "description": "Laravel Countries is a bundle for Laravel, providing Almost ISO 3166_2, 3166_3, currency, Capital and more for all countries.",
+            "homepage": "https://github.com/webpatser/laravel-countries",
+            "keywords": [
+                "countries",
+                "iso_3166_2",
+                "iso_3166_3",
+                "laravel"
+            ],
+            "time": "2017-01-25 20:26:35"
         },
         {
             "name": "zyberspace/steam-web-api-client",
@@ -4538,12 +4791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3395d759df4603b2a93e05f201c09eeb3f899eb9"
+                "reference": "db3166889854d881265f7d3caa20fa82132305fa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3395d759df4603b2a93e05f201c09eeb3f899eb9",
-                "reference": "3395d759df4603b2a93e05f201c09eeb3f899eb9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/db3166889854d881265f7d3caa20fa82132305fa",
+                "reference": "db3166889854d881265f7d3caa20fa82132305fa",
                 "shasum": ""
             },
             "require": {
@@ -4612,7 +4865,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-06-04 05:23:38"
+            "time": "2017-06-14 16:53:16"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -5192,12 +5445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "02878ee742708dd663c129a1bd3ad1b628098b00"
+                "reference": "08c644988dba9d608d18bb8ad8dd633f276137f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/02878ee742708dd663c129a1bd3ad1b628098b00",
-                "reference": "02878ee742708dd663c129a1bd3ad1b628098b00",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/08c644988dba9d608d18bb8ad8dd633f276137f7",
+                "reference": "08c644988dba9d608d18bb8ad8dd633f276137f7",
                 "shasum": ""
             },
             "require": {
@@ -5239,7 +5492,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2017-06-12 16:03:21"
+            "time": "2017-06-14 20:38:21"
         },
         {
             "name": "webmozart/assert",
@@ -5295,7 +5548,8 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "giantbomb/giantbomb-php-api": 20
+        "giantbomb/giantbomb-php-api": 20,
+        "webpatser/laravel-countries": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

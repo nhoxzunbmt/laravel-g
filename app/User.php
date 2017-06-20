@@ -8,11 +8,13 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Cmgmyr\Messenger\Traits\Messagable;
 use Hootlex\Friendships\Traits\Friendable;
+use \HighIdeas\UsersOnline\Traits\UsersOnlineTrait;
 use Cache;
+use Sofa\Eloquence\Eloquence;
   
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract 
 {
-	use Notifiable, Authenticatable, CanResetPassword, Messagable, Friendable;
+	use Notifiable, Authenticatable, CanResetPassword, Messagable, Friendable, Eloquence, UsersOnlineTrait;
 
     /**
 	 * The database table used by the model.
@@ -27,7 +29,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type'
+        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type', 'country_id'
     ];
 
     /**
@@ -36,7 +38,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'api_token'
+    ];
+    
+    protected $searchableColumns = [
+        'nickname' => 20,
+        'email' => 10,
+        'name' => 10,
+        'last_name' => 5
     ];
     
     /**
@@ -137,33 +146,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
     /**
-     * Scope a query to only sponsor scopes.
+     * Scope a query to only investor scopes.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSponsor($query)
+    public function scopeInvestor($query)
     {
-        return $query->where('type', '=', 'sponsor');
-    }
-    
-    /**
-     * Scope a query to only commentator scopes.
-     *
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     *
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeCommentator($query)
-    {
-        return $query->where('type', '=', 'commentator');
-    }    
-    
-    public function isOnline()
-    {
-        return Cache::has('user-is-online-' . $this->id);
-    }
+        return $query->where('type', '=', 'investor');
+    }   
     
     public static function createBySocialProvider($providerUser)
     {

@@ -138,15 +138,9 @@
                         <li>
                             <router-link :to="{ name: 'profile' }"><i class="zmdi zmdi-account"></i><span>Profile</span></router-link>
                         </li>
-						<li>
-							<a href="#"><i class="zmdi zmdi-card"></i><span>my balance</span></a>
-						</li>
-						<li>
-							<a href="inbox.html"><i class="zmdi zmdi-email"></i><span>Inbox</span></a>
-						</li>
-						<li>
-							<a href="#"><i class="zmdi zmdi-settings"></i><span>Settings</span></a>
-						</li>
+                        <li>
+                            <router-link :to="{ name: 'friends.all' }"><i class="zmdi zmdi-accounts"></i><span>Friends</span></router-link>
+                        </li>
 						<li class="divider"></li>                        
                         <li>
                             <a href="javascript:void(0)" v-on:click="this.$parent.logout">
@@ -165,6 +159,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
+    name: 'navigation',
     computed: mapGetters({
         user: 'authUser',
         authenticated: 'authCheck'

@@ -55,6 +55,10 @@ class DatabaseSeeder extends Seeder
         $this->call('MenuItemTableSeeder');
         $this->call('PermissionTableSeeder');
         $this->call('PermissionsRoleTableSeeder');
+        
+        //Seed the countries
+        $this->call('CountriesSeeder');
+        $this->command->info('Seeded the countries!'); 
     }
 }
 
@@ -123,7 +127,7 @@ class UserTableSeeder extends Seeder
 	            'password'          => 'secret',
                 'remember_token'    => str_random(60),
                 'role_id'           => 2, //$faker->randomElement([1, 2]),
-                'type'              => $faker->randomElement(['player', 'commentator', 'sponsor']),
+                'type'              => $faker->randomElement(['player', 'investor']),
                 'phone'             => $faker->phoneNumber,
                 'rating'            => $faker->randomFloat(2, 0, 1000),
                 'team_wins'         => $faker->randomDigit,
