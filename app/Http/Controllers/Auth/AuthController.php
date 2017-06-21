@@ -11,6 +11,7 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Cache;
+use App\Mail\EmailVerify;
 use Mail;
 
 class AuthController extends Controller
@@ -58,10 +59,18 @@ class AuthController extends Controller
             'confirmation_code' => $confirmation_code
         ]);
         
-        Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($request) {
+        $content = [
+    		'url' => url(config('app.url')."/auth/verify/".$confirmation_code),
+            'title' => 'Verify your email address',
+    		'button' => 'Click Here'
+  		];
+
+    	Mail::to($request->json('email'))->send(new EmailVerify($content));
+        
+        /*Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($request) {
             $message->to($request->json('email'), $request->json('name'))
                 ->subject('Verify your email address');
-        });
+        });*/
     }
     
     public function signin(LoginFormRequest $request)
@@ -90,10 +99,19 @@ class AuthController extends Controller
             $user->confirmation_code = $confirmation_code;
             $user->update();
             
-            Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($user) {
+            $content = [
+        		'url' => url(config('app.url')."/auth/verify/".$confirmation_code),
+                'title' => 'Verify your email address',
+        		'button' => 'Click Here'
+      		];
+    
+        	Mail::to($user->email)->send(new EmailVerify($content));
+            
+                      
+            /*Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Verify your email address');
-            });
+            });*/
             
             return response()->json([
                 'error' => 'You didn\'t confirm email. Check your email box, you should recieve email with confirmation link.',
