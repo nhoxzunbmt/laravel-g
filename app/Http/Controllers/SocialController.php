@@ -40,8 +40,6 @@ class SocialController extends Controller
    
         $data = User::getApiUserData($user, $token);
         return response()->json($data);
-        //\Auth::login($user, true);
-        //return redirect()->intended('/');
     }
 
 }

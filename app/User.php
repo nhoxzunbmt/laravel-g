@@ -29,7 +29,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type', 'country_id'
+        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type', 'country_id', 'confirmation_code'
     ];
 
     /**
@@ -38,7 +38,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'api_token'
+        'password', 'remember_token', 'api_token', 'confirmation_code'
     ];
     
     protected $searchableColumns = [
@@ -60,6 +60,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         {
             if(empty($user->nickname))
                 $user->nickname = $user->email;
+                
+            if(empty($user->api_token))
+                $user->api_token = str_random(100);
         });
     }
     
@@ -170,7 +173,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'nickname' => $providerUser->getNickname(),
             'name' => $providerUser->getName() ? $providerUser->getName() : $providerUser->getNickname(),
             'password' => str_random(10),
-            'avatar' => $providerUser->getAvatar()            
+            'avatar' => $providerUser->getAvatar(),
+            'confirmed' => 1           
         ];                               
         
         return self::create($data);

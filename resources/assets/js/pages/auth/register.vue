@@ -19,7 +19,7 @@
                                         <p>There was an error, unable to complete registration.</p>
                                     </div>
                                     <div class="alert alert-success" v-if="success">
-                                        <p>Registration completed. You can now sign in.</p>
+                                        <p>We sent you an activation code. Check your email.</p>
                                     </div>
                                     <form autocomplete="off" v-on:submit="register" v-if="!success">
                                         <div class="form-group">

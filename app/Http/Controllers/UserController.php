@@ -82,6 +82,11 @@ class UserController extends Controller
         
         if ($request->has('password')) 
             $user->password = bcrypt($request->password);
+            
+        if($user->confirmed)
+        {
+            $user->active = 1;
+        }
         
         if($result = $user->update($input))
         {

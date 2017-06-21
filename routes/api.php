@@ -49,6 +49,10 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::post('/password/reset', 'Auth\ResetPasswordController@postReset');
     Route::get('/social/{provider}/callback', 'SocialController@callback');
+    Route::get('/auth/verify/{confirmationCode}', [
+        'as' => 'confirmation_path',
+        'uses' => 'Auth\AuthController@verify'
+    ]);
 });
 
 Route::group(['middleware' => 'jwt.auth'], function () {

@@ -1,0 +1,62 @@
+<template>
+<div class="table-struct full-width">
+	<div class="table-cell vertical-align-middle auth-form-wrap">
+		<div class="auth-form  ml-auto mr-auto no-float">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="panel panel-default card-view">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h6 class="panel-title txt-dark">Verify account</h6>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div v-if="status" class="alert alert-success">
+                                {{ status }}
+                                 Now you can <router-link :to="{ name: 'auth.login' }">login</router-link>.
+                            </div>
+                        </div>
+                    </div><!--card-view-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</template>
+
+<script>
+import axios from 'axios'
+
+export default {
+    metaInfo: { titleTemplate: 'Verify email' },
+    mounted() {
+        this.verify();
+    },
+    data() {
+        return {
+            token: null,
+            success: false,
+            error: false,
+            response: null,
+            status: null
+        }
+    },
+    methods: {
+        verify() {
+            this.token = this.$route.params.token
+            axios.get(
+                '/api/auth/verify/'+this.token
+            ).then(response => {
+                this.success = true
+                this.error = false
+                this.status = response.data.status
+            }).catch(error => {
+                this.response = error.response.data
+                this.error = true
+                this.status = false
+            });
+        }
+    }
+}
+</script>

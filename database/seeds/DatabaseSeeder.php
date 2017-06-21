@@ -35,6 +35,11 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        
+        //Seed the countries
+        $this->call('CountriesSeeder');
+        $this->command->info('Seeded the countries!');
+        
         $this->call('RoleTableSeeder');
 		$this->call('UserTableSeeder');
         $this->call('UserSocialAccountTableSeeder');
@@ -55,10 +60,6 @@ class DatabaseSeeder extends Seeder
         $this->call('MenuItemTableSeeder');
         $this->call('PermissionTableSeeder');
         $this->call('PermissionsRoleTableSeeder');
-        
-        //Seed the countries
-        $this->call('CountriesSeeder');
-        $this->command->info('Seeded the countries!'); 
     }
 }
 
@@ -110,7 +111,9 @@ class UserTableSeeder extends Seeder
                 'password'       => 'password',
                 'remember_token' => str_random(60),
                 'role_id'        => $role->id,
-                'avatar'         => $faker->imageUrl($width = 300, $height = 300)
+                'avatar'         => $faker->imageUrl($width = 300, $height = 300),
+                'country_id'     => 1,
+                'api_token'         => str_random(100)
             ]);
         }
         
@@ -135,7 +138,9 @@ class UserTableSeeder extends Seeder
                 'min_sponsor_fee'   => null,
                 'credit_rating'     => $faker->randomFloat(2, 0, 1000),
                 'notify'            => $faker->randomElement(['y', 'n']),
-                'avatar'            => $faker->imageUrl($width = 300, $height = 300)
+                'avatar'            => $faker->imageUrl($width = 300, $height = 300),
+                'country_id'        => 1,
+                'api_token'         => str_random(100)
 	        ];
             
 	        User::create($data);
@@ -291,7 +296,7 @@ class FightTableSeeder extends Seeder
 
         //Get info from other models
         $arPlayers = User::active()->player()->pluck('id')->all();
-        $arCommentators = User::active()->commentator()->pluck('id')->all();
+        $arCommentators = User::active()->pluck('id')->all();
         $arGames = Game::active()->pluck('title', 'id')->all();
         $arTeams = Team::pluck('id')->all();
         

@@ -11,16 +11,57 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Cache;
+use Mail;
 
 class AuthController extends Controller
 {
+    public function verify($confirmation_code)
+    {
+        if( ! $confirmation_code)
+        {
+            return response()->json([
+                'error' => 'No confirmation code',
+            ], 500);
+        }
+
+        $user = User::where('confirmation_code', $confirmation_code)->first();
+
+        if ( ! $user)
+        {
+            return response()->json([
+                'error' => 'Wrong confirmation code'.$confirmation_code,
+            ], 500);
+        }
+
+        $user->confirmed = 1;
+        
+        if(!empty($user->type))
+        {
+            $user->active = 1;
+        }
+        
+        $user->confirmation_code = null;
+        $user->save();
+        
+        return response()->json(['status' => 'Your account is now verified!'], 200);
+    }
+    
+    
     public function register(RegisterFormRequest $request)
     {
+        $confirmation_code = str_random(100);
+        
         User::create([
             'name' => $request->json('name'),
             'email' => $request->json('email'),
             'password' => $request->json('password'),
+            'confirmation_code' => $confirmation_code
         ]);
+        
+        Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($request) {
+            $message->to($request->json('email'), $request->json('name'))
+                ->subject('Verify your email address');
+        });
     }
     
     public function signin(LoginFormRequest $request)
@@ -32,13 +73,32 @@ class AuthController extends Controller
                 'exp' => Carbon::now()->addWeek()->timestamp,
             ])){
                 return response()->json([
-                    'error' => 'Invalid credentials'
+                    'error' => 'Invalid credentials.'
                 ], 401);
             }
         } catch (JWTException $e) {
             return response()->json([
                 'error' => 'Could not create token',
             ], 500);
+        }
+        
+        $user = $request->user();
+        
+        if(!$user->confirmed)
+        {
+            $confirmation_code = str_random(100);
+            $user->confirmation_code = $confirmation_code;
+            $user->update();
+            
+            Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($user) {
+                $message->to($user->email, $user->name)
+                    ->subject('Verify your email address');
+            });
+            
+            return response()->json([
+                'error' => 'You didn\'t confirm email. Check your email box, you should recieve email with confirmation link.',
+                'user' => $request->user()
+            ], 401);
         }
 
         $data = User::getApiUserData($request->user(), $token);
