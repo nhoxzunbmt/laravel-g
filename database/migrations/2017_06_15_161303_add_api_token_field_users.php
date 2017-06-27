@@ -30,6 +30,8 @@ class AddApiTokenFieldUsers extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('api_token');
             $table->dropColumn('country_id');
+            
+            $table->dropForeign(['country_id']);
         });
     }
 }

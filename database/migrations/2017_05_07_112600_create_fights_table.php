@@ -16,9 +16,9 @@ class CreateFightsTable extends Migration
         Schema::create('fights', function (Blueprint $table) {
             $table->increments('id');
             $table->boolean('active')->default(1);
-            $table->integer('game_id')->unsigned();
+            $table->integer('game_id')->unsigned()->nullable();
             $table->string('title');
-            $table->integer('created_id')->unsigned();
+            $table->integer('created_id')->unsigned()->nullable();
             $table->enum('type', ['personal', 'team']);
             $table->integer('count_parts')->unsigned();
             $table->integer('count_team_users')->unsigned()->nullable();

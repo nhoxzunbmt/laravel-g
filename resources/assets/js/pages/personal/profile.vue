@@ -1,52 +1,52 @@
 <template>
 <div>
-<div class="row heading-bg">
-	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-        <h5 class="txt-dark">Profile</h5>
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-3 col-md-3 col-xs-12">
-		<div class="panel panel-default card-view  pa-0">
-			<div class="panel-wrapper collapse in">
-				<div class="panel-body  pa-0">
-					<div class="profile-box">
-						<div class="profile-cover-pic">
-                            <vue-core-image-upload
-                                crop-ratio="1:1"
-                                class="fileupload btn btn-default"
-                                :crop="false"
-                                :headers="header"
-                                text="edit"
-                                @imageuploaded="overlayuploaded"
-                                :maxWidth="1000"
-                                url="/api/user/overlay">
-                            </vue-core-image-upload>
-							<div class="profile-image-overlay" v-if="user.overlay!==null" v-bind:style="{ 'background-image': 'url(' + user.overlay + ')' }"></div>
-                            <div class="profile-image-overlay" v-else></div>
-						</div>
-						<div class="profile-info text-center">
-							<div class="profile-img-wrap">
-								<img class="inline-block mb-10" :src="user.avatar" alt="user"/>
+    <div class="row mt-20">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+    		<div class="panel panel-default card-view  pa-0">
+    			<div class="panel-wrapper collapse in">
+    				<div class="panel-body  pa-0">
+    					<div class="profile-box">
+    						<div class="profile-cover-pic">
                                 <vue-core-image-upload
                                     crop-ratio="1:1"
-                                    class="fileupload btn btn-primary"
-                                    :crop="true"
+                                    class="fileupload btn btn-default"
+                                    :crop="false"
                                     :headers="header"
-                                    text="edit"
-                                    @imageuploaded="imageuploaded"
-                                    :maxWidth="150"
-                                    url="/api/user/avatar">
+                                    @imageuploaded="overlayuploaded"
+                                    :maxWidth="1000"
+                                    url="/api/user/overlay">
+                                    <i class="fa fa-camera"></i>
                                 </vue-core-image-upload>
-							</div>
-							<h5 class="block mt-10 mb-25 weight-500 capitalize-font txt-danger">{{ user.nickname }}</h5>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col-lg-9 col-md-9 col-xs-12">
+    							<div class="profile-image-overlay" v-if="user.overlay!==null" v-bind:style="{ 'background-image': 'url(' + user.overlay + ')' }"></div>
+                                <div class="profile-image-overlay" v-else></div>
+    						</div>
+    						<div class="profile-info text-center">
+    							<div class="profile-img-wrap">
+    								<img class="inline-block mb-10" :src="user.avatar" alt="user"/>
+                                    <vue-core-image-upload
+                                        crop-ratio="1:1"
+                                        class="fileupload btn btn-primary"
+                                        :crop="true"
+                                        :headers="header"
+                                        @imageuploaded="imageuploaded"
+                                        :maxWidth="150"
+                                        url="/api/user/avatar">
+                                        <i class="fa fa-camera"></i>
+                                    </vue-core-image-upload>
+    							</div>
+                                <h5 class="profile-title">
+                                    <span class="font-24 weight-600">{{ user.name }} {{ user.last_name }}</span>
+                                    <br /><span class="font-20 weight-500">({{ user.nickname }})</span>
+                                </h5>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+<div class="row" v-if="user!==null">
+	<div class="col-lg-12 col-md-12 col-xs-12">
         <div class="panel panel-default card-view">
 			<div class="panel-wrapper collapse in">
 				<div class="panel-body">
@@ -291,25 +291,3 @@ export default {
     },
 }
 </script>
-<style>
-.g-core-image-corp-container .info-aside{
-    top: 65px !important;
-    background: #000 !important;
-    height: 60px !important;
-}
-.g-core-image-corp-container .info-aside .btn-groups{
-    margin:15px auto 0;
-    width: 200px;
-}
-.g-core-image-corp-container .btn-upload
-{
-    background: #177ec1 !important;
-    border: solid 1px #177ec1 !important;
-}
-.g-resize-bar{
-    background-color: #177ec1 !important;
-}
-.profile-cover-pic .g-core-image-upload-btn{
-    color: #fff !important;
-}
-</style>

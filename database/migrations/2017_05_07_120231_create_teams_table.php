@@ -17,7 +17,7 @@ class CreateTeamsTable extends Migration
             $table->increments('id');
             $table->string('title')->unique();
             $table->string('image')->nullable();
-            $table->integer('capt_id')->unsigned();
+            $table->integer('capt_id')->unsigned()->nullable();
             $table->timestamps();
             $table->foreign('capt_id')->references('id')->on('users')->onDelete('cascade');
         });

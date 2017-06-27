@@ -39,7 +39,8 @@ export default {
             siteName: "ToPlay.tv",
             logo: '/images/logo.png',
             genres: [],
-            popularGames: []
+            popularGames: [],
+            games: []
         }
     },
     methods: {
@@ -167,17 +168,8 @@ export default {
         	});
             
             /*Slimscroll*/
-        	/*$('.nicescroll-bar').slimscroll({height:'100%',color: '#878787', disableFadeOut : true,borderRadius:0,size:'4px',alwaysVisible:false});
-        	$('.message-nicescroll-bar').slimscroll({height:'229px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.message-box-nicescroll-bar').slimscroll({height:'350px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.product-nicescroll-bar').slimscroll({height:'346px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.app-nicescroll-bar').slimscroll({height:'162px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.todo-box-nicescroll-bar').slimscroll({height:'310px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.users-nicescroll-bar').slimscroll({height:'370px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.users-chat-nicescroll-bar').slimscroll({height:'257px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.chatapp-nicescroll-bar').slimscroll({height:'543px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
-        	$('.chatapp-chat-nicescroll-bar').slimscroll({height:'483px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});*/
-        	
+        	$('.nicescroll-bar').slimscroll({height:'100%',color: '#878787', disableFadeOut : true,borderRadius:0,size:'4px',alwaysVisible:false});
+
         	/*Nav Tab Responsive Js*/
         	$(document).on('show.bs.tab', '.nav-tabs-responsive [data-toggle="tab"]', function(e) {
         		var $target = $(e.target);
@@ -246,3 +238,57 @@ var setHeightWidth = function () {
 	}
 };
 </script>
+
+<style>
+.g-core-image-corp-container .info-aside{
+    top: 65px !important;
+    background: #000 !important;
+    height: 60px !important;
+}
+.g-core-image-corp-container .info-aside .btn-groups{
+    margin:15px auto 0;
+    width: 200px;
+}
+.g-core-image-corp-container .btn-upload
+{
+    background: #177ec1 !important;
+    border: solid 1px #177ec1 !important;
+}
+.g-core-image-upload-btn.fileupload.btn:hover
+{
+    color: rgba(220, 70, 102, 0.85);
+}
+.g-resize-bar{
+    background-color: #177ec1 !important;
+}
+.profile-cover-pic .g-core-image-upload-btn{
+    color: #fff !important;
+}
+.profile-box .profile-cover-pic .profile-image-overlay{
+    background-position: 50% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    opacity: 1 !important;
+}
+.profile-box .profile-info .profile-img-wrap {
+    margin: -100px 15px 15px !important;
+}
+.profile-box .profile-cover-pic{
+    min-height: 250px !important;
+}
+.profile-box .profile-title{
+    position: absolute;
+    bottom: 55px;
+    left: 170px;
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    text-transform:none;
+}
+.g-core-image-upload-btn{
+    font-size: 20px !important;
+}
+.g-core-image-upload-btn i{
+    font-size: 20px;
+}
+</style>

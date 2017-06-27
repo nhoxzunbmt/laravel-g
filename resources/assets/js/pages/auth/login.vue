@@ -82,21 +82,21 @@ export default {
                     token: response.data.meta.token,
                     remember: true
                 })
-                
+            
                 this.$store.dispatch('fetchUser').then(() => {
                     this.$router.push({ name: 'home' })
                 })
+                
+                Vue.nextTick(function(){
+                    setTimeout(function(){
+                        $('.message-nicescroll-bar').slimscroll({height:'229px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
+                        $('.message-box-nicescroll-bar').slimscroll({height:'350px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
+                    }, 1000);
+                });
             }).catch(error => {
                 
                 this.response = error.response.data
                 this.error = true
-                
-                /*console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-                
-                alert(this.response);*/
-                
                 
             });
         }

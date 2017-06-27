@@ -18,7 +18,7 @@ class CreateGamesTable extends Migration
             $table->boolean('active')->default(1);
             $table->integer('giantbomb_id')->unsigned();
             $table->integer('twitch_id')->unsigned();
-            $table->integer('genre_id')->unsigned();
+            $table->integer('genre_id')->unsigned()->nullable();
             $table->string('title')->unique();
             $table->string('alias')->nullable();
             $table->text('images')->nullable();
@@ -29,7 +29,7 @@ class CreateGamesTable extends Migration
             $table->integer('video_count')->default(0)->unsigned();
             $table->boolean('online')->default(1);
         
-            $table->foreign('genre_id')->references('id')->on('genres');
+            $table->foreign('genre_id')->references('id')->on('genres')->onDelete('cascade');
         });
     }
 

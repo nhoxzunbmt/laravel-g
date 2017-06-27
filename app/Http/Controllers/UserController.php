@@ -8,6 +8,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
+use Image;
 
 class UserController extends Controller
 {
@@ -68,7 +69,7 @@ class UserController extends Controller
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(UserUpdateRequest $request, $id = false)
+	public function update($id = false, UserUpdateRequest $request)
 	{
         $data = [];
         $input = $request->except(['avatar', 'overlay']);
@@ -105,15 +106,31 @@ class UserController extends Controller
 	 */
 	public function avatar(Request $request)
 	{
+        $params = $request->all();
         $user = JWTAuth::parseToken()->authenticate();
+        
         if($user->avatar)
         {
-            Storage::delete($user->avatar);
+            $path = public_path() . '/storage/' . $user->avatar;
+            if(file_exists($path)) 
+            {
+                unlink($path);
+            }
         }
             
         $path = Storage::disk('public')->putFile(
             'avatars', $request->file('files')
         );
+        
+        /**
+         * Crop & resize using client crop data
+         */
+        $img = Image::make('storage/'.$path);
+        $img->crop((int)$params["toCropImgH"], (int)$params["toCropImgW"], (int)$params["toCropImgX"], (int)$params["toCropImgY"]);
+        $img->resize(150, 150);
+        $img->save('storage/'.$path);
+        $img->destroy();
+        
         $user->avatar = $path;
         $user->update();
         $data = User::getApiUserData($user);
@@ -133,7 +150,11 @@ class UserController extends Controller
         $user = JWTAuth::parseToken()->authenticate();
         if($user->overlay)
         {
-            Storage::delete($user->overlay);
+            $path = public_path() . '/storage/' . $user->overlay;
+            if(file_exists($path)) 
+            {
+                unlink($path);
+            }
         }
             
         $path = Storage::disk('public')->putFile(

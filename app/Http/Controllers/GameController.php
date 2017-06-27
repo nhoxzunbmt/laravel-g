@@ -27,7 +27,15 @@ class GameController extends Controller
             return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
         });*/
 
-        $items = Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(12)->appends('page');        
+        $items = Game::search($request->all())->active();
+
+        if($request->has('show_all')) 
+        {
+            $items = $items->select(['id', 'title'])->orderBy('title', 'asc')->get();
+        }else{
+            $items = $items->orderBy('id', 'asc')->paginate(12)->appends('page');
+        }
+            
         return response()->json($items);
     }
 
@@ -63,10 +71,12 @@ class GameController extends Controller
         try
         {
             $game = Cache::remember('game' . $id, 60, function() use ($id){
-                $game = Game::findOrFail($id);
+                $game = Game::with(['genre' => function($query){
+                    $query->select('id', 'title');
+                }])->findOrFail($id);
                 $game->images = json_decode($game->images, true);
                 return $game;
-            }); 
+            });
         }
         catch(ModelNotFoundException $e)
         {
@@ -249,8 +259,13 @@ class GameController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function popular()
+    public function popular(Request $request)
     {
-        return response()->json(Game::orderBy('id', 'asc')->limit(5)->get());
+        $limit = 3;
+        if($request->has('limit')) 
+        {
+            $limit = (int)$request->get('limit'); 
+        }
+        return response()->json(Game::orderBy('id', 'asc')->limit($limit)->get());
     }
 }

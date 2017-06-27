@@ -9,6 +9,8 @@ class Game extends Model
 {
     public $timestamps = false;
     
+    protected $fillable = ['genre_id'];
+    
     /**
      * Scope a query to only active scopes.
      *

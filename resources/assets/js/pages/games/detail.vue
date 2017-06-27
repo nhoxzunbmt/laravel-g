@@ -21,7 +21,6 @@
 									</div>
 								</div>
 							</div>
-								
 							<div class="col-md-10">
 								<div class="product-detail-wrap">
                                     <h3 class="mb-15 weight-500">{{ game.title }}</h3>
@@ -42,7 +41,7 @@
                                     		</div>
                                         </div>
                                     </div>
-                                    <p class="mb-10"><strong>Genre:</strong> &nbsp;{{ game.genre_id }}</p>
+                                    <p class="mb-10"><strong>Genre:</strong> &nbsp;{{ game.genre.title }}</p>
 									<p class="mb-50"><strong>Description:</strong> &nbsp;{{ game.body }}</p>
 								</div>
 							</div>

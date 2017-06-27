@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
+    public $timestamps = false;
+    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image'];
+    
     /**
      * Пользователи, которые принадлежат данной команде.
      */

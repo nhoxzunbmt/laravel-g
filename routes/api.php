@@ -23,15 +23,25 @@ Route::get('/countries', 'CountryController@index');
 /**
  *Genres
  */
-Route::get('/genres', 'GenreController@index');
-Route::get('/genres/{id}', 'GenreController@show');
+Route::resource('genres', 'GenreController', ['only' => [
+    'index', 'show'
+]]);
 
 /**
  * Games
  */
-Route::get('/games', 'GameController@index');
 Route::get('/games/popular', 'GameController@popular');
-Route::get('/games/{id}', 'GameController@show');
+Route::resource('games', 'GameController', ['only' => [
+    'index', 'show'
+]]);
+
+
+/**
+ * Teams
+ */
+Route::resource('teams', 'TeamController', ['only' => [
+    'index', 'show'
+]]);
 
 /**
  * Twitch & streams
@@ -67,6 +77,14 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user/overlay', 'UserController@overlay');
     Route::post('logout', 'Auth\AuthController@logout');
     
+    /**
+     * Teams
+     */
+    Route::resource('teams', 'TeamController', ['only' => [
+        'store', 'update', 'destroy', 'edit'
+    ]]);
+    Route::post('/teams/{id}', 'TeamController@update');
+
     /**
      * Friends
      */

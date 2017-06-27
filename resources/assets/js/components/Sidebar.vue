@@ -14,6 +14,20 @@
                 </div>
             </router-link>
         </li>
+        
+        <li v-if="authenticated && user.type=='player'"><hr class="light-grey-hr mb-10"/></li>
+        
+        <li v-if="authenticated && user.type=='player'">
+            <router-link :to="{ name: 'teams.create' }">
+                <div class="mr-10">
+                    <button class="btn btn-info w-100"> 
+                        <span class="btn-text">Create Team</span>
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </router-link>
+        </li>
+        
 		<li><hr class="light-grey-hr mb-10"/></li>
 		<li class="navigation-header">
 			<span>left menu</span> 
@@ -38,13 +52,20 @@
             <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-info-outline mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
         </li>
 	</ul>
+    
 </div>
 <!-- /Left Sidebar Menu -->
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'sidebar',
+    computed: mapGetters({
+        user: 'authUser',
+        authenticated: 'authCheck'
+    }),
     data() {
         return {
             storagePath: '/storage/'
@@ -52,3 +73,8 @@ export default {
     }
 };
 </script>
+<style lang="css">
+.w-100{
+    width: 100% !important;
+}
+</style>

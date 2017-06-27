@@ -30,12 +30,8 @@
                 <li v-if="!authenticated">
                     <router-link :to="{ name: 'auth.register' }">Register</router-link>
                 </li>
-                
-                <li class="pull-right" v-if="authenticated">
-                    <a href="javascript:void(0)" v-on:click="this.$parent.logout">Logout</a>
-                </li>
 				<li class="dropdown alert-drp" v-if="authenticated">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown" @click="showDropdown"><i class="zmdi zmdi-notifications top-nav-icon"></i><span class="top-nav-icon-badge">5</span></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" @click="showDropdown"><i class="zmdi zmdi-notifications top-nav-icon"></i><span class="top-nav-icon-badge">0</span></a>
 					<ul class="dropdown-menu alert-dropdown" data-dropdown-in="bounceIn" data-dropdown-out="bounceOut">
 						<li>
 							<div class="notification-box-head-wrap">
@@ -58,63 +54,6 @@
 											<span class="inline-block font-11  pull-right notifications-time">2pm</span>
 											<div class="clearfix"></div>
 											<p class="truncate">Your customer subscribed for the basic plan. The customer will pay $25 per month.</p>
-										</div>
-									</a>	
-								</div>
-								<hr class="light-grey-hr ma-0"/>
-								<div class="sl-item">
-									<a href="javascript:void(0)">
-										<div class="icon bg-yellow">
-											<i class="zmdi zmdi-trending-down"></i>
-										</div>
-										<div class="sl-content">
-											<span class="inline-block capitalize-font  pull-left truncate head-notifications txt-warning">Server #2 not responding</span>
-											<span class="inline-block font-11 pull-right notifications-time">1pm</span>
-											<div class="clearfix"></div>
-											<p class="truncate">Some technical error occurred needs to be resolved.</p>
-										</div>
-									</a>	
-								</div>
-								<hr class="light-grey-hr ma-0"/>
-								<div class="sl-item">
-									<a href="javascript:void(0)">
-										<div class="icon bg-blue">
-											<i class="zmdi zmdi-email"></i>
-										</div>
-										<div class="sl-content">
-											<span class="inline-block capitalize-font  pull-left truncate head-notifications">2 new messages</span>
-											<span class="inline-block font-11  pull-right notifications-time">4pm</span>
-											<div class="clearfix"></div>
-											<p class="truncate"> The last payment for your G Suite Basic subscription failed.</p>
-										</div>
-									</a>	
-								</div>
-								<hr class="light-grey-hr ma-0"/>
-								<div class="sl-item">
-									<a href="javascript:void(0)">
-										<div class="sl-avatar">
-                                            {{ user.name }}
-
-										</div>
-										<div class="sl-content">
-											<span class="inline-block capitalize-font  pull-left truncate head-notifications">Sandy Doe</span>
-											<span class="inline-block font-11  pull-right notifications-time">1pm</span>
-											<div class="clearfix"></div>
-											<p class="truncate">Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit</p>
-										</div>
-									</a>	
-								</div>
-								<hr class="light-grey-hr ma-0"/>
-								<div class="sl-item">
-									<a href="javascript:void(0)">
-										<div class="icon bg-red">
-											<i class="zmdi zmdi-storage"></i>
-										</div>
-										<div class="sl-content">
-											<span class="inline-block capitalize-font  pull-left truncate head-notifications txt-danger">99% server space occupied.</span>
-											<span class="inline-block font-11  pull-right notifications-time">1pm</span>
-											<div class="clearfix"></div>
-											<p class="truncate">consectetur, adipisci velit.</p>
 										</div>
 									</a>	
 								</div>
@@ -164,6 +103,14 @@ export default {
         user: 'authUser',
         authenticated: 'authCheck'
     }),
+    mounted: function () {
+        Vue.nextTick(function(){
+            setTimeout(function(){
+                $('.message-nicescroll-bar').slimscroll({height:'229px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
+                $('.message-box-nicescroll-bar').slimscroll({height:'350px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
+            }, 1000);
+        });
+    },
     methods: {
         showDropdown(event){
             if(!$(event.currentTarget).closest("li").hasClass("open"))
