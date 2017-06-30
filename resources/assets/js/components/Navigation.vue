@@ -72,6 +72,10 @@
 					<a href="#" class="dropdown-toggle pr-0" data-toggle="dropdown" @click="showDropdown">
                         <img :src="user.avatar" alt="user_auth" class="user-auth-img img-circle"/>
                         <span class="user-online-status"></span>
+                        <span class="user-title">{{user.name}}</span>
+                        <span class="user-balance text-info">
+                            <span class="weight-500" style="font-size: 20px;" >{{user.balance}}</span><i class="fa fa-btc" style="font-size: 22px" aria-hidden="true"></i>
+                        </span>
                     </a>
 					<ul class="dropdown-menu user-auth-dropdown" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
                         <li>
@@ -80,13 +84,15 @@
                         <li>
                             <router-link :to="{ name: 'friends.all' }"><i class="zmdi zmdi-accounts"></i><span>Friends</span></router-link>
                         </li>
+                        <li>
+                            <router-link :to="{ name: 'personal.teams' }"><i class="fa fa-users" style="font-size: 14px" aria-hidden="true"></i><span>Teams</span></router-link>
+                        </li>
 						<li class="divider"></li>                        
                         <li>
                             <a href="javascript:void(0)" v-on:click="this.$parent.logout">
                                 <i class="zmdi zmdi-power"></i><span>Logout</span>
                             </a>
                         </li>
-
 					</ul>
 				</li>
     		</ul>

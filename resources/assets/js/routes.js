@@ -50,18 +50,23 @@ export default [
     
   ...authGuard([
     {
-        path: '/profile',
-        name: 'profile',
-        component: require('./pages/personal/profile.vue')
+        path: '/personal',
+        component: require('./pages/personal/index.vue'), children: [
+            { path: '', redirect: { name: 'profile' }},
+            { path: 'info', name: 'profile', component: require('./pages/personal/profile.vue') },
+            { path: 'teams', name: 'personal.teams', component: require('./pages/personal/teams.vue') },
+            
+            { path: 'friends', component: require('./pages/personal/friends/index.vue'), children: [
+                { path: '', redirect: { name: 'friends.all' }},
+                { path: 'all', name: 'friends.all', component: require('./pages/personal/friends/_all.vue') },
+                { path: 'online', name: 'friends.online', component: require('./pages/personal/friends/_online.vue') },
+                { path: 'requests-in', name: 'friends.request.in', component: require('./pages/personal/friends/_request_in.vue') },
+                { path: 'requests-out', name: 'friends.request.out', component: require('./pages/personal/friends/_request_out.vue') },
+                { path: 'search', name: 'friends.search', component: require('./pages/personal/friends/_search.vue') }
+            ] },
+            
+        ]
     },
-    { path: '/friends', component: require('./pages/personal/friends/index.vue'), children: [
-        { path: '', redirect: { name: 'friends.all' }},
-        { path: 'all', name: 'friends.all', component: require('./pages/personal/friends/_all.vue') },
-        { path: 'online', name: 'friends.online', component: require('./pages/personal/friends/_online.vue') },
-        { path: 'requests-in', name: 'friends.request.in', component: require('./pages/personal/friends/_request_in.vue') },
-        { path: 'requests-out', name: 'friends.request.out', component: require('./pages/personal/friends/_request_out.vue') },
-        { path: 'search', name: 'friends.search', component: require('./pages/personal/friends/_search.vue') }
-    ] },
     {
         path: '/teams/create',
         name: 'teams.create',
@@ -94,7 +99,7 @@ export default [
     children: [
         {
             path: ':slug',
-            name: 'team',
+            name: 'team.detail',
             component: require('./pages/teams/detail.vue')
         }
     ]

@@ -76,6 +76,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
     Route::post('logout', 'Auth\AuthController@logout');
+    Route::get('/user/{id}/teams', 'UserController@teams');
     
     /**
      * Teams
@@ -83,6 +84,8 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::resource('teams', 'TeamController', ['only' => [
         'store', 'update', 'destroy', 'edit'
     ]]);
+    Route::post('/teams/logo', 'TeamController@logo');
+    Route::post('/teams/overlay', 'TeamController@overlay');
     Route::post('/teams/{id}', 'TeamController@update');
 
     /**

@@ -1,50 +1,5 @@
 <template>
 <div>
-    <div class="row mt-20">
-        <div class="col-lg-12 col-md-12 col-xs-12">
-    		<div class="panel panel-default card-view  pa-0">
-    			<div class="panel-wrapper collapse in">
-    				<div class="panel-body  pa-0">
-    					<div class="profile-box">
-    						<div class="profile-cover-pic">
-                                <vue-core-image-upload
-                                    crop-ratio="1:1"
-                                    class="fileupload btn btn-default"
-                                    :crop="false"
-                                    :headers="header"
-                                    @imageuploaded="overlayuploaded"
-                                    :maxWidth="1000"
-                                    url="/api/user/overlay">
-                                    <i class="fa fa-camera"></i>
-                                </vue-core-image-upload>
-    							<div class="profile-image-overlay" v-if="user.overlay!==null" v-bind:style="{ 'background-image': 'url(' + user.overlay + ')' }"></div>
-                                <div class="profile-image-overlay" v-else></div>
-    						</div>
-    						<div class="profile-info text-center">
-    							<div class="profile-img-wrap">
-    								<img class="inline-block mb-10" :src="user.avatar" alt="user"/>
-                                    <vue-core-image-upload
-                                        crop-ratio="1:1"
-                                        class="fileupload btn btn-primary"
-                                        :crop="true"
-                                        :headers="header"
-                                        @imageuploaded="imageuploaded"
-                                        :maxWidth="150"
-                                        url="/api/user/avatar">
-                                        <i class="fa fa-camera"></i>
-                                    </vue-core-image-upload>
-    							</div>
-                                <h5 class="profile-title">
-                                    <span class="font-24 weight-600">{{ user.name }} {{ user.last_name }}</span>
-                                    <br /><span class="font-20 weight-500">({{ user.nickname }})</span>
-                                </h5>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </div>
 <div class="row" v-if="user!==null">
 	<div class="col-lg-12 col-md-12 col-xs-12">
         <div class="panel panel-default card-view">
@@ -58,10 +13,6 @@
 									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You should set person's type. </p>
 									<div class="clearfix"></div>
 								</div>
-                                <div class="alert alert-success alert-dismissable" v-if="success">
-                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p>Profile data is updated.</p>
-                                </div>
     							<form autocomplete="off" @submit="save">
                                     <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Info</h6>
                                     <hr class="light-grey-hr">
@@ -176,6 +127,10 @@
                                         </button>			
     								</div>				
     							</form>
+                                <div class="alert alert-success alert-dismissable mt-20" v-if="success">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <p>Profile data is updated.</p>
+                                </div>
     						</div>
     					</div>
                 	</div>
@@ -190,8 +145,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
-import Cookies from 'js-cookie'
-import VueCoreImageUpload from 'vue-core-image-upload'
 
 export default {
     metaInfo: {
@@ -201,11 +154,22 @@ export default {
         user: 'authUser',
         authenticated: 'authCheck',
     }),
-    components: {
-        'vue-core-image-upload': VueCoreImageUpload,
-    },
     data() {
         return {
+            tabs: [
+                {
+                    name: 'Info',
+                    route: 'profile'
+                },
+                {
+                    name: 'Friends',
+                    route: 'friends.all'
+                },
+                {
+                    name: 'Teams',
+                    route: 'teams.all'
+                },
+            ],
             types: {
                 investor: 'investor',
                 player: 'player'
@@ -214,10 +178,7 @@ export default {
             success: false,
             error: false,
             response: null,
-            countries: null,
-            header: {
-                Authorization: 'Bearer ' + Cookies.get('token')
-            }
+            countries: null
         }
     },
     mounted() {
@@ -267,13 +228,6 @@ export default {
                 this.error = true
                 this.success = false;                
             });
-        },
-        imageuploaded(response) {
-            this.user.avatar = response.data.avatar;
-            //Event.fire('changeAvatar', this.user.avatar);
-        },
-        overlayuploaded(response) {
-            this.user.overlay = response.data.overlay;
         },
         getCountries: function()
         {

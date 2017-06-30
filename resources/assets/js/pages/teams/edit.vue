@@ -12,25 +12,27 @@
                                     class="fileupload btn btn-default"
                                     :crop="false"
                                     :headers="header"
+                                    :data="{id:team.id}"
                                     @imageuploaded="overlayuploaded"
                                     :maxWidth="1000"
                                     url="/api/teams/overlay">
                                     <i class="fa fa-camera"></i>
                                 </vue-core-image-upload>
-    							<div class="profile-image-overlay" v-if="team.overlay!==null" v-bind:style="{ 'background-image': 'url(' + team.overlay + ')' }"></div>
+    							<div class="profile-image-overlay" v-if="team.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(team.overlay) + ')' }"></div>
                                 <div class="profile-image-overlay" v-else></div>
     						</div>
     						<div class="profile-info text-center">
     							<div class="profile-img-wrap">
-    								<img class="inline-block mb-10" :src="team.image" alt="logo"/>
+    								<img class="inline-block mb-10" :src="getImageLink(team.image)" alt="logo"/>
                                     <vue-core-image-upload
                                         crop-ratio="1:1"
                                         class="fileupload btn btn-primary"
                                         :crop="true"
                                         :headers="header"
+                                        :data="{id:team.id}"
                                         @imageuploaded="imageuploaded"
                                         :maxWidth="150"
-                                        url="/api/teams/avatar">
+                                        url="/api/teams/logo">
                                         <i class="fa fa-camera"></i>
                                     </vue-core-image-upload>
     							</div>
@@ -133,7 +135,7 @@ export default {
             authenticated: 'authCheck',
         }),
         slug: function() {
-            var slug = this.sanitizeTitle(this.team.title);
+            var slug = this.slugTitle(this.team.title);
             this.team.slug = slug;
             return slug;
         }       
@@ -192,10 +194,10 @@ export default {
             });
         },
         imageuploaded(response) {
-            this.team.image = response.data.image;
+            this.team.image = response.image;
         },
         overlayuploaded(response) {
-            this.team.overlay = response.team.overlay;
+            this.team.overlay = response.overlay;
         },
         getGames: function()
         {
@@ -209,34 +211,10 @@ export default {
                 this.games = this.$parent.games;
             }  
         },
-        sanitizeTitle: function(title) {
-            var slug = "";
-            if(title!==null)
-            {
-                // Change to lower case
-                var titleLower = title.toLowerCase();
-                // Letter "e"
-                slug = titleLower.replace(/e|é|è|ẽ|ẻ|ẹ|ê|ế|ề|ễ|ể|ệ/gi, 'e');
-                // Letter "a"
-                slug = slug.replace(/a|á|à|ã|ả|ạ|ă|ắ|ằ|ẵ|ẳ|ặ|â|ấ|ầ|ẫ|ẩ|ậ/gi, 'a');
-                // Letter "o"
-                slug = slug.replace(/o|ó|ò|õ|ỏ|ọ|ô|ố|ồ|ỗ|ổ|ộ|ơ|ớ|ờ|ỡ|ở|ợ/gi, 'o');
-                // Letter "u"
-                slug = slug.replace(/u|ú|ù|ũ|ủ|ụ|ư|ứ|ừ|ữ|ử|ự/gi, 'u');
-                // Letter "d"
-                slug = slug.replace(/đ/gi, 'd');
-                // Trim the last whitespace
-                slug = slug.replace(/\s*$/g, '');
-                // Change whitespace to "-"
-                slug = slug.replace(/\s+/g, '-');
-            }
-        
-            return slug;
-        },
         getLink(slug)
         {
             let props = this.$router.resolve({ 
-                name: 'team',
+                name: 'team.detail',
                 params: { slug: slug },
             });
             

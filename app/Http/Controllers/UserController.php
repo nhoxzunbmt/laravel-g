@@ -9,6 +9,8 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Support\Facades\Storage;
 use Image;
+use App\Models\Team;
+use App\Models\TeamUser;
 
 class UserController extends Controller
 {
@@ -165,5 +167,21 @@ class UserController extends Controller
         $data = User::getApiUserData($user);
         
         return response()->json($data);
+	}
+    
+    /**
+	 * Update overlay.
+     * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function teams($id, Request $request)
+	{
+        $items = User::find($id)->teams()->with(['users', 'game'])->paginate(12)->appends('page');
+        //$items = Team::with(['users', 'game'])->wherePivot('user_id', '=', (int)$id)
+            //->paginate(12)->appends('page');
+        
+        return response()->json($items);
 	}
 }

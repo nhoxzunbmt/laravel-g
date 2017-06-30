@@ -240,6 +240,51 @@ var setHeightWidth = function () {
 </script>
 
 <style>
+/**
+** Profile
+*/
+.profile-box .profile-cover-pic .profile-image-overlay{
+    background-position: 50% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    opacity: 1 !important;
+}
+.profile-box .profile-info .profile-img-wrap {
+    bottom: 0px !important;
+    margin: -2px 10px !important;
+    position: absolute !important;
+}
+/*.profile-box .profile-cover-pic{
+    min-height: 250px !important;
+}*/
+.profile-box .profile-title{
+    position: absolute;
+    bottom: 60px;
+    left: 160px;
+    color: #fff;
+    padding: 10px;
+    text-align: left;
+    text-transform: none;
+}
+.profile-box .tab-struct{
+    margin-left: 170px;
+}
+
+.sticky{
+    background: #fff;
+}
+
+.profile-box .sticky .tab-struct{
+    margin-left: 0px !important;
+}
+
+.profile-box .sticky.profile-info .profile-img-wrap{
+    display: none;
+}
+
+.profile-cover-pic .g-core-image-upload-btn{
+    color: #fff !important;
+}
 .g-core-image-corp-container .info-aside{
     top: 65px !important;
     background: #000 !important;
@@ -261,34 +306,31 @@ var setHeightWidth = function () {
 .g-resize-bar{
     background-color: #177ec1 !important;
 }
-.profile-cover-pic .g-core-image-upload-btn{
-    color: #fff !important;
-}
-.profile-box .profile-cover-pic .profile-image-overlay{
-    background-position: 50% !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-    opacity: 1 !important;
-}
-.profile-box .profile-info .profile-img-wrap {
-    margin: -100px 15px 15px !important;
-}
-.profile-box .profile-cover-pic{
-    min-height: 250px !important;
-}
-.profile-box .profile-title{
-    position: absolute;
-    bottom: 55px;
-    left: 170px;
-    color: #fff;
-    padding: 10px;
-    text-align: left;
-    text-transform:none;
-}
 .g-core-image-upload-btn{
     font-size: 20px !important;
 }
 .g-core-image-upload-btn i{
     font-size: 20px;
+}
+
+
+/**
+** Navigation top
+*/
+.navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-online-status{
+    left: 40px !important;
+}
+.navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-title{
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: top;
+    line-height: 55px;
+    margin-right: 10px;
+}
+.navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-balance{
+    position: absolute;
+    top: 13px;
+    left: 65px;
+    font-size: 16px;
 }
 </style>
