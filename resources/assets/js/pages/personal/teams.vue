@@ -16,14 +16,16 @@
                                                 <th>Players in team</th>
                                                 <th>Need players</th>
                                                 <th>Game</th>
-                                                <th>Balance, $</th>
+                                                <th>Balance, <i aria-hidden="true" class="fa fa-btc"></i></th>
                                                 <th class="text-nowrap">Action</th>
                                             </tr>
                                         </thead>
     								    <tbody>
                                             <tr v-for="team in teams">
                                                 <td>
-                                                    <img :src="getImageLink(team.image)" class="img-responsive" :alt="team.title" />
+                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
+                                                        <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
+                                                    </router-link>
                                                 </td>
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">

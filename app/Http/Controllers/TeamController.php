@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Image;
 
 class TeamController extends Controller
-{
+{    
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +22,7 @@ class TeamController extends Controller
      */
     public function index(Request  $request)
     {
-        $items = Team::all();                    
+        $items = Team::search($request->all())->with(['users', 'game'])->orderBy('id', 'asc')->paginate(12)->appends('page');                    
         return response()->json($items);
     }
 
@@ -63,7 +63,8 @@ class TeamController extends Controller
          */
         TeamUser::create([
             "user_id" => $request->user()->id,
-            "team_id" => $result->id
+            "team_id" => $result->id,
+            "status" => TeamUser::ACCEPTED
         ]);
         
         return response()->json($result);        
@@ -75,13 +76,15 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($param)
     {
         try
         {
             $team = Team::with(['users' => function($query){
-                $query->select('id', 'name', 'email');
-            }])->findOrFail($id);
+                $query->select('name', 'email', 'avatar', 'status');
+            }])->where('id', $param)
+                ->orWhere('slug', $param)
+                ->firstOrFail();
         }
         catch(ModelNotFoundException $e)
         {
@@ -104,7 +107,7 @@ class TeamController extends Controller
         try
         {
             $team = Team::with(['users' => function($query){
-                $query->select('name', 'email');
+                $query->select('name', 'email', 'avatar', 'status');
             }])->findOrFail($id);
             
             

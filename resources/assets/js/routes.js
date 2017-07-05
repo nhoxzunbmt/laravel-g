@@ -7,11 +7,18 @@ export default [
         name: 'games',
         component: require('./pages/games/index.vue')
   },
-    {
+    /*{
         path: '/games/:gameId',
         name: 'game',
-        component: require('./pages/games/detail.vue')
-    },
+        component: require('./pages/games/detail/index.vue')
+    },*/
+    
+    { path: '/games/:gameId', component: require('./pages/games/detail/index.vue'), children: [
+        { path: '', redirect: { name: 'game' }},
+        { path: 'broadcasts', name: 'game', component: require('./pages/games/detail/_broadcasts.vue') },
+        { path: 'info', name: 'game.info', component: require('./pages/games/detail/_info.vue') }
+    ] },
+
     {
         path: '/streams/:stream',
         name: 'stream',
@@ -72,11 +79,11 @@ export default [
         name: 'teams.create',
         component: require('./pages/teams/create.vue')
     },
-    {
-        path: '/teams/:id/edit',
-        name: 'teams.edit',
-        component: require('./pages/teams/edit.vue')
-    },
+    { path: '/teams/:id/edit', component: require('./pages/teams/edit/index.vue'), children: [
+        { path: '', redirect: { name: 'teams.edit' }},
+        { path: 'info', name: 'teams.edit', component: require('./pages/teams/edit/_info.vue') },
+        { path: 'players', name: 'teams.edit.players', component: require('./pages/teams/edit/_players.vue') }
+    ]},
   ]),
 
   ...guestGuard([
@@ -95,14 +102,9 @@ export default [
   {
     path: '/teams',
     name: 'teams',
-    component: require('./pages/teams/index.vue'),
-    children: [
-        {
-            path: ':slug',
-            name: 'team.detail',
-            component: require('./pages/teams/detail.vue')
-        }
-    ]
+    component: require('./pages/teams/index.vue')
   },  
+  
+  { path: '/teams/:slug', name: 'team.detail', component: require('./pages/teams/detail/index.vue')},
   { path: '*', component: require('./pages/errors/404.vue') }
 ]

@@ -76,9 +76,14 @@ Vue.mixin({
     methods: {
         getImageLink(image)
         {
-            if(image!==undefined && image!=null && image!="" && !image.includes("http:") && !image.includes("https:"))
+            if(image!==undefined && image!=null && image!="")
             {
-                image = '/storage/'+image;
+                if(!image.includes("http:") && !image.includes("https:"))
+                {
+                    image = '/storage/'+image;
+                }
+            }else{
+                image = '/storage/users/default.png';
             }
             
             return image;

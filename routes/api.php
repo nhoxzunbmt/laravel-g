@@ -39,8 +39,9 @@ Route::resource('games', 'GameController', ['only' => [
 /**
  * Teams
  */
+Route::get('/teams/{param}', 'TeamController@show');
 Route::resource('teams', 'TeamController', ['only' => [
-    'index', 'show'
+    'index'/*, 'show'*/
 ]]);
 
 /**

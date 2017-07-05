@@ -9,6 +9,9 @@ class Team extends Model
     public $timestamps = false;
     protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image'];
     
+    const PENDING = 0;
+    const ACCEPTED = 1;
+    
     /**
      * Пользователи, которые принадлежат данной команде.
      */
@@ -31,5 +34,22 @@ class Team extends Model
     public function game()
     {
         return $this->belongsTo('App\Models\Game');
+    }
+    
+    public function scopeSearch($query, $request)
+    {
+        if(!empty($request['id']))
+        {
+            $query->where('id', (int)$request['id']);
+        }
+        if(!empty($request['status']))
+        {
+            $query->where('status', $request['status']);
+        }
+        if(!empty($request['game_id']))
+        {
+            $query->where('game_id', $request['game_id']);
+        }
+        return $query;
     }
 }

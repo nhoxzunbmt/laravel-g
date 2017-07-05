@@ -33,10 +33,10 @@
         						</div>
                                 
                                 <div class="profile-img-wrap">
-    								<img class="inline-block mb-10" :src="getImageLink(user.avatar)" alt="user"/>
+    								<img class="inline-block" :src="getImageLink(user.avatar)" alt="user"/>
                                     <vue-core-image-upload
                                         crop-ratio="1:1"
-                                        class="fileupload btn btn-primary"
+                                        class="fileupload btn btn-primary mb-10"
                                         :crop="true"
                                         :headers="header"
                                         @imageuploaded="imageuploaded"

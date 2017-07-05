@@ -168,29 +168,11 @@ class GameController extends Controller
                     {
                         $genre_id = 1;
                     }
-                    
-                    /*$image = $game->getImage();
-                    $logo = null;
-                    if(!empty($image["icon_url"]))
-                    {
-                        $path = $image["icon_url"];
-                        $extension = strtolower(File::extension(basename($path)));
-                        
-                        if(in_array($extension, ["jpg", "jpeg", "png"]) && !empty($path))
-                        {
-                            $logo = 'games/'.basename($path);
-                            $logo = str_replace(array("%20", "+"), "", $logo);
-                            Image::make($path)->save(public_path("storage/".$logo));
-                        }
-                    }*/
-                    
+                                        
                     $logo = null;
                     if(!empty($arGame['game']['box']['large']))
                     {
                         $path = str_replace("https", "http", $arGame['game']['box']['large']);
-                        
-                        //echo $path."\r\n";
-                        
                         $extension = strtolower(File::extension(basename($path)));
                         
                         if(in_array($extension, ["jpg", "jpeg", "png"]) && !empty($path))
@@ -202,13 +184,7 @@ class GameController extends Controller
                     }
                     
                     $arImages = [];
-                    $images = $game->getImages();
-                    
-                    /*if(!empty($arGame['game']['box']['large']))
-                    {
-                        array_unshift($images, ['medium_url'=> $arGame['game']['box']['large']]);
-                    }*/
-                    
+                    $images = $game->getImages();                
                     foreach($images as $arImage)
                     {
                         $path = $arImage['medium_url'];
@@ -224,6 +200,25 @@ class GameController extends Controller
                         }
                     }
                     
+                    $overlay = null;
+                    foreach($images as $arImage)
+                    {
+                        $path = $arImage['screen_url'];
+                        $extension = strtolower(File::extension(basename($path)));
+                        if(in_array($extension, ["jpg", "jpeg", "png"]) && !empty($path) && @getimagesize($path))
+                        {
+                            $image = 'games/'.basename($path);
+                            $image = str_replace(array("%", "+", ":"), "", $image);
+                            Image::make($path)->save(public_path("storage/".$image));
+                            $overlay = $image;
+                            
+                            break;
+                        }
+                    }
+                    
+                    
+                    
+                    
                     if($logo===NULL && count($arImages)>0)
                     {
                         $logo = $arImages[0];
@@ -237,6 +232,7 @@ class GameController extends Controller
                         'genre_id'    => $arGenres[$genre_id],
                         'images'      => json_encode($arImages),
                         'logo'        => $logo,
+                        'overlay'     => $overlay,  
                         'body'        => $game->getDeck(),
                         'online'      => true,
                         'alias'       => $game->getAliases()

@@ -25,6 +25,7 @@
 import { mapGetters } from 'vuex'
 import api from '../api'
 import axios from 'axios'
+import swal from 'sweetalert2';
 
 export default {
     computed: mapGetters({
@@ -190,6 +191,23 @@ export default {
             }).resize();
         });
         
+        //First on site
+        let confirm_cookie = localStorage.getItem('confirm_cookie')
+        if (confirm_cookie === null) 
+        {
+            swal({
+                title: 'First time on Toplay.tv?',
+                html: '<p>You can search your favourite games using genres!  Create team! Play with your friends! We hope you\'ll enjoy it!</p><br/>'+
+                '<p>Be advised that cookies are used to ensure you get the best experience on our website. If you continue to use this site, you consent to this use of cookies. Learn more about our Privacy and Cookie Policy.</p>'+
+                '<p>This website stores cookies on your computer. These cookies are used to improve your website experience and provide more personalized services to you. </p>',
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Accept!'
+            }).then(function () {
+                localStorage.setItem('confirm_cookie', true)
+            })
+        }
+        
         /*Event.listen('changeAvatar', (avatar) => {
             console.log('App (avatar changed listener) - '+avatar);
             this.auth.user.profile.avatar = avatar;
@@ -251,9 +269,14 @@ var setHeightWidth = function () {
 }
 .profile-box .profile-info .profile-img-wrap {
     bottom: 0px !important;
-    margin: -2px 10px !important;
+    margin: -8px 15px !important;
     position: absolute !important;
 }
+
+.profile-box .profile-info .profile-img-wrap img, .profile-box .profile-info .profile-img-wrap {
+    height: auto;
+}
+
 /*.profile-box .profile-cover-pic{
     min-height: 250px !important;
 }*/
@@ -313,6 +336,9 @@ var setHeightWidth = function () {
     font-size: 20px;
 }
 
+.table-responsive .team-image{
+    width: 55px;
+}
 
 /**
 ** Navigation top
