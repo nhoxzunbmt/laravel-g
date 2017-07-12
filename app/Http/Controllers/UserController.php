@@ -40,7 +40,19 @@ class UserController extends Controller
         
         if($request->has('q')) 
         {
-            $items = User::search($request->get('q'))->orderBy('id', 'asc')->paginate(12);
+            $items = User::search($request->get('q'))->orderBy('id', 'asc');
+            
+            if($request->has('type')) 
+            {
+                $items = $items->whereType($request->get('type'));
+            }
+            
+            if($request->has('active')) 
+            {
+                $items = $items->active();
+            }
+            
+            $items = $items->paginate(12);
             
             if($items->count()==0)
                 return response()->json($error);
@@ -178,10 +190,32 @@ class UserController extends Controller
 	 */
 	public function teams($id, Request $request)
 	{
-        $items = User::find($id)->teams()->with(['users', 'game'])->paginate(12)->appends('page');
-        //$items = Team::with(['users', 'game'])->wherePivot('user_id', '=', (int)$id)
-            //->paginate(12)->appends('page');
-        
+        $items = User::find($id)->teams()
+            ->where("team_user.status", 1)
+            ->with(['users', 'game'])
+            ->paginate(12)
+            ->appends('page');
+
         return response()->json($items);
 	}
+    
+    
+    /**
+	 * Get invitation list to teams.
+     * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return Response
+	 */
+    public function invitesToTeam($id, Request $request)
+    {
+        $user = User::findOrFail($id);
+        
+        $items = $user->teams()->with(['game'])
+            ->where("team_user.status", 0)
+            ->where("team_user.sender_id", "<>", $user->id)
+            ->get();
+        
+        return response()->json($items, 200);
+    }
 }

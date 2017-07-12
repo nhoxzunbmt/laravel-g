@@ -81,4 +81,14 @@ class FightUserController extends Controller
     {
         //
     }
+    
+    public function getInvites($team_id)
+    {
+        
+    }
+    
+    public function getRequests($team_id)
+    {
+        
+    }
 }

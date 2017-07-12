@@ -23,6 +23,9 @@ window.Vue = require('vue');
 require('vue-resource');
 require('select2');
 
+var SocialSharing = require('vue-social-sharing');
+Vue.use(SocialSharing);
+
 var VueBreadcrumbs = require('vue2-breadcrumbs');
 window.axios = require('axios');
 

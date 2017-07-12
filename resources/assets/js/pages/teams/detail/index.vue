@@ -51,7 +51,7 @@ var Sticky = require('sticky-js');
 export default {
     metaInfo () {
         return {
-            title: 'Team',
+            title: this.title,
         }
     },
     computed: {
@@ -62,14 +62,15 @@ export default {
     },
     data() {
         return {
+            title: 'Detail page of team',
             tabs: [
                 {
                     name: 'Info',
-                    route: 'teams.edit'
+                    route: 'team.detail'
                 },
                 {
                     name: 'Players',
-                    route: 'teams.edit.players'
+                    route: 'team.detail.players'
                 }
             ],
             team: null,
@@ -88,9 +89,11 @@ export default {
     methods: {
         getTeam()
         {
-            console.log(this.$route.params);
             axios.get('/api/teams/'+this.$route.params.slug).then((response) => {
                 this.$set(this, 'team', response.data);
+                
+                this.title = "Team: "+this.team.title;
+                this.$meta().refresh();
                 
                 Event.fire('teamEditLoad', {
                     team: response.data

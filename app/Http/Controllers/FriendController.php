@@ -109,8 +109,7 @@ class FriendController extends Controller
     public function getFriends(Request $request)
     {
         $user = $request->user();        
-        //$result = $user->getFriends(12); 
-        
+
         $friendships = $user->getAcceptedFriendships();
         $recipients  = $friendships->pluck('recipient_id')->all();
         $senders     = $friendships->pluck('sender_id')->all();

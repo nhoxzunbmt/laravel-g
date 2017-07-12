@@ -105,6 +105,11 @@ export default [
     component: require('./pages/teams/index.vue')
   },  
   
-  { path: '/teams/:slug', name: 'team.detail', component: require('./pages/teams/detail/index.vue')},
+  { path: '/teams/:slug', component: require('./pages/teams/detail/index.vue'), children: [
+        { path: '', redirect: { name: 'team.detail' }},
+        { path: 'info', name: 'team.detail', component: require('./pages/teams/detail/_info.vue') },
+        { path: 'players', name: 'team.detail.players', component: require('./pages/teams/detail/_players.vue') }
+  ]},
+  
   { path: '*', component: require('./pages/errors/404.vue') }
 ]

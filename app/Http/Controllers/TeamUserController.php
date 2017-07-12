@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Team;
+use App\Models\TeamUser;
 
 class TeamUserController extends Controller
 {
@@ -80,5 +82,5 @@ class TeamUserController extends Controller
     public function destroy($id)
     {
         //
-    }
+    }      
 }

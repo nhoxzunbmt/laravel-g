@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
  * Countries
  */
 Route::get('/countries', 'CountryController@index');
-//Route::get('/user/search', 'UserController@search');
+Route::get('/user/search', 'UserController@search');
 
 
 /**
@@ -78,17 +78,23 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user/overlay', 'UserController@overlay');
     Route::post('logout', 'Auth\AuthController@logout');
     Route::get('/user/{id}/teams', 'UserController@teams');
+    Route::get('/user/{id}/teams/invites', 'UserController@invitesToTeam');
+    Route::get('/user/{userId}/teams/{teamId}', 'UserController@getTeamById');
     
     /**
      * Teams
      */
+    Route::get('/teams/{id}/users', 'TeamController@users');
+    Route::get('/teams/{teamId}/users/{userId}', 'TeamController@userById');
+    Route::put('/teams/{teamId}/users/{userId}', 'TeamController@inviteUser');
+    
     Route::resource('teams', 'TeamController', ['only' => [
         'store', 'update', 'destroy', 'edit'
     ]]);
     Route::post('/teams/logo', 'TeamController@logo');
     Route::post('/teams/overlay', 'TeamController@overlay');
-    Route::post('/teams/{id}', 'TeamController@update');
-
+    Route::post('/teams/{id}', 'TeamController@update');    
+    
     /**
      * Friends
      */

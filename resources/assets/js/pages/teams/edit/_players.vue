@@ -5,7 +5,88 @@
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
-        
+                            
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="form-wrap">
+    									<div class="form-inline">
+                                            <button v-on:click="collapsed = !collapsed" class="btn btn-primary btn-icon">Invite players</button>
+                                            <div class="checkbox mr-15" v-bind:class="{'hide' : collapsed }">
+    											<input type="checkbox" v-model="selectAll" id="allInvites"/>
+                                                <label for="allInvites">Check all</label>
+    										</div>
+    										<button type="button" v-bind:class="{'hide' : collapsed }" @click="sendInvites()" class="btn btn-success btn-anim"><i class="icon-rocket"></i><span class="btn-text">Send invitations</span></button>
+    									</div>
+    								</div>
+                                </div>
+                            </div>
+                            
+                            <div v-bind:class="{'hide' : collapsed }" class="mb-20">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="input-group mb-15 mt-15">
+                                        	<input type="text" v-model="q" name="q" @keyup.enter="search()" class="form-control" placeholder="Search by name or email">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-primary" v-if="!loading" @click="search()"><i class="fa fa-search"></i></button>
+                                                <button class="btn btn-default" type="button" disabled="disabled" v-if="loading">Searching...</button>
+                                        	</span>
+                                        </div>
+                                        <div class="alert alert-danger" role="alert" v-if="error">
+                                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                            {{ error }}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="followers-wrap">
+                    				<ul class="followers-list-wrap">
+                    					<li class="follow-list">
+                                            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12" v-for="friend in friends">
+                        						<div class="follo-body">
+                        							<div class="follo-data">
+                                                        <router-link :to="{ name: friend.type, params: { id: friend.id }}">
+                                                            <img :src="getImageLink(friend.avatar)" class="user-img img-circle" :alt="friend.title" />
+                                                        </router-link>
+                        								<div class="user-data mt-15">
+                        									<span class="name block capitalize-font">{{ friend.nickname}}</span>
+                        									<span class="time block truncate txt-grey">{{ friend.name}} {{ friend.last_name}}</span>
+                        								</div>
+                                                        
+                                                        <div class="checkbox pull-right mt-20" v-if="!checkInTeam(friend.id)">
+    														<input type="checkbox" :value="friend.id" v-model="selected" :id="'checkbox'+friend.id" number/>
+                                                            <label :for="'checkbox'+friend.id">&nbsp;</label>
+    													</div>
+                                                        
+                                                        <div class="pull-right mt-20" v-else>
+                                                            <i class="fa fa-check text-danger"></i>
+    													</div>
+                                                        
+                                                        <div class="clearfix"></div>
+                        							</div>
+                                                </div>
+                                            </div>
+                    					</li>
+                    				</ul>
+                    			</div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>	
+    			</div>	
+    		</div>
+        </div>
+                                             
+        <div class="row" v-if="team!==null">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    			<div class="panel panel-default card-view">
+    				<div class="panel-wrapper collapse in">
+    					<div class="panel-body">
+                        
+                            <div class="alert alert-success alert-dismissable mt-20" v-if="inviteAnswerSuccess">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <p>Your response to the invitation has been saved.</p>
+                            </div>
+                        
                             <div class="table-wrap" v-if="team.users!==null">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
@@ -20,22 +101,32 @@
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="user in team.users">
+                                            <tr v-for="player in team.users" v-bind:class="{'danger' : player.status==2, 'success' : player.status==1 }">
                                                 <td>
-                                                    <router-link  :to="{ name: 'player', params: { id: user.pivot.user_id }}">
-                                                        <img :src="getImageLink(user.avatar)" class="img-responsive team-image" />
+                                                    <router-link  :to="{ name: 'player', params: { id: player.pivot.user_id }}">
+                                                        <img :src="getImageLink(player.avatar)" class="img-responsive team-image" />
                                                     </router-link>
                                                 </td>
                                                 <td>
-                                                    <router-link  :to="{ name: 'player', params: { id: user.pivot.user_id }}">
-                                                        {{ user.name}}
+                                                    <router-link  :to="{ name: 'player', params: { id: player.pivot.user_id }}">
+                                                        {{ player.name}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center">{{ user.email}}</td>
-                                                <td class="text-center"><i class="fa fa-check text-danger" v-if="user.pivot.user_id==team.capt_id"></i></td>
-                                                <td class="text-center"></td>
+                                                <td class="text-center">{{ player.email}}</td>
+                                                <td class="text-center"><i class="fa fa-check text-danger" v-if="player.pivot.user_id==team.capt_id"></i></td>
+                                                <td class="text-center">
+                                                    <span v-if="player.status==0">pending</span>
+                                                    <span v-if="player.status==1">accepted</span>
+                                                    <span v-if="player.status==2">denied</span>
+                                                </td>
                                                 <td class="text-nowrap text-center">
-                                                   
+                                                   <span v-if="team.capt_id!=player.sender_id && player.status==0">
+                                                        <select @change="answerToInvite(team.id, player.pivot.user_id, $event)" class='form-control' data-style="form-control btn-default btn-outline">
+                                                            <option v-for="status in statuses" v-bind:value="status.id">
+                                                                {{ status.title }}
+                                                            </option>
+                                                        </select>
+                                                   </span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -61,19 +152,60 @@ export default {
             title: 'Team',
         }
     },
-    computed: {
-        ...mapGetters({
-            user: 'authUser',
-            authenticated: 'authCheck',
-        })      
-    },
     data() {
         return {
             success: false,
             error: false,
             team: null,
-            response: null
+            response: null,
+            collapsed: true,
+            checkedAll: true,
+            friends: [],
+            q: this.$route.query.q || '',
+            loading: false,
+            selected: [],
+            statuses: [
+                {id:0, title: 'pending'},
+                {id:1, title: 'accept'},
+                {id:2, title: 'denied'}
+            ],
+            inviteAnswerSuccess: false
         }
+    },
+    computed: {
+        ...mapGetters({
+            user: 'authUser',
+            authenticated: 'authCheck',
+        }),
+        selectAll: {
+            get: function () {
+                return this.friends ? this.selected.length == this.friends.length : false;
+            },
+            set: function (value) {
+                var selected = [];
+
+                if (value) {
+                    this.friends.forEach(function (user) {
+                        selected.push(user.id);
+                    });
+                }
+
+                this.selected = selected;
+            }
+        },
+        usersInTeam: function () {
+            
+            var usersInTeam = [];
+            
+            if(this.friends.length)
+            {
+                this.team.users.forEach(function (user) {
+                    usersInTeam.push(user.pivot.user_id);
+                });
+            }
+            
+            return usersInTeam;
+        }     
     },
     mounted() {
         Event.listen('teamEditLoad', event => {
@@ -81,7 +213,63 @@ export default {
         });
         
         this.team = this.$parent.team;
+        
+        this.getFriends();
     },
-    methods: {},
+    methods: {
+        
+        getFriends(){
+            axios.get('/api/friends/getFriends'+location.search).then(response => {
+                
+                if(response.data.error!==undefined)
+                    this.error = response.data.error
+                
+                this.$set(this, 'friends', response.data.data);
+                delete response.data.data;
+                this.pagination = response.data;
+            });
+        },
+        search(){
+            if(this.q.length<2)
+                return false;
+            
+            this.error = false;
+            this.loading = true;
+            
+            axios.get('/api/user/search'+"?q="+this.q+"&type=player&active=1").then(response => {
+                
+                if(response.data.error!==undefined)
+                    this.error = response.data.error
+                
+                this.$set(this, 'friends', response.data.data);
+                this.loading = false;
+                delete response.data.data;
+            });
+        },
+        sendInvites(){
+            var _self = this;
+            
+            this.selected.forEach(function (user) {
+                _self.invite(user);
+            }); 
+            
+            //change team parent
+        },
+        invite(user_id)
+        {
+            axios.put('/api/teams/'+this.team.id+'/users/'+user_id).then(response => {
+                console.log(response);
+            });
+        },
+        answerToInvite(team_id, user_id, event)
+        {
+            axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:event.target.value}).then(response => {
+                this.inviteAnswerSuccess = true;
+            });
+        },
+        checkInTeam: function (value) {
+            return this.usersInTeam.indexOf(value) > -1 ? true : false;
+        }
+    },
 }
 </script>

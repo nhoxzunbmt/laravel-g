@@ -64,6 +64,7 @@ class TeamController extends Controller
         TeamUser::create([
             "user_id" => $request->user()->id,
             "team_id" => $result->id,
+            "sender_id" => $request->user()->id,
             "status" => TeamUser::ACCEPTED
         ]);
         
@@ -80,7 +81,7 @@ class TeamController extends Controller
     {
         try
         {
-            $team = Team::with(['users' => function($query){
+            $team = Team::with(['game', 'users' => function($query){
                 $query->select('name', 'email', 'avatar', 'status');
             }])->where('id', $param)
                 ->orWhere('slug', $param)
@@ -107,9 +108,8 @@ class TeamController extends Controller
         try
         {
             $team = Team::with(['users' => function($query){
-                $query->select('name', 'email', 'avatar', 'status');
+                $query->select('name', 'email', 'avatar', 'status', 'sender_id');
             }])->findOrFail($id);
-            
             
             if($team->capt_id!=$user->id)
             {
@@ -150,6 +150,27 @@ class TeamController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    
+    /**
+     * Get users of the team
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function users($id)
+    {
+        try
+        {
+            $users = Team::findOrFail($id)->users()->select('name', 'email', 'avatar', 'status');
+        }
+        catch(ModelNotFoundException $e)
+        {
+            return response()->json([], 404);
+        }
+        
+        return response()->json($users);
     }
     
     /**
@@ -198,7 +219,6 @@ class TeamController extends Controller
 	 * Update overlay.
      * 
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
 	 * @return Response
 	 */
 	public function overlay(Request $request)
@@ -224,4 +244,105 @@ class TeamController extends Controller
         
         return response()->json($team);
 	}
+    
+    /**
+     * Send invite user to the team
+     *
+     * @param  int  $teamId
+     * @param  int  $userId
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function inviteUser($teamId, $userId, Request $request)
+    {
+        $user = $request->user();
+    
+        $TeamUser = TeamUser::where("user_id", $userId)->where("team_id", $teamId)->first();
+    
+        if($TeamUser)
+        {   
+            $input = $request->all();
+            $TeamUser->update($input);
+            
+            return response()->json($TeamUser);
+        }else{
+    
+            $team = Team::findOrFail($teamId);
+            
+            if($team->capt_id!=$user->id)
+            {
+                //check user add himself to the team
+                if($userId!=$user->id)
+                {
+                    return response()->json(["error" => "Only captain can add new user to team."], 404);
+                }
+            }
+            
+            $result = TeamUser::create([
+                "user_id" => $userId,
+                "team_id" => $team->id,
+                "sender_id" => $request->user()->id,
+                "status" => TeamUser::PENDING
+            ]);
+        }
+        
+        return response()->json([
+            'success' => true,
+            '_id'=> $result->id
+        ], 200);
+    }
+    
+    
+    public function getRequestsOut($id, Request $request)
+    {
+        $user = $request->user();
+        
+        $query = TeamUser::where("sender_id", $user->id)
+            ->where("team_id", $id);
+        
+        if($request->has('status'))
+        {
+            $query = $query->where("status", (int)$request->get('status'));
+        }
+        
+        $result = $query->get();
+            
+        if($result)
+        {
+            return response()->json([
+                'success' => true
+            ], 200);
+        }else{
+            return response()->json([
+                'error' => 'Error of system. Try to make it later'
+            ], 200);
+        }
+    }    
+    
+    /**
+     * Get a list of potential team players
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchPotentialUsers($id, Request $request)
+    {
+        $user = $request->user(); 
+        $error = ['error' => 'No results found, please try with different keywords.'];
+        $teamUsers = TeamUser::where('team_id', $id)->select(['user_id'])->get();
+
+        if($request->has('q'))
+        {
+            $items = User::search($request->get('q'))
+                ->whereNotIn('id', $teamUsers)
+                ->where('type', $user->type)->active()
+                ->select(['id', 'name', 'last_name', 'avatar', 'nickname', 'type'])->paginate(12);
+            
+            if($items->count()==0)
+                return response()->json($error);
+
+            return response()->json($items);
+        }
+        
+        return response()->json($error);
+    }
 }
