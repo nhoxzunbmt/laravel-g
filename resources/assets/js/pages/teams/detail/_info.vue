@@ -34,8 +34,8 @@
 					<div class="pull-left">
 						<h3 class="panel-title txt-dark">
                             {{team.title}}
-                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-if="!checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Connect to the team</button>
-                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-else><i class="fa fa-check" aria-hidden="true"></i>&nbsp; Connected</button>
+                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-if="authenticated && !checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Connect to the team</button>
+                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-else-if="authenticated"><i class="fa fa-check" aria-hidden="true"></i>&nbsp; Connected</button>
                         </h3> 
 					</div>
 					<div class="clearfix"></div>
