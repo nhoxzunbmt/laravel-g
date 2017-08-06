@@ -68,6 +68,9 @@ Route::group(['middleware' => 'guest:api'], function () {
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     
+    /**
+     * Users
+     */
     Route::get('/user', function (Request $request) {
         $data = App\User::getApiUserData($request->user());
         return response()->json($data);
@@ -76,7 +79,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user', 'UserController@update');
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
-    Route::post('logout', 'Auth\AuthController@logout');
+    Route::post('/logout', 'Auth\AuthController@logout');
     Route::get('/user/{id}/teams', 'UserController@teams');
     Route::get('/user/{id}/teams/invites', 'UserController@invitesToTeam');
     Route::get('/user/{userId}/teams/{teamId}', 'UserController@getTeamById');
@@ -87,6 +90,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/teams/{id}/users', 'TeamController@users');
     Route::get('/teams/{teamId}/users/{userId}', 'TeamController@userById');
     Route::put('/teams/{teamId}/users/{userId}', 'TeamController@inviteUser');
+    Route::post('/teams/{id}/toInvestor', 'TeamController@linkToInvestor');
     
     Route::resource('teams', 'TeamController', ['only' => [
         'store', 'update', 'destroy', 'edit'

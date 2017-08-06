@@ -49,16 +49,22 @@
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr>
+                                                <th>Created at</th>
                                                 <th>Logo</th>
                                                 <th>Name</th>
-                                                <th>Players in team</th>
-                                                <th>Need players</th>
+                                                <th>Players</th>
                                                 <th>Game</th>
+                                                <th>Total fights</th>
+                                                <th>Count wins</th>
+                                                <th>Victory rate</th>
+                                                <th>Earned</th>
+                                                <th>Amount paid to investors</th>
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
     								    <tbody>
                                             <tr v-for="team in teams">
+                                                <td>{{ moment(team.created_at, "YYYY-MM-DD h:mm:ss").fromNow()}}</td>
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
                                                         <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
@@ -69,11 +75,22 @@
                                                         {{ team.title}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center">{{ team.users.length}}</td>
-                                                <td class="text-center">{{ team.quantity}}</td>
+                                                <td class="text-center"><router-link  :to="{ name: 'team.detail.players', params: { slug: team.slug }}">{{ team.users.length}}</router-link> / {{ team.quantity}}</td>
                                                 <td class="text-center" v-if="team.game!==null">{{ team.game.title}}</td>
                                                 <td class="text-center" v-else></td>
-                                                <td class="text-center">{{ team.status}}</td>
+                                                
+                                                <td class="text-center">{{team.count_fights}}</td>
+                                                <td class="text-center">{{team.count_wins}}</td>
+                                                <td class="text-center" v-if="team.count_fights>0">{{ Number((team.count_wins/team.count_fights).toFixed(2))}}</td>
+                                                <td class="text-center" v-else>0</td>
+                                                <td class="text-center">{{team.total_sum}}</td>
+                                                <td class="text-center">{{team.payed_dividents}}</td>
+    
+                                                <td class="text-center">
+                                                    <span v-if="team.status==0">pending</span>
+                                                    <span v-if="team.status==1">accepted</span>
+                                                    <button v-if="team.quantity>team.users.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -116,7 +133,7 @@
 <script> 
     import { mapGetters } from 'vuex'
     import axios from 'axios'
-       
+    
     export default {
         metaInfo: {
             title: 'Teams',
@@ -229,7 +246,13 @@
             search: function(event)
             {
                 this.$router.push(this.$route.path+"?"+$("#filter-form").serialize());
-            }
+            },
+            joinTeam(team_id)
+            {
+                axios.put('/api/teams/'+team_id+'/users/'+this.user.id).then(response => {
+                    console.log(response);
+                });
+            },
         },
         watch: {
             '$route.query'(newPage, oldPage) {

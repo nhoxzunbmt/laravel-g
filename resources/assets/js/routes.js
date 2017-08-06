@@ -79,6 +79,11 @@ export default [
         name: 'teams.create',
         component: require('./pages/teams/create.vue')
     },
+    {
+        path: '/fights/create',
+        name: 'fights.create',
+        component: require('./pages/fights/create.vue')
+    },
     { path: '/teams/:id/edit', component: require('./pages/teams/edit/index.vue'), children: [
         { path: '', redirect: { name: 'teams.edit' }},
         { path: 'info', name: 'teams.edit', component: require('./pages/teams/edit/_info.vue') },

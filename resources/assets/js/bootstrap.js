@@ -44,6 +44,9 @@ var truncateFilter = function(text, length, clamp){
 };
 Vue.filter('truncate', truncateFilter);
 
+import moment from 'moment'
+Vue.prototype.moment = moment
+
 /**
 **  Event bus 
 **/

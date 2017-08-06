@@ -12,6 +12,8 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Storage;
 use Image;
+use App\Mail\TeamLinkToInvestor;
+use Mail;
 
 class TeamController extends Controller
 {    
@@ -22,7 +24,9 @@ class TeamController extends Controller
      */
     public function index(Request  $request)
     {
-        $items = Team::search($request->all())->with(['users', 'game'])->orderBy('id', 'asc')->paginate(12)->appends('page');                    
+        $items = Team::search($request->all())->with(['game', 'fights', 'users' => function($query){
+            $query->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status', 'sender_id');
+        }])->orderBy('id', 'asc')->paginate(12)->appends('page');                    
         return response()->json($items);
     }
 
@@ -81,7 +85,7 @@ class TeamController extends Controller
     {
         try
         {
-            $team = Team::with(['game', 'users' => function($query){
+            $team = Team::with(['game', 'fights', 'users' => function($query){
                 $query->select('name', 'email', 'avatar', 'status');
             }])->where('id', $param)
                 ->orWhere('slug', $param)
@@ -264,6 +268,31 @@ class TeamController extends Controller
             $input = $request->all();
             $TeamUser->update($input);
             
+            /*$team = Team::with(['users' => function($query){
+                $query->select('status');
+            }])->where('id', $TeamUser->team_id);
+            
+            $q = intval($team->quantity);
+            
+            $countUsers = 0;
+            foreach($team->users as $player)
+            {
+                if($player->status==TeamUser::ACCEPTED)
+                {
+                    $countUsers++;
+                }
+            }*/
+            
+            $team = Team::findOrFail($TeamUser->team_id);
+            $countUsers = $team->users()->whereStatus(TeamUser::ACCEPTED)->count();
+            
+            if($team->quantity<=$countUsers)
+            {
+                Team::update($team->id, [
+                    'status' => Team::ACCEPTED
+                ]);
+            }
+            
             return response()->json($TeamUser);
         }else{
     
@@ -344,5 +373,21 @@ class TeamController extends Controller
         }
         
         return response()->json($error);
+    }
+    
+    public function linkToInvestor($id, Request $request)
+    {
+        $user = $request->user();
+        $team = Team::findOrFail($id);
+        
+        $content = [
+    		'url' => url(config('app.url')."/teams/".$team->slug),
+            'title' => '<a href="'.url(config('app.url')."/players/".$user->id).'">'.$user->name.'</a> sended you link to the team you can invest. Look at this!',
+    		'button' => 'Click Here'
+  		];
+
+    	Mail::to($request->get('email'))->send(new TeamLinkToInvestor($content));
+        
+        return response()->json(null, 200);
     }
 }
