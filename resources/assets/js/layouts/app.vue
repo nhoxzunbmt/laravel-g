@@ -37,7 +37,7 @@ export default {
     },
     data() {
         return {
-            siteName: "ToPlay.tv",
+            siteName: "Sparta.games",
             logo: '/images/logo.png',
             genres: [],
             popularGames: [],

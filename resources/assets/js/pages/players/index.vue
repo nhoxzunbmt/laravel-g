@@ -40,7 +40,7 @@
                                                         [{{ player.nickname}}] {{ player.name}} {{ player.last_name}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center"><span v-if="player.country_id>0"><img :src="'/images/flags/'+player.country.flag" :title="player.country.full_name" /></span><span v-else> - </span></td>
+                                                <td class="text-center"><span v-if="player.country_id>0 && country!==null"><img :src="'/images/flags/'+player.country.flag" :title="player.country.full_name" /></span><span v-else> - </span></td>
                                                 <td class="text-center">{{player.teams.length}}</td>
                                                 <td class="text-center"><span v-if="player.fights.length>0">{{player.fights.length}}</span><span v-else>0</span></td>
                                                 <td class="text-center"><span v-if="player.team_wins>0">{{player.team_wins}}</span><span v-else>0</span></td>
