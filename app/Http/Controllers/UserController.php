@@ -21,12 +21,28 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        return User::all();
+        $response = [];
+        try{
+            $statusCode = 200;
+            $response = User::filter($request->all())->with(['fights', 'country', 'teams'])->active()->orderBy('balance', 'desc')->paginate(12);                    
+        }catch (Exception $e){
+            $statusCode = 404;
+        }        
+        return response()->json($response, $statusCode);
     }
     
     public function show($id)
     {
-        return User::findOrFail($id);
+        $response = [];
+	    try{
+            $statusCode = 200;
+            $user = User::find($id);
+            $response = App\User::getApiUserData($user);
+        }catch (Exception $e){
+            $statusCode = 404;
+        }
+        
+        return response()->json($response, $statusCode);
     }
     
     /**

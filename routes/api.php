@@ -17,8 +17,12 @@ use Illuminate\Http\Request;
  * Countries
  */
 Route::get('/countries', 'CountryController@index');
-Route::get('/user/search', 'UserController@search');
 
+/**
+ * Users
+ */
+Route::get('/user/search', 'UserController@search');
+Route::get('/user/all', 'UserController@index');
 
 /**
  *Genres
@@ -78,13 +82,14 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         return response()->json($data);
     });
     
+    Route::get('/user/{id}', 'UserController@show');
     Route::post('/user', 'UserController@update');
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
-    Route::post('/logout', 'Auth\AuthController@logout');
     Route::get('/user/{id}/teams', 'UserController@teams');
     Route::get('/user/{id}/teams/invites', 'UserController@invitesToTeam');
     Route::get('/user/{userId}/teams/{teamId}', 'UserController@getTeamById');
+    Route::post('/logout', 'Auth\AuthController@logout');
     
     /**
      * Teams

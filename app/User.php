@@ -77,11 +77,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function country()
+    {
+        return $this->belongsTo('\Webpatser\Countries\Countries');
+    }
+    
+    /**
      * Команды, к которым принадлежит пользователь.
      */
     public function teams()
     {
-        return $this->belongsToMany('App\Models\Team', 'team_user');
+        return $this->belongsToMany('App\Models\Team');//, 'team_user');
     }
     
     /**
@@ -89,7 +97,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     public function fights()
     {
-        return $this->belongsToMany('App\Models\FightUser', 'fight_user', 'fight_id', 'user_id');
+        return $this->belongsToMany('App\Models\Fight');
+        //return $this->belongsToMany('App\Models\FightUser', 'fight_user', 'fight_id', 'user_id');
     }
     
     /**
@@ -211,5 +220,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'data' => $data,
             'meta' => $meta
         ];
+    }
+    
+    public function scopeFilter($query, $request)
+    {
+        if(!empty($request['type']))
+        {
+            $query->whereType($request['type']);
+        }
+        return $query;
     }
 }
