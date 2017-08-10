@@ -33,15 +33,6 @@
                                                 <span class="help-block" v-if="error && response.title">{{ response.title[0] }}</span>
     										</div>
     									</div>
-                                    </div>
-                                    <div class="row">
-    									<div class="col-md-6">
-    										<div class="form-group" :class="{ 'has-error': error && response.quantity }">
-                                                <label class="control-label mb-10">Quantity</label>
-                                                <input v-model.number="quantity" type="number" class="form-control" placeholder="quantity">
-                                                <span class="help-block" v-if="error && response.quantity">{{ response.quantity[0] }}</span>  
-                                            </div>
-    									</div>
                                         <div class="col-md-6">
     										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
                                                 <label class="control-label mb-10">Game</label>
@@ -54,6 +45,51 @@
                                             </div>
     									</div>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+    										<div class="form-group" :class="{ 'has-error': error && response.type }">
+                                                <label class="control-label mb-10">Type</label>
+    											<select v-model="type" class='form-control' data-style="form-control btn-default btn-outline">
+                                                    <option v-for="type in types" v-bind:value="type.id">
+                                                        {{ type.title }}
+                                                    </option>
+                                                </select>
+                                                <span class="help-block" v-if="error && response.type">{{ response.type[0] }}</span>
+                                            </div>
+    									</div>
+    									<div class="col-md-6">
+    										<div class="form-group" :class="{ 'has-error': error && response.quantity }">
+                                                <label class="control-label mb-10">Quantity</label>
+                                                <input v-model.number="quantity" type="number" class="form-control" placeholder="quantity">
+                                                <span class="help-block" v-if="error && response.quantity">{{ response.quantity[0] }}</span>  
+                                            </div>
+    									</div>
+                                        
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+    										<div class="form-group" :class="{ 'has-error': error && response.start_at }">
+                                                <label class="control-label mb-10">Date & time</label>
+                                                <div class="row">
+        											<div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                                                        <date-picker v-model="start_at" lang="en"></date-picker>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                                        <vue-timepicker format="HH:mm:ss" v-model="start_at_time" :minute-interval="5"></vue-timepicker>
+                                                    </div>
+                                                </div>
+                                                <span class="help-block" v-if="error && response.start_at">{{ response.start_at[0] }}</span>
+                                            </div>
+    									</div>
+    									
+                                        
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                      
     								<div class="form-actions mt-10">
                                         <button type="submit" class="btn btn-primary mr-10">
                                             <span>Save</span>
@@ -74,11 +110,14 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import DatePicker from 'vue2-datepicker'
+import VueTimepicker from 'vue2-timepicker'
 
 export default {
     metaInfo: {
         title: 'Fight create'
     },
+    components: { DatePicker, VueTimepicker },
     computed: {
         ...mapGetters({
             user: 'authUser',
@@ -91,9 +130,20 @@ export default {
             quantity: 2,
             game_id: null,
             games: [],
+            type: null,
             success: false,
             error: false,
-            response: null
+            response: null,
+            types: [
+                {id: 'personal', title: 'personal'},
+                {id: 'team', title: 'team'}
+            ],
+            start_at: null,
+            start_at_time: {
+                HH: "00",
+                mm: "05",
+                ss: "00"
+            }
         }
     },
     mounted() {
@@ -147,3 +197,24 @@ export default {
     },
 }
 </script>
+
+<style>
+    .datepicker .input, .time-picker input.display-time{
+        border: 1px solid rgba(33, 33, 33, 0.12) !important;
+        border-radius: 0 !important;
+        background-color: #fff !important;
+        box-shadow: none !important;
+        color: #212121 !important;
+        height: 42px !important;
+        width: 100% !important;
+    }
+    .datepicker, .time-picker, .time-picker .dropdown .select-list, .time-picker .dropdown{
+        width: 100% !important;
+    }
+    .time-picker .dropdown{
+        top: 42px !important;
+    }
+    .time-picker .dropdown ul li.active, .time-picker .dropdown ul li.active:hover{
+        background: #177ec1 !important;
+    }
+</style>

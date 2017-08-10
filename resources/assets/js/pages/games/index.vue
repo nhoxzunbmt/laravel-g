@@ -5,6 +5,8 @@
                 <h5 class="txt-dark">Games</h5>
         	</div>
         </div>
+    
+        <!--
         <div class="row">
         	<div class="col-md-12">
         		<div class="panel panel-default card-view">
@@ -14,14 +16,12 @@
                                 <form autocomplete="off" id="genre-form">
                                     <div class="row">
         								<div class="col-md-3">
-        									<!--<div class="form-group">
-        										<label class="control-label mb-10">Select genre</label>-->
                                                 <select v-model="genre_id" name="genre_id" class='form-control' data-style="form-control btn-default btn-outline" id="genre_list">
                                                     <option v-for="genre in genres" v-bind:value="genre.id">
                                                         {{ genre.title }}
                                                     </option>
                                                 </select>
-        									<!--</div>-->	
+        										
         								</div>
                                     </div>
                                 </form>
@@ -30,7 +30,7 @@
         			</div>
         		</div>
         	</div>
-        </div>
+        </div>-->
         
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6" v-for="game in games">

@@ -49,7 +49,6 @@
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Created at</th>
                                                 <th>Logo</th>
                                                 <th>Name</th>
                                                 <th>Players</th>
@@ -64,7 +63,7 @@
                                         </thead>
     								    <tbody>
                                             <tr v-for="team in teams">
-                                                <td>{{ moment(team.created_at, "YYYY-MM-DD h:mm:ss").fromNow()}}</td>
+                                                <!--<td>{{ moment(team.created_at, "YYYY-MM-DD h:mm:ss").fromNow()}}</td>-->
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
                                                         <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />

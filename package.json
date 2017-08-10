@@ -28,6 +28,7 @@
     "vue-social-sharing": "^2.2.3",
     "vue-sticky": "^3.1.5",
     "vue-sticky-js": "0.0.4",
+    "vue2-timepicker": "^0.1.4",
     "vuex": "^2.2.1",
     "vuex-router-sync": "^4.1.2"
   },

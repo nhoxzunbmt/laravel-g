@@ -12,7 +12,15 @@
     		<a id="toggle_nav_btn" class="toggle-left-nav-btn inline-block ml-20 pull-left" href="javascript:void(0);"><i class="zmdi zmdi-menu"></i></a>
     		<a id="toggle_mobile_search" data-toggle="collapse" data-target="#search_form" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-search"></i></a>
     		<a id="toggle_mobile_nav" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-more"></i></a>
-    		<form id="search_form" role="search" class="top-nav-search collapse pull-left">
+    		
+            <router-link :to="{ name: 'streams' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Online streams</router-link>
+            
+            <router-link :to="{ name: 'teams' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Top teams</router-link>
+            
+            <router-link :to="{ name: 'players' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Top players</router-link>
+            
+            
+            <form id="search_form" role="search" class="top-nav-search collapse pull-left">
     			<div class="input-group">
     				<input type="text" name="example-input1-group2" class="form-control" placeholder="Search">
     				<span class="input-group-btn">

@@ -5,6 +5,7 @@ namespace App\Acme\Helpers;
 use App\Models\Game;
 use Illuminate\Support\Str;
 use Cache;
+use Illuminate\Http\Request;
 
 class TwitchHelper{
     
@@ -57,5 +58,36 @@ class TwitchHelper{
         }
         
         return $channel;
+    }
+    
+    public function getFeaturedStreams(Request $request)
+    {
+        $cache_key = 'twitchgetFeaturedStreams';
+        
+        if (Cache::has($cache_key)){
+            $streams = Cache::get($cache_key);
+        } else {
+            $twitchClient = new \TwitchApi\TwitchApi([
+                'client_id' => env('TWITCH_API_CLIENT_ID')
+            ]); 
+            
+            $limit = 100;
+            $offset = 0;
+            if($request->has('limit')) 
+            {
+                $limit = intval($request->get('limit'));
+            } 
+            if($request->has('offset')) 
+            {
+                $offset = intval($request->get('offset'));
+            }
+    
+            $responseTwitch = $twitchClient->getFeaturedStreams($limit, $offset);
+            $streams = $responseTwitch["featured"];
+            
+            Cache::put($cache_key, $streams, 10);
+        }
+
+        return $streams;
     }
 }

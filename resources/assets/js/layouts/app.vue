@@ -359,4 +359,20 @@ var setHeightWidth = function () {
     left: 65px;
     font-size: 16px;
 }
+
+@media (min-width: 1025px){
+    .navbar.navbar-inverse.navbar-fixed-top .top-nav-search {
+        width: 150px;
+    }
+    .navbar.navbar-inverse.navbar-fixed-top .top-nav-search .input-group input {
+        border-radius: 2px;
+    }
+}
+
+@media (max-width: 1024px){
+    .navbar.navbar-inverse.navbar-fixed-top .btn-warning{
+        display: none !important;
+    }
+}
+
 </style>

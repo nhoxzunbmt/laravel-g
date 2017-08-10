@@ -18,7 +18,11 @@ export default [
         { path: 'broadcasts', name: 'game', component: require('./pages/games/detail/_broadcasts.vue') },
         { path: 'info', name: 'game.info', component: require('./pages/games/detail/_info.vue') }
     ] },
-
+    {
+        path: '/streams/',
+        name: 'streams',
+        component: require('./pages/streams/index.vue')
+    },
     {
         path: '/streams/:stream',
         name: 'stream',

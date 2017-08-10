@@ -47,8 +47,10 @@ Route::resource('teams', 'TeamController', ['only' => [
 /**
  * Twitch & streams
  */
+Route::get('/twitch/', '\App\Acme\Helpers\TwitchHelper@getFeaturedStreams');
 Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
 Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
+
 
 /**
  * Login & register
