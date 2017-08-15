@@ -57,23 +57,13 @@
                                                 <span class="help-block" v-if="error && response.type">{{ response.type[0] }}</span>
                                             </div>
     									</div>
-    									<div class="col-md-6">
-    										<div class="form-group" :class="{ 'has-error': error && response.quantity }">
-                                                <label class="control-label mb-10">Quantity</label>
-                                                <input v-model.number="quantity" type="number" class="form-control" placeholder="quantity">
-                                                <span class="help-block" v-if="error && response.quantity">{{ response.quantity[0] }}</span>  
-                                            </div>
-    									</div>
-                                        
-                                    </div>
-                                    
-                                    <div class="row">
+    									
                                         <div class="col-md-6">
     										<div class="form-group" :class="{ 'has-error': error && response.start_at }">
                                                 <label class="control-label mb-10">Date & time</label>
                                                 <div class="row">
         											<div class="col-md-8 col-sm-12 col-xs-12 form-group">
-                                                        <date-picker v-model="start_at" lang="en"></date-picker>
+                                                        <date-picker v-model="start_at_date" lang="en"></date-picker>
                                                     </div>
                                                     <div class="col-md-4 col-sm-12 col-xs-12 form-group">
                                                         <vue-timepicker format="HH:mm:ss" v-model="start_at_time" :minute-interval="5"></vue-timepicker>
@@ -82,8 +72,18 @@
                                                 <span class="help-block" v-if="error && response.start_at">{{ response.start_at[0] }}</span>
                                             </div>
     									</div>
-    									
+                                    </div>
+                                    
+                                    <div class="row">
                                         
+    									
+                                        <div class="col-md-6" v-if="type=='personal'">
+    										<div class="form-group" :class="{ 'has-error': error && response.count_parts }">
+                                                <label class="control-label mb-10">Quantity</label>
+                                                <input v-model.number="count_parts" type="number" class="form-control" placeholder="quantity">
+                                                <span class="help-block" v-if="error && response.count_parts">{{ response.count_parts[0] }}</span>  
+                                            </div>
+    									</div>
                                     </div>
                                     
                                     
@@ -138,7 +138,7 @@ export default {
                 {id: 'personal', title: 'personal'},
                 {id: 'team', title: 'team'}
             ],
-            start_at: null,
+            start_at_date: null,
             start_at_time: {
                 HH: "00",
                 mm: "05",
@@ -165,22 +165,23 @@ export default {
         save(event) {
             event.preventDefault()
             
-            /*axios.post('/api/teams', {
+            axios.post('/api/fights', {
                 title : this.title,
-                slug: this.slug,
-                quantity: this.quantity,
+                type: this.type,
+                start_at_date: this.start_at_date,
+                start_at_time: this.start_at_time.HH+":"+this.start_at_time.mm+":"+this.start_at_time.ss,
                 game_id: this.game_id
             }).then(response => {
                 this.error = false;
                 this.success = true;
                 
-                this.$router.push({ name: 'teams.edit', params: { id: response.data.id } })
+                //this.$router.push({ name: 'teams.edit', params: { id: response.data.id } })
                 
             }).catch(error => {
                 this.response = error.response.data
                 this.error = true
                 this.success = false;                
-            });*/
+            });
         },
         getGames: function()
         {

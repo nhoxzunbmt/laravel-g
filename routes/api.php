@@ -55,6 +55,12 @@ Route::get('/twitch/', '\App\Acme\Helpers\TwitchHelper@getFeaturedStreams');
 Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
 Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
 
+/**
+ * Figths
+ */
+Route::resource('fights', 'FightController', ['only' => [
+    'index'/*, 'show'*/
+]]);
 
 /**
  * Login & register
@@ -105,6 +111,13 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/teams/logo', 'TeamController@logo');
     Route::post('/teams/overlay', 'TeamController@overlay');
     Route::post('/teams/{id}', 'TeamController@update');    
+    
+    /**
+     * Fights
+     */
+    Route::resource('fights', 'FightController', ['only' => [
+        'store', 'update', 'destroy', 'edit'
+    ]]);
     
     /**
      * Friends

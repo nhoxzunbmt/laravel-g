@@ -1,9 +1,9 @@
 <template>
 <div>
     <div class="row" v-if="team!==null">
-    	<div class="col-lg-12 col-md-12 col-xs-12">
+    	<div class="col-lg-4 col-md-6 col-xs-12">
             <div class="panel panel-default card-view pa-0">
-                <h6 class="ml-10 mt-10">Share with friends:</h6>
+                <h6 class="ml-10 mt-10">Invite Player:</h6>
                 <social-sharing :title="team.title" inline-template>
                 <div class="button-list mb-15 ml-5">
                     <network network="facebook">
@@ -25,6 +25,24 @@
                 </social-sharing>
              </div>
         </div>
+        
+        <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default card-view pa-0">
+                <h6 class="ml-10 mt-10">Invite investor:</h6>
+                <div class="mb-15 mt-15">
+                    <button class="btn btn-primary ml-10" v-if="authenticated" @click="sendToInvestor()">&nbsp; Apply to Investor</button>
+                </div>
+             </div>
+        </div>        
+        <div class="col-lg-4 col-md-6 col-xs-12">
+            <div class="panel panel-default card-view pa-0">
+                <h6 class="ml-10 mt-10">Players wanted: {{team.quantity-team.users.length}}</h6>
+                <div class="mb-15 mt-15">
+                    <button class="btn btn-primary btn-icon left-icon ml-10" v-if="authenticated && !checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Join to Team</button>
+                    <span class="btn btn-primary btn-icon left-icon ml-10" v-else-if="authenticated"><i class="fa fa-check"></i>&nbsp; Your are in the team</span>
+                </div>
+             </div>
+        </div>
      </div>      
      <div class="row" v-if="team!==null">
     	<div class="col-lg-12 col-md-12 col-xs-12">
@@ -34,10 +52,6 @@
 					<div class="pull-left">
 						<h2 class="panel-title txt-dark">
                             {{team.title}}
-                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-if="authenticated && !checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Connect to the team</button>
-                            <button class="btn btn-primary btn-icon left-icon btn-xs ml-10" v-else-if="authenticated"><i class="fa fa-check" aria-hidden="true"></i>&nbsp; Connected</button>
-                       
-                            <button class="btn btn-primary btn-xs ml-10" v-if="authenticated" @click="sendToInvestor()">&nbsp; Send to investor</button>
                         </h2> 
 					</div>
 					<div class="clearfix"></div>
@@ -55,10 +69,12 @@
                                     <span v-if="team.status==0">pending</span>
                                     <span v-if="team.status==1">accepted</span>
                                   </dd>
-                                  <dt class="mb-10">Players in team</dt>
-        						  <dd class="mb-10">{{ team.users.length}}</dd>
-        						  <dt class="mb-10">Need players</dt>
-        						  <dd>{{team.quantity}}</dd>
+                                  <dt class="mb-10">
+                                        <router-link :to="{ name: 'team.detail.players' }" style="border-bottom: 1px dashed;">
+                                            Players in team
+                                        </router-link>
+                                  </dt>
+        						  <dd>{{ team.users.length}}</dd>
         						</dl>
         					</div>
                         </div>
@@ -68,7 +84,10 @@
                                   <dt class="mb-10">Captain</dt>
         						  <dd class="mb-10"><span v-if="team.users.length>0">{{team.users[0].name}}</span><span v-else>-</span></dd>
                                   <dt class="mb-10">Game</dt>
-        						  <dd class="mb-10">{{team.game.title}}</dd>
+        						  <dd class="mb-10">
+                                    <img :src="getImageLink(team.game.logo)" class="zmdi mr-5" width="17" :alt="team.game.title" />
+                                    <span style="vertical-align: top;">{{team.game.title}}</span>
+                                  </dd>
         						  <dt class="mb-10">Total fights</dt>
         						  <dd class="mb-10">{{team.count_fights}}</dd>
                                   <dt class="mb-10">Count wins</dt>

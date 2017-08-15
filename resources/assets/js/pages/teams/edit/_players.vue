@@ -253,6 +253,11 @@ export default {
                 _self.invite(user);
             }); 
             
+            swal({
+                type: 'success',
+                title: 'Invitations were sent!',
+                html: 'Invitations were sent to all players.'
+            })
             //change team parent
         },
         invite(user_id)

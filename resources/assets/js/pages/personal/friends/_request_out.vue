@@ -18,8 +18,8 @@
     									<span class="name block capitalize-font">{{ user.nickname}}</span>
     									<span class="time block truncate txt-grey">{{ user.name}} {{ user.last_name}}</span>
     								</div>
-    								<button class="btn btn-primary pull-right btn-xs fixed-btn mt-20" @click="cancel(user)" v-if="!user.canceled">Cancel</button>
-                                    <button class="btn btn-default pull-right btn-xs fixed-btn mt-20" v-if="user.canceled" >Canceled</button>
+    								<button class="btn btn-primary pull-right btn-xs fixed-btn mt-20 btn-outline" @click="cancel(user)" v-if="!user.canceled">Cancel</button>
+                                    <button class="btn btn-default pull-right btn-xs fixed-btn mt-20 btn-outline" v-if="user.canceled" >Canceled</button>
                                     
     								<div class="clearfix"></div>
     							</div>

@@ -30,7 +30,7 @@
 </head>
 
 <body>
-    <div class="wrapper theme-5-active pimary-color-blue">
+    <div class="wrapper theme-4-active pimary-color-blue">
         
         @include('_partials.nav')
         @include('_partials.left_sidebar')

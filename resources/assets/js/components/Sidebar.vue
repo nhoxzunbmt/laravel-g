@@ -15,32 +15,6 @@
             </router-link>
         </li>
         
-        <li v-if="authenticated && user.type=='player'"><hr class="light-grey-hr mb-10"/></li>
-        
-        <li v-if="authenticated && user.type=='player'">
-            <router-link :to="{ name: 'teams.create' }">
-                <div class="mr-10">
-                    <button class="btn btn-info w-100"> 
-                        <span class="btn-text">Create Team</span>
-                    </button>
-                </div>
-                <div class="clearfix"></div>
-            </router-link>
-        </li>
-        
-        <li v-if="authenticated && user.type=='player'"><hr class="light-grey-hr mb-10"/></li>
-        
-        <li v-if="authenticated && user.type=='player'">
-            <router-link :to="{ name: 'fights.create' }">
-                <div class="mr-10">
-                    <button class="btn btn-primary w-100"> 
-                        <span class="btn-text">Create Fight</span>
-                    </button>
-                </div>
-                <div class="clearfix"></div>
-            </router-link>
-        </li>
-        
 		<li><hr class="light-grey-hr mb-10"/></li>
 		<li class="navigation-header">
 			<span>left menu</span> 

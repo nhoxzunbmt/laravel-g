@@ -54,9 +54,19 @@ export default [
         component: require('./pages/investors/detail.vue')
     },
     {
+        path: '/investors-info',
+        name: 'investors-info',
+        component: require('./pages/investors-info.vue')
+    },
+    {
         path: '/fights',
         name: 'fights',
         component: require('./pages/fights/index.vue')
+    },
+    {
+        path: '/fights/:id',
+        name: 'fight',
+        component: require('./pages/fights/detail.vue')
     },
     
   ...authGuard([

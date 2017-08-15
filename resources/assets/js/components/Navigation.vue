@@ -19,6 +19,7 @@
             
             <router-link :to="{ name: 'players' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Top players</router-link>
             
+            <router-link :to="{ name: 'investors-info' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">For Investors</router-link>
             
             <form id="search_form" role="search" class="top-nav-search collapse pull-left">
     			<div class="input-group">

@@ -6,6 +6,7 @@
         <!-- Main Content -->
 		<div class="page-wrapper">
             <div class="container-fluid">
+                <navbuttons></navbuttons>
                 <child/>
             </div>
 			
@@ -38,7 +39,7 @@ export default {
     data() {
         return {
             siteName: "Sparta.games",
-            logo: '/images/logo.png',
+            logo: '/images/logo-2.png',
             genres: [],
             popularGames: [],
             games: []
@@ -196,7 +197,7 @@ export default {
         if (confirm_cookie === null) 
         {
             swal({
-                title: 'First time on Toplay.tv?',
+                title: 'First time on SPARTA.games?',
                 html: '<p>You can search your favourite games using genres!  Create team! Play with your friends! We hope you\'ll enjoy it!</p><br/>'+
                 '<p>Be advised that cookies are used to ensure you get the best experience on our website. If you continue to use this site, you consent to this use of cookies. Learn more about our Privacy and Cookie Policy.</p>'+
                 '<p>This website stores cookies on your computer. These cookies are used to improve your website experience and provide more personalized services to you. </p>',
@@ -258,6 +259,22 @@ var setHeightWidth = function () {
 </script>
 
 <style>
+
+.col-item .photo img{
+    width: 100%;
+}
+.col-item .info, .dropdown-menu{
+    background: #284152;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered,
+.select2-selection.select2-selection--multiple, 
+.form-control, 
+.wizard .content > .body input, .mce-floatpanel .mce-textbox, .mce-floatpanel .mce-btn, .dataTables_wrapper .dataTables_filter input, .dataTables_wrapper .dataTables_length select, .jsgrid-cell input, .jsgrid-cell select, .tablesaw-bar .btn-select select, .dd-handle, .dd3-content, .app-search .form-control:focus, .app-search .select2-container--default .select2-selection--single:focus, .select2-container--default .app-search .select2-selection--single:focus, .app-search .select2-selection.select2-selection--multiple:focus, .app-search .mce-floatpanel .mce-textbox:focus, .mce-floatpanel .app-search .mce-textbox:focus, .app-search .mce-floatpanel .mce-btn:focus, .mce-floatpanel .app-search .mce-btn:focus, .app-search .dataTables_wrapper .dataTables_filter input:focus, .dataTables_wrapper .dataTables_filter .app-search input:focus, .app-search .dataTables_wrapper .dataTables_length select:focus, .dataTables_wrapper .dataTables_length .app-search select:focus, .app-search .jsgrid-cell input:focus, .jsgrid-cell .app-search input:focus, .app-search .jsgrid-cell select:focus, .jsgrid-cell .app-search select:focus, .app-search .tablesaw-bar .btn-select select:focus, .tablesaw-bar .btn-select .app-search select:focus, .app-search .dd-handle:focus, .app-search .dd3-content:focus {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background-color: #102e42;
+}
+
 /**
 ** Profile
 */
@@ -266,6 +283,7 @@ var setHeightWidth = function () {
     background-repeat: no-repeat !important;
     background-size: cover !important;
     opacity: 1 !important;
+    background-color: #102e42;
 }
 .profile-box .profile-info .profile-img-wrap {
     bottom: 0px !important;
@@ -294,7 +312,7 @@ var setHeightWidth = function () {
 }
 
 .sticky{
-    background: #fff;
+    background: #284152; /*#fff;*/
 }
 
 .profile-box .sticky .tab-struct{
@@ -375,4 +393,37 @@ var setHeightWidth = function () {
     }
 }
 
+.navbar.navbar-inverse.navbar-fixed-top .nav-header .logo-wrap {
+    padding-top: 10px;
+}
+.navbar.navbar-inverse.navbar-fixed-top .nav-header .logo-wrap .brand-img {
+    margin-right: 5px;
+    top: 8px;
+}
+
+.page-wrapper {
+    background: #102e42;
+}
+.card-view {
+    background: #284152;
+    margin-bottom: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    box-shadow: none;
+    padding: 15px 15px 0;
+    margin-left: -9px;
+    margin-right: -9px;
+}
+.txt-dark {
+    color: #fff !important;
+}
+.control-label {
+    color: #fff;
+}
+
+.datepicker .input, .time-picker input.display-time{
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background-color: #102e42 !important;
+    color: #fff !important;
+}
 </style>

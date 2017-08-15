@@ -22,7 +22,7 @@ export default {
   },
 
   metaInfo: {
-    title: 'Laravel'
+    title: 'Sparta.Games'
   },
 
   data: () => ({

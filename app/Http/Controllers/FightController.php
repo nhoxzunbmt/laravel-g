@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use App\Models\Fight;
 use App\Models\Game;
-use Request;
+//use Request;
+use Illuminate\Http\Request;
 use Cache;
+use Validator;
 
 class FightController extends Controller
 {
@@ -17,15 +19,13 @@ class FightController extends Controller
      */
     public function index()
     {    
-        $id = Str::slug(implode(Request::all()));
+        /*$id = Str::slug(implode(Request::all()));
         $figths = Cache::remember('figths' . $id, 60, function(){
             return Fight::published()->orderBy('id', 'asc')->paginate(12);
-        });       
+        });*/       
         
-        $figths = Fight::published()->orderBy('id', 'asc')->paginate(12);
-        
-        dd($figths);
-        return view('fight.index')->with(compact('fights'));
+        $figths = Fight::orderBy('start_at', 'desc')->with(['game', 'teams', 'users'])->paginate(12);
+        return response()->json($figths);
     }
 
     /**
@@ -47,7 +47,29 @@ class FightController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request['start_at'] = substr($request->get('start_at_date'), 0, 10)." ".$request->get('start_at_time');
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|max:255',
+            'game_id'  => 'required|regex:#^[0-9]+$#',
+            'type' => 'required',
+            'start_at' => 'required|date_format:Y-m-d H:i:s',//|after:now',
+        ]);
+
+        if ($validator->fails()) 
+        {
+            return response()->json($validator->messages(), 422);
+        }else{
+            $input = $request->all();
+            unset($input["start_at_date"]);
+            unset($input["start_at_time"]);
+            $input['created_id'] = $request->user()->id;
+            
+            $arGame = Game::findOrFail($input["game_id"]);
+            $input['count_team_users'] = intval($arGame["min_players"]);
+            
+            $result = Fight::create($input);
+            return response()->json($result, 200); 
+        }
     }
 
     /**

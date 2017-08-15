@@ -83,7 +83,7 @@ export default {
         }
     },
     mounted() {
-        var sticky = new Sticky('.stickyNav');        
+        //var sticky = new Sticky('.stickyNav');        
         this.getTeam();
     },
     methods: {

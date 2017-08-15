@@ -86,7 +86,7 @@ class TeamController extends Controller
         try
         {
             $team = Team::with(['game', 'fights', 'users' => function($query){
-                $query->select('name', 'email', 'avatar', 'status');
+                $query->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status');
             }])->where('id', $param)
                 ->orWhere('slug', $param)
                 ->firstOrFail();
