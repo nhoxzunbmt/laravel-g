@@ -53,8 +53,14 @@
         },
         methods : {
             getGame: function(id){
-                axios.get('/api/games/' + id).then((response) => {
-                    this.$set(this, 'game', response.data);
+                var query = this.ArrayToUrl({
+                    "_with" : 'genre'
+                });
+            
+                axios.get('/api/games/' + id+"?"+query).then((response) => {
+                    var game = response.data;
+                    game.images = JSON.parse(game.images);
+                    this.$set(this, 'game', game);
                 });
             },
         },

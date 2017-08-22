@@ -146,8 +146,16 @@
             }
         },
         methods : {
-            getVueItems: function(){
-                axios.get('/api/fights'+location.search).then((response) => {
+            getVueItems: function()
+            {
+                var query = this.UrlParamsMerge({
+                    'page' : 1,
+                    '_limit' : 12,
+                    "_sort" : '-start_at',
+                    '_with' : 'game,teams,users'
+                });
+                
+                axios.get('/api/fights?'+query).then((response) => {
                     this.$set(this, 'fights', response.data.data);
                     
                     delete response.data.data;

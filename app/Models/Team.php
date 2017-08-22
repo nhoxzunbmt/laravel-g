@@ -14,22 +14,35 @@ class Team extends Model
     
     /**
      * Пользователи, которые принадлежат данной команде.
+     * @Relation
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'team_user')->active();
+        return $this->belongsToMany('App\User', 'team_user')->active()->select('name', 'email', 'avatar', 'status', 'sender_id');;
+    }
+    
+    /**
+     * Пользователи, которые принадлежат данной команде.
+     * @Relation
+     */
+    public function usersAccepted()
+    {
+        return $this->belongsToMany('App\User', 'team_user')->active()
+            ->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status', 'sender_id');
     }
     
     /**
      * Fight which belongs to the team
+     * @Relation
      */
     public function fights()
     {
-        return $this->belongsToMany('App\Models\Fight', 'fight_team');
+        return $this->belongsToMany('App\Models\Fight');//, 'fight_team');
     }
     
     /**
      * Fight which belongs to the team
+     * @Relation
      */
     public function game()
     {

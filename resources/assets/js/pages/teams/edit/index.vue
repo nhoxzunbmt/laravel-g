@@ -124,11 +124,17 @@ export default {
         },
         getTeam()
         {
-            axios.get('/api/teams/'+this.$route.params.id+'/edit').then((response) => {
-                this.$set(this, 'team', response.data);
+            var query = this.ArrayToUrl({
+                "_with" : 'users'
+            });
+            
+            axios.get('/api/teams/'+this.$route.params.id+'/edit?'+query).then((response) => {
+                
+                var team = response.data;
+                this.$set(this, 'team', team);
                 
                 Event.fire('teamEditLoad', {
-                    team: response.data
+                    team: team
                 });
             });
         },

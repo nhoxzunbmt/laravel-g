@@ -17,6 +17,7 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
+        "marcelgwerder/laravel-api-handler": "dev-master",
         "nicklaw5/twitch-api-php": "^0.1.5",
         "pusher/pusher-php-server": "^2.6",
         "socialiteproviders/steam": "^1.0",

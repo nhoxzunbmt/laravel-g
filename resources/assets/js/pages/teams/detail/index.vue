@@ -89,7 +89,11 @@ export default {
     methods: {
         getTeam()
         {
-            axios.get('/api/teams/'+this.$route.params.slug).then((response) => {
+            var query = this.ArrayToUrl({
+                "_with" : 'game,fights,usersAccepted'
+            });
+            
+            axios.get('/api/teams/'+this.$route.params.slug+"?"+query).then((response) => {
                 this.$set(this, 'team', response.data);
                 
                 this.title = "Team: "+this.team.title;

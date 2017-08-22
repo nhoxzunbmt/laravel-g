@@ -7,7 +7,7 @@
         	</div>
         </div>
         
-        <div class="row">
+        <!--<div class="row">
         	<div class="col-md-12">
         		<div class="panel panel-default card-view">
         			<div class="panel-wrapper collapse in">
@@ -36,7 +36,7 @@
         			</div>
         		</div>
         	</div>
-        </div>
+        </div>-->
     
         <div class="row" v-if="teams!==null">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -74,7 +74,7 @@
                                                         {{ team.title}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center"><router-link  :to="{ name: 'team.detail.players', params: { slug: team.slug }}">{{ team.users.length}}</router-link> / {{ team.quantity}}</td>
+                                                <td class="text-center"><router-link  :to="{ name: 'team.detail.players', params: { slug: team.slug }}">{{ team.users_accepted.length}}</router-link> / {{ team.quantity}}</td>
                                                 <td class="text-center" v-if="team.game!==null">{{ team.game.title}}</td>
                                                 <td class="text-center" v-else></td>
                                                 
@@ -88,7 +88,7 @@
                                                 <td class="text-center">
                                                     <span v-if="team.status==0">pending</span>
                                                     <span v-if="team.status==1">accepted</span>
-                                                    <button v-if="team.quantity>team.users.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
+                                                    <button v-if="team.quantity>team.users_accepted.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -168,7 +168,7 @@
         },
         mounted() {
             this.getVueItems();
-            this.getGames();
+            /*this.getGames();
         
             var self = this;
             Vue.nextTick(function(){ 
@@ -195,7 +195,7 @@
                     self.$router.push(self.$route.path+"?status="+self.status);
                 });
 
-            });
+            });*/
         },
         data : function() {
             return {
@@ -223,20 +223,30 @@
         },
         methods : {
             getVueItems: function(){
-                axios.get('/api/teams'+location.search).then((response) => {
+                
+                var queryStartParams = {
+                    'page' : 1,
+                    '_limit' : 12,
+                    '_with' : 'game,fights,usersAccepted',
+                    "_sort" : '-id'
+                };
+                
+                var query = this.UrlParamsMerge(queryStartParams);
+                
+                axios.get('/api/teams?'+query).then((response) => {
                     this.$set(this, 'teams', response.data.data);
                     
                     delete response.data.data;
                     this.pagination = response.data;
                 });
             },
-            getGames: function()
+            /*getGames: function()
             {
                 axios.get('/api/games?show_all=1').then((response) => {
                     this.$set(this, 'games', response.data);
                     this.$parent.games = this.games;
                 });
-            },
+            },*/
             getLink(page){
                 let link = location.search;
                 link = this.$route.path + this.updateUrlParameter(link, "page", page);

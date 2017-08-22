@@ -121,8 +121,48 @@ Vue.mixin({
                 params = '?' + newParam;
             }
             
-            
             return params;
+        },
+        UrlToArray: function(url) {
+            var request = {};
+            var pairs = url.substring(url.indexOf('?') + 1).split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                if(!pairs[i])
+                    continue;
+                var pair = pairs[i].split('=');
+                request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+            return request;
+        },
+        ArrayToUrl: function(array) {
+            var pairs = [];
+            for (var key in array)
+            if (array.hasOwnProperty(key))
+            
+                pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(array[key]));
+            return pairs.join('&');
+        },
+        UrlParamsMerge: function(queryStartParams)
+        {
+            if(location.search)
+            {
+                var paramsArray = this.UrlToArray(location.search);
+                
+                for (var prop in paramsArray)
+                {
+                    if (paramsArray.hasOwnProperty(prop)) 
+                    {
+                        queryStartParams[prop] = paramsArray[prop];
+                    }
+                }
+                
+                if(parseInt(paramsArray['_limit'])>0)
+                    paramsArray['_offset'] = (parseInt(paramsArray['page'])-1)*parseInt(paramsArray['_limit']);
+            }
+                
+            var query = this.ArrayToUrl(queryStartParams);
+            
+            return query;
         },
         slugTitle: function(title) {
             var slug = "";

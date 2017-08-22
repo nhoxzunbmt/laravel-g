@@ -24,6 +24,7 @@ class Game extends Model
     }
 
     /**
+     * @Relation
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function genre()
@@ -34,6 +35,7 @@ class Game extends Model
     /**
      * Get the fights that owns the game.
      * 
+     * @Relation
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function fights()

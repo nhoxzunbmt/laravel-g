@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Storage;
 use Image;
 use App\Mail\TeamLinkToInvestor;
 use Mail;
+use ApiHandler;
+use App\Acme\Helpers\ApiHelper;
 
 class TeamController extends Controller
 {    
@@ -24,10 +26,8 @@ class TeamController extends Controller
      */
     public function index(Request  $request)
     {
-        $items = Team::search($request->all())->with(['game', 'fights', 'users' => function($query){
-            $query->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status', 'sender_id');
-        }])->orderBy('id', 'asc')->paginate(12)->appends('page');                    
-        return response()->json($items);
+        $teams = new Team();      
+        return ApiHelper::parseMultiple($teams, ['title'], $request->all());
     }
 
     /**
@@ -81,22 +81,17 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($param)
-    {
-        try
+    public function show($param, Request  $request)
+    {      
+        if ( is_numeric($param) ) 
         {
-            $team = Team::with(['game', 'fights', 'users' => function($query){
-                $query->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status');
-            }])->where('id', $param)
-                ->orWhere('slug', $param)
-                ->firstOrFail();
-        }
-        catch(ModelNotFoundException $e)
-        {
-            return response()->json([], 404);
+            $filterBy = ['id' => $param];
+        }else{
+            $filterBy = ['slug' => $param];
         }
         
-        return response()->json($team);
+        $team = new Team();
+        return ApiHelper::parseSingle($team, $filterBy, $request->all());
     }
 
     /**
@@ -105,26 +100,19 @@ class TeamController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request  $request)
     {
-        $user = JWTAuth::parseToken()->authenticate();
+        $user = $request->user();
+    
+        $team = new Team();
+        $response = ApiHelper::parseSingle($team, ['id' => $id], $request->all());
+        $team = json_decode($response->content(), true);
         
-        try
+        if($team['capt_id']!=$user->id)
         {
-            $team = Team::with(['users' => function($query){
-                $query->select('name', 'email', 'avatar', 'status', 'sender_id');
-            }])->findOrFail($id);
+            return response()->json(["error" => "Only captain can edit data."], 404);
+        }
             
-            if($team->capt_id!=$user->id)
-            {
-                return response()->json(["error" => "Only captain can edit data."], 404);
-            }
-        }
-        catch(ModelNotFoundException $e)
-        {
-            return response()->json([], 404);
-        }
-        
         return response()->json($team);
     }
 

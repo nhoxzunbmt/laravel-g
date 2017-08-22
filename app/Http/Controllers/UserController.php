@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 use Image;
 use App\Models\Team;
 use App\Models\TeamUser;
+use App\Models\Fight;
+use ApiHandler;
+use App\Acme\Helpers\ApiHelper;
 
 class UserController extends Controller
 {
@@ -31,18 +34,10 @@ class UserController extends Controller
         return response()->json($response, $statusCode);
     }
     
-    public function show($id)
+    public function show($id, Request $request)
     {
-        $response = [];
-	    try{
-            $statusCode = 200;
-            $user = User::find($id);
-            $response = App\User::getApiUserData($user);
-        }catch (Exception $e){
-            $statusCode = 404;
-        }
-        
-        return response()->json($response, $statusCode);
+        $user = new User();
+        return ApiHelper::parseSingle($user, $id, $request->all());
     }
     
     /**
@@ -206,15 +201,43 @@ class UserController extends Controller
 	 */
 	public function teams($id, Request $request)
 	{
-        $items = User::find($id)->teams()
-            ->where("team_user.status", 1)
-            ->with(['users', 'game'])
-            ->paginate(12)
-            ->appends('page');
-
-        return response()->json($items);
+        $teams = User::find($id)->teams()
+            ->where("team_user.status", 1);
+               
+        return ApiHelper::parseMultiple($teams, ['title'], $request->all());
 	}
     
+    /**
+     * Get all figths of all user's teams
+     */
+    public function teamsFights($id, Request $request)
+    {
+        $teams = User::find($id)->teams()
+            ->where("team_user.status", 1)
+            ->pluck('team_id')->all();
+            
+        $teams = Team::whereIn("id", $teams)->with(['fights']);
+        
+        $fight_ids = [];
+        $fights = [];
+        foreach($teams->get() as $team)
+        {
+            foreach($team->fights as $fight)
+            {
+                $fight_ids[] = $fight->id;
+            }
+        }
+        
+        if(count($fight_ids)>0)
+        {
+            $fight_ids = array_unique($fight_ids);
+            $fights = Fight::whereIn("id", $fight_ids);
+            
+            return ApiHelper::parseMultiple($fights, ['title'], $request->all());
+        }else{
+            return response()->json([], 200);
+        }
+    }
     
     /**
 	 * Get invitation list to teams.

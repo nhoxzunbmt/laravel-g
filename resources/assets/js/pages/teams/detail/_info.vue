@@ -36,7 +36,7 @@
         </div>        
         <div class="col-lg-4 col-md-6 col-xs-12">
             <div class="panel panel-default card-view pa-0">
-                <h6 class="ml-10 mt-10">Players wanted: {{team.quantity-team.users.length}}</h6>
+                <h6 class="ml-10 mt-10">Players wanted: {{team.quantity-team.users_accepted.length}}</h6>
                 <div class="mb-15 mt-15">
                     <button class="btn btn-primary btn-icon left-icon ml-10" v-if="authenticated && !checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Join to Team</button>
                     <span class="btn btn-primary btn-icon left-icon ml-10" v-else-if="authenticated"><i class="fa fa-check"></i>&nbsp; Your are in the team</span>
@@ -74,7 +74,7 @@
                                             Players in team
                                         </router-link>
                                   </dt>
-        						  <dd>{{ team.users.length}}</dd>
+        						  <dd>{{ team.users_accepted.length}}</dd>
         						</dl>
         					</div>
                         </div>
@@ -82,7 +82,7 @@
                             <div class="panel-body">
         						<dl>
                                   <dt class="mb-10">Captain</dt>
-        						  <dd class="mb-10"><span v-if="team.users.length>0">{{team.users[0].name}}</span><span v-else>-</span></dd>
+        						  <dd class="mb-10"><span v-if="team.users_accepted.length>0">{{team.users_accepted[0].name}}</span><span v-else>-</span></dd>
                                   <dt class="mb-10">Game</dt>
         						  <dd class="mb-10">
                                     <img :src="getImageLink(team.game.logo)" class="zmdi mr-5" width="17" :alt="team.game.title" />
@@ -172,9 +172,9 @@ export default {
             
             var usersInTeam = [];
             
-            if(this.team.users.length)
+            if(this.team.users_accepted.length)
             {
-                this.team.users.forEach(function (user) {
+                this.team.users_accepted.forEach(function (user) {
                     usersInTeam.push(user.pivot.user_id);
                 });
             }

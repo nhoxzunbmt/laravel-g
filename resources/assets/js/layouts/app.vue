@@ -53,8 +53,15 @@ export default {
             })
         },
         getPopularGames () {
-            axios.get('/api/games/popular').then((res) => {
-                this.popularGames = res.data
+            var queryStartParams = {
+                '_limit' : 3,
+                "_sort" : 'id'
+            };
+            
+            var query = this.ArrayToUrl(queryStartParams);
+            
+            axios.get('/api/games?'+query).then((res) => {
+                this.popularGames = res.data.data;
             })
             .catch((error) => {
                 console.log(error)
@@ -267,6 +274,7 @@ var setHeightWidth = function () {
     background: #284152;
 }
 
+.select2-container--default .select2-search--dropdown .select2-search__field,
 .select2-container--default .select2-selection--single .select2-selection__rendered,
 .select2-selection.select2-selection--multiple, 
 .form-control, 
@@ -425,5 +433,11 @@ var setHeightWidth = function () {
     border: 1px solid rgba(255, 255, 255, 0.12);
     background-color: #102e42 !important;
     color: #fff !important;
+}
+
+.select2-dropdown{
+    background: #284152;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 </style>

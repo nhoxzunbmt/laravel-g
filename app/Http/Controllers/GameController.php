@@ -12,6 +12,8 @@ use Storage;
 use Image;
 use File;
 use Cache;
+use ApiHandler;
+use App\Acme\Helpers\ApiHelper;
 
 class GameController extends Controller
 {
@@ -22,10 +24,10 @@ class GameController extends Controller
      */
     public function index(Request $request)
     {
-        $id = Str::slug(implode($request->all()));
-        /*$items = Cache::remember('games'.$id, 60, function() use ($request){
-            return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
-        });*/
+        /*$id = Str::slug(implode($request->all()));
+        //$items = Cache::remember('games'.$id, 60, function() use ($request){
+        //    return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
+        //});
 
         $items = Game::search($request->all())->active();
 
@@ -37,6 +39,9 @@ class GameController extends Controller
         }
             
         return response()->json($items);
+        */
+        $games = Game::active();      
+        return ApiHelper::parseMultiple($games, ['title', 'genre_id'], $request->all());
     }
 
     /**
@@ -66,9 +71,9 @@ class GameController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
-        try
+        /*try
         {
             $game = Cache::remember('game' . $id, 60, function() use ($id){
                 $game = Game::with(['genre' => function($query){
@@ -83,7 +88,9 @@ class GameController extends Controller
             abort(404);
         }
         
-        return response()->json($game);
+        return response()->json($game);*/
+        $game = new Game();
+        return ApiHelper::parseSingle($game, $id, $request->all());
     }
 
     /**

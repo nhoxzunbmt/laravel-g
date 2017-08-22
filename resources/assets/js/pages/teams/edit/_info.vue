@@ -149,7 +149,14 @@ export default {
         {
             if(this.$parent.games==undefined || this.$parent.games.length==0)
             {
-                axios.get('/api/games?show_all=1').then((response) => {
+                var queryStartParams = {
+                    '_limit' : 0,
+                    "_sort" : 'title'
+                };
+                
+                var query = this.ArrayToUrl(queryStartParams);
+                
+                axios.get('/api/games?'+query).then((response) => {
                     this.$set(this, 'games', response.data);
                     this.$parent.games = this.games;
                 });

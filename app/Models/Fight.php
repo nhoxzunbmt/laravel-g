@@ -9,8 +9,11 @@ class Fight extends Model
 {
     protected $dates = ['start_at'];
     
+    protected $fillable = ['start_at', 'title', 'type', 'game_id', 'created_id', 'count_team_users', 'count_parts', 'active'];
+    
     /**
      * Пользователи, которые принадлежат данному бою.
+     * @Relation
      */
     public function users()
     {
@@ -19,14 +22,16 @@ class Fight extends Model
     
     /**
      * Команды, которые принадлежат данному бою.
+     * @Relation
      */
     public function teams()
     {
-        return $this->belongsToMany('App\Models\Team', 'fight_team', 'team_id', 'fight_id');
+        return $this->belongsToMany('App\Models\Team');//, 'fight_team', 'team_id', 'fight_id');
     }
     
     /**
      * Игра, в которую будут играть в бою.
+     * @Relation
      */
     public function game()
     {
@@ -35,6 +40,7 @@ class Fight extends Model
        
     /**
      * Пользователь, создавший бой
+     * @Relation
      */
     public function createdBy()
     {
@@ -43,6 +49,7 @@ class Fight extends Model
     
     /**
      * Судья
+     * @Relation
      */
     public function judge()
     {
@@ -51,6 +58,7 @@ class Fight extends Model
     
     /**
      * Комментатор
+     * @Relation
      */
     public function commentator()
     {
@@ -59,6 +67,7 @@ class Fight extends Model
     
     /**
      * Пользователь, отменивший бой
+     * @Relation
      */
     public function canceledBy()
     {

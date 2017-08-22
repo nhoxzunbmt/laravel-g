@@ -156,6 +156,7 @@ return [
         Webpatser\Countries\CountriesServiceProvider::class,
         HighIdeas\UsersOnline\UsersOnlineServiceProvider::class,
         HighIdeas\UsersOnline\Providers\UsersOnlineEventServiceProvider::class,
+        Marcelgwerder\ApiHandler\ApiHandlerServiceProvider::class,
         
         /*
          * Application Service Providers...
@@ -220,5 +221,6 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Countries' => Webpatser\Countries\CountriesFacade::class,
+        'ApiHandler' => Marcelgwerder\ApiHandler\Facades\ApiHandler::class,
     ],
 ];

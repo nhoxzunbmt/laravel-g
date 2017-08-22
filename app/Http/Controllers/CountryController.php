@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;;
 use \Webpatser\Countries\Countries;
+use App\Acme\Helpers\ApiHelper;
 
 class CountryController extends Controller
 {
@@ -12,9 +13,9 @@ class CountryController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $countries = Countries::orderBy('name', 'asc')->select('id', 'name', 'flag')->get()->toArray();
-        return response()->json($countries, 200);
+        $countries = new Countries();      
+        return ApiHelper::parseMultiple($countries, ['name'], $request->all());
     }
 }

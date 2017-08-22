@@ -5,7 +5,7 @@
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
-                            <div class="table-wrap" v-if="team.users!==null">
+                            <div class="table-wrap" v-if="team.users_accepted!==null">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
@@ -17,7 +17,7 @@
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="player in team.users" v-if="player.status==1">
+                                            <tr v-for="player in team.users_accepted" v-if="player.status==1">
                                                 <td>
                                                     <router-link  :to="{ name: 'player', params: { id: player.pivot.user_id }}">
                                                         <img :src="getImageLink(player.avatar)" class="img-responsive team-image" />

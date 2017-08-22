@@ -38,11 +38,14 @@ export default [
         name: 'players',
         component: require('./pages/players/index.vue')
     },
-    {
-        path: '/players/:id',
-        name: 'player',
-        component: require('./pages/players/detail.vue')
-    },
+    
+    { path: '/players/:id', component: require('./pages/players/detail/index.vue'), children: [
+        { path: '',  name: 'player', redirect: { name: 'player.detail' }},
+        { path: 'info', name: 'player.detail', component: require('./pages/players/detail/_info.vue') },
+        { path: 'teams', name: 'player.detail.teams', component: require('./pages/players/detail/_teams.vue') },
+        { path: 'fights', name: 'player.detail.fights', component: require('./pages/players/detail/_fights.vue') }
+    ]},
+
     {
         path: '/investors',
         name: 'investors',
@@ -57,16 +60,6 @@ export default [
         path: '/investors-info',
         name: 'investors-info',
         component: require('./pages/investors-info.vue')
-    },
-    {
-        path: '/fights',
-        name: 'fights',
-        component: require('./pages/fights/index.vue')
-    },
-    {
-        path: '/fights/:id',
-        name: 'fight',
-        component: require('./pages/fights/detail.vue')
     },
     
   ...authGuard([
@@ -129,6 +122,17 @@ export default [
         { path: 'info', name: 'team.detail', component: require('./pages/teams/detail/_info.vue') },
         { path: 'players', name: 'team.detail.players', component: require('./pages/teams/detail/_players.vue') }
   ]},
+  
+  {
+        path: '/fights',
+        name: 'fights',
+        component: require('./pages/fights/index.vue')
+  },
+  {
+        path: '/fights/:id',
+        name: 'fight',
+        component: require('./pages/fights/detail.vue')
+  },
   
   { path: '*', component: require('./pages/errors/404.vue') }
 ]

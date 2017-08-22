@@ -16,13 +16,15 @@ use Illuminate\Http\Request;
 /**
  * Countries
  */
-Route::get('/countries', 'CountryController@index');
+Route::get('/countries', 'CountryController@index');//apiHandler
 
 /**
  * Users
  */
 Route::get('/user/search', 'UserController@search');
 Route::get('/user/all', 'UserController@index');
+Route::get('/user/{id}/teams', 'UserController@teams');//apiHandler
+Route::get('/user/{id}/teams/all/fights', 'UserController@teamsFights');
 
 /**
  *Genres
@@ -34,19 +36,19 @@ Route::resource('genres', 'GenreController', ['only' => [
 /**
  * Games
  */
-Route::get('/games/popular', 'GameController@popular');
+//Route::get('/games/popular', 'GameController@popular');//apiHandler
 Route::resource('games', 'GameController', ['only' => [
     'index', 'show'
-]]);
+]]);//apiHandler
 
 
 /**
  * Teams
  */
-Route::get('/teams/{param}', 'TeamController@show');
+Route::get('/teams/{param}', 'TeamController@show');//apiHandler
 Route::resource('teams', 'TeamController', ['only' => [
     'index'/*, 'show'*/
-]]);
+]]);//apiHandler
 
 /**
  * Twitch & streams
@@ -92,7 +94,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/user', 'UserController@update');
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');
-    Route::get('/user/{id}/teams', 'UserController@teams');
+    
     Route::get('/user/{id}/teams/invites', 'UserController@invitesToTeam');
     Route::get('/user/{userId}/teams/{teamId}', 'UserController@getTeamById');
     Route::post('/logout', 'Auth\AuthController@logout');
@@ -107,7 +109,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     
     Route::resource('teams', 'TeamController', ['only' => [
         'store', 'update', 'destroy', 'edit'
-    ]]);
+    ]]);//apiHandler
     Route::post('/teams/logo', 'TeamController@logo');
     Route::post('/teams/overlay', 'TeamController@overlay');
     Route::post('/teams/{id}', 'TeamController@update');    

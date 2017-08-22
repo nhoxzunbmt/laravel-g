@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use App\Models\Fight;
+use App\Models\FightTeam;
+use App\Models\FightUser;
 use App\Models\Game;
-//use Request;
 use Illuminate\Http\Request;
 use Cache;
 use Validator;
+use App\Acme\Helpers\ApiHelper;
 
 class FightController extends Controller
 {
@@ -17,15 +19,15 @@ class FightController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {    
         /*$id = Str::slug(implode(Request::all()));
         $figths = Cache::remember('figths' . $id, 60, function(){
             return Fight::published()->orderBy('id', 'asc')->paginate(12);
         });*/       
         
-        $figths = Fight::orderBy('start_at', 'desc')->with(['game', 'teams', 'users'])->paginate(12);
-        return response()->json($figths);
+        $figths = new Fight();      
+        return ApiHelper::parseMultiple($figths, ['title', 'game_id'], $request->all());
     }
 
     /**
@@ -48,26 +50,47 @@ class FightController extends Controller
     public function store(Request $request)
     {
         $request['start_at'] = substr($request->get('start_at_date'), 0, 10)." ".$request->get('start_at_time');
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'title' => 'required|max:255',
             'game_id'  => 'required|regex:#^[0-9]+$#',
             'type' => 'required',
             'start_at' => 'required|date_format:Y-m-d H:i:s',//|after:now',
-        ]);
-
+        ];
+        $input = $request->all();
+        if($input['type']=='team')
+        {
+            $rules['team_id'] = 'required|regex:#^[0-9]+$#';
+        }
+        $validator = Validator::make($request->all(), $rules);
+        
         if ($validator->fails()) 
         {
             return response()->json($validator->messages(), 422);
         }else{
-            $input = $request->all();
+            
             unset($input["start_at_date"]);
             unset($input["start_at_time"]);
             $input['created_id'] = $request->user()->id;
+            
+            $input['active'] = 0;
             
             $arGame = Game::findOrFail($input["game_id"]);
             $input['count_team_users'] = intval($arGame["min_players"]);
             
             $result = Fight::create($input);
+            if($input['type']=='team')
+            {
+                FightTeam::create([
+                    'team_id' => $input["team_id"],
+                    'fight_id' => $result->id
+                ]);
+            }else{
+                FightUser::create([
+                    'user_id' => $request->user()->id,
+                    'fight_id' => $result->id
+                ]);
+            }
+            
             return response()->json($result, 200); 
         }
     }

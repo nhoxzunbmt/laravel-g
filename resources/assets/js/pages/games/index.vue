@@ -151,7 +151,16 @@
         },
         methods : {
             getVueItems: function(){
-                axios.get('/api/games'+location.search).then((response) => {
+                
+                var queryStartParams = {
+                    'page' : 1,
+                    '_limit' : 12,
+                    "_sort" : 'id'
+                };
+                
+                var query = this.UrlParamsMerge(queryStartParams);
+                
+                axios.get('/api/games?'+query).then((response) => {
                     this.$set(this, 'games', response.data.data);
                     
                     delete response.data.data;

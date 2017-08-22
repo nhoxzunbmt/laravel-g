@@ -29,7 +29,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 'overlay', 'description', 'type', 'country_id', 'confirmation_code'
+        'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
+        'overlay', 'description', 'type', 'country_id', 'confirmation_code'
     ];
 
     /**
@@ -78,6 +79,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @Relation
      */
     public function country()
     {
@@ -86,6 +88,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * Команды, к которым принадлежит пользователь.
+     * @Relation
      */
     public function teams()
     {
@@ -93,7 +96,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
     /**
+     * Команды, к которым принадлежит пользователь.
+     * @Relation
+     */
+    public function teamsActive()
+    {
+        return $this->belongsToMany('App\Models\Team')->where("status", 1);//, 'team_user');
+    }
+    
+    /**
      * Бои, к которым принадлежит пользователь.
+     * @Relation
      */
     public function fights()
     {
@@ -103,6 +116,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * Fights which are created by user
+     * @Relation
      */
     public function createdFights()
     {
@@ -111,6 +125,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * User is judge of fights
+     * @Relation
      */
     public function judgeOfFights()
     {
@@ -119,6 +134,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * User is commentator of fights
+     * @Relation
      */
     public function commentatorOfFights()
     {
@@ -127,6 +143,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     /**
      * Figths canceled by user
+     * @Relation
      */
     public function canceledFights()
     {

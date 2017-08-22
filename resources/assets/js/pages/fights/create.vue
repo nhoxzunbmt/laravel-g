@@ -75,9 +75,18 @@
                                     </div>
                                     
                                     <div class="row">
-                                        
-    									
-                                        <div class="col-md-6" v-if="type=='personal'">
+                                        <div class="col-md-6" v-if="type=='team'">
+    										<div class="form-group" :class="{ 'has-error': error && response.team_id }">
+                                                <label class="control-label mb-10">Team</label>
+                                                <select v-model="team_id" class='form-control' data-style="form-control btn-default btn-outline">
+                                                    <option v-for="team in teams" v-bind:value="team.team_id">
+                                                        {{ team.title }}
+                                                    </option>
+                                                </select>
+                                                <span class="help-block" v-if="error && response.team_id">{{ response.team_id[0] }}</span>  
+                                            </div>
+    									</div>
+                                        <div class="col-md-6">
     										<div class="form-group" :class="{ 'has-error': error && response.count_parts }">
                                                 <label class="control-label mb-10">Quantity</label>
                                                 <input v-model.number="count_parts" type="number" class="form-control" placeholder="quantity">
@@ -85,10 +94,6 @@
                                             </div>
     									</div>
                                     </div>
-                                    
-                                    
-                                    
-                                    
                                       
     								<div class="form-actions mt-10">
                                         <button type="submit" class="btn btn-primary mr-10">
@@ -127,10 +132,11 @@ export default {
     data() {
         return {
             title: null,
-            quantity: 2,
             game_id: null,
             games: [],
             type: null,
+            teams: [],
+            count_parts: 2,
             success: false,
             error: false,
             response: null,
@@ -148,6 +154,7 @@ export default {
     },
     mounted() {
         this.getGames();
+        this.getUserTeams();
         
         var self = this;
         Vue.nextTick(function(){ 
@@ -170,12 +177,15 @@ export default {
                 type: this.type,
                 start_at_date: this.start_at_date,
                 start_at_time: this.start_at_time.HH+":"+this.start_at_time.mm+":"+this.start_at_time.ss,
-                game_id: this.game_id
+                game_id: this.game_id,
+                count_parts: this.count_parts,
+                team_id: this.team_id
             }).then(response => {
                 this.error = false;
                 this.success = true;
                 
-                //this.$router.push({ name: 'teams.edit', params: { id: response.data.id } })
+                this.$router.push({ name: 'fights'});
+                //this.$router.push({ name: 'fights.edit', params: { id: response.data.id } })
                 
             }).catch(error => {
                 this.response = error.response.data
@@ -187,13 +197,30 @@ export default {
         {
             if(this.$parent.games==undefined || this.$parent.games.length==0)
             {
-                axios.get('/api/games?show_all=1').then((response) => {
+                var queryStartParams = {
+                    '_limit' : 0,
+                    "_sort" : 'title'
+                };
+                
+                var query = this.ArrayToUrl(queryStartParams);
+                
+                axios.get('/api/games?'+query).then((response) => {
                     this.$set(this, 'games', response.data);
                     this.$parent.games = this.games;
                 });
             }else{
                 this.games = this.$parent.games;
             }  
+        },
+        getUserTeams: function()
+        {
+            var query = this.ArrayToUrl({
+                'status' : 1
+            });
+            axios.get('/api/user/'+this.user.id+'/teams?'+query).then((response) => {
+                this.$set(this, 'teams', response.data);
+                this.$parent.teams = this.teams;
+            });
         }
     },
 }

@@ -8,6 +8,9 @@ class Genre extends Model
 {
     public $timestamps = false;
     
+    /**
+     * @Relation
+     */
     public function games()
     {
         return $this->hasMany(Game::class)
