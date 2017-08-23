@@ -23,8 +23,9 @@ Route::get('/countries', 'CountryController@index');//apiHandler
  */
 Route::get('/user/search', 'UserController@search');
 Route::get('/user/all', 'UserController@index');
+Route::get('/user/{id}', 'UserController@show');//apiHandler
 Route::get('/user/{id}/teams', 'UserController@teams');//apiHandler
-Route::get('/user/{id}/teams/all/fights', 'UserController@teamsFights');
+Route::get('/user/{id}/teams/all/fights', 'UserController@teamsFights');//apiHandler
 
 /**
  *Genres
@@ -90,7 +91,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
         return response()->json($data);
     });
     
-    Route::get('/user/{id}', 'UserController@show');
     Route::post('/user', 'UserController@update');
     Route::post('/user/avatar', 'UserController@avatar');
     Route::post('/user/overlay', 'UserController@overlay');

@@ -96,11 +96,11 @@
                                                 <td class="text-center">{{ team.game.title}}</td>
                                                 <td class="text-center">{{ team.balance}}</td>
                                                 <td class="text-nowrap text-center">
-                                                    <router-link  :to="{ name: 'teams.edit', params: { id: team.team_id }}" class="mr-25" v-if="team.capt_id==user.id">
+                                                    <router-link  :to="{ name: 'teams.edit', params: { id: team.id }}" class="mr-25" v-if="team.capt_id==user.id">
                                                         <i class="fa fa-pencil text-inverse m-r-10"></i>
                                                     </router-link>
                                                     
-                                                    <a href="#" @click="leaveTeam(team.team_id, $event)" title="Leave the team">
+                                                    <a href="#" @click="leaveTeam(team.id, $event)" title="Leave the team">
                                                         <i class="fa fa-trash text-inverse m-r-10"></i>
                                                     </a>
                                                 </td>

@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Str;
 use App\Models\Fight;
+use App\Models\Team;
 use App\Models\FightTeam;
 use App\Models\FightUser;
 use App\Models\Game;
+use App\User;
 use Illuminate\Http\Request;
 use Cache;
 use Validator;
@@ -28,17 +30,6 @@ class FightController extends Controller
         
         $figths = new Fight();      
         return ApiHelper::parseMultiple($figths, ['title', 'game_id'], $request->all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        $games = Game::orderBy('title', 'asc')->pluck('title', 'id');
-        return view('fight.create')->with(compact('games'));
     }
 
     /**
@@ -101,9 +92,10 @@ class FightController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request  $request)
     {
-        //
+        $fight = new Fight();
+        return ApiHelper::parseSingle($fight, $id, $request->all());
     }
 
     /**
@@ -138,5 +130,29 @@ class FightController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    public function teams($id, Request $request)
+    {
+        $team_ids = Fight::find($id)->teams()
+            ->select(['team_id'])
+            ->pluck('team_id')
+            ->all();
+            
+        $teams = Team::whereIn("id", $team_ids);
+              
+        return ApiHelper::parseMultiple($teams, ['title'], $request->all());
+    }
+    
+    public function users($id, Request $request)
+    {
+        $user_ids = Fight::find($id)->users()
+            ->select(['user_id'])
+            ->pluck('user_id')
+            ->all();
+            
+        $users = User::whereIn("id", $user_ids);
+              
+        return ApiHelper::parseMultiple($users, [], $request->all());
     }
 }

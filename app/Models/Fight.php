@@ -17,7 +17,7 @@ class Fight extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'fight_user', 'user_id', 'fight_id');
+        return $this->belongsToMany('App\User');//, 'fight_user', 'user_id', 'fight_id');
     }
     
     /**

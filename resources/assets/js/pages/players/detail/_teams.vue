@@ -1,11 +1,17 @@
 <template>
 <div>
-    <div class="row" v-if="player!==null && player.teams!==null">
+    <div class="row" v-if="player!==null && teams!==null">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                        <h3 class="panel-title txt-dark">
+                            Teams
+                        </h3></div> 
+                        <div class="clearfix"></div>
+                </div>
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
-        
                             <div class="table-wrap">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
@@ -22,7 +28,7 @@
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="team in player.teams">
+                                            <tr v-for="team in teams">
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
                                                         <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
@@ -81,7 +87,8 @@ export default {
             success: false,
             error: false,
             player: null,
-            response: null
+            response: null,
+            teams: []
         }
     },
     mounted() {
@@ -95,9 +102,24 @@ export default {
             this.player = this.$parent.player;
         }
     
+        this.getTeams();
     },
     methods: {       
-        
+        getTeams: function(){
+            
+            var queryStartParams = {
+                '_limit' : 0,
+                "_with" : 'users,game',
+                "_sort" : '-id',
+                'status': 1
+            };
+             
+            var query = this.ArrayToUrl(queryStartParams);
+            
+            axios.get('/api/user/'+this.$route.params.id+'/teams?'+query).then((response) => {
+                this.$set(this, 'teams', response.data);
+            });
+        },
     },
 }
 </script>

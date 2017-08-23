@@ -193,7 +193,7 @@ class UserController extends Controller
 	}
     
     /**
-	 * Update overlay.
+	 * Get teams of user.
      * 
 	 * @param  \Illuminate\Http\Request  $request
 	 * @param  int  $id
@@ -201,9 +201,14 @@ class UserController extends Controller
 	 */
 	public function teams($id, Request $request)
 	{
-        $teams = User::find($id)->teams()
-            ->where("team_user.status", 1);
-               
+        $team_ids = User::find($id)->teams()
+            ->where("team_user.status", 1)
+            ->select(['team_id'])
+            ->pluck('team_id')
+            ->all();
+            
+        $teams = Team::whereIn("id", $team_ids);
+              
         return ApiHelper::parseMultiple($teams, ['title'], $request->all());
 	}
     
@@ -212,11 +217,13 @@ class UserController extends Controller
      */
     public function teamsFights($id, Request $request)
     {
-        $teams = User::find($id)->teams()
+        $team_ids = User::find($id)->teams()
             ->where("team_user.status", 1)
-            ->pluck('team_id')->all();
+            ->select(['team_id'])
+            ->pluck('team_id')
+            ->all();
             
-        $teams = Team::whereIn("id", $teams)->with(['fights']);
+        $teams = Team::whereIn("id", $team_ids)->with(['fights']);
         
         $fight_ids = [];
         $fights = [];

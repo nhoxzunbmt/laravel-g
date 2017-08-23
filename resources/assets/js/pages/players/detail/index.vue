@@ -92,7 +92,7 @@ export default {
         getItem()
         {
             var query = this.ArrayToUrl({
-                "_with" : 'teams,fights',
+                "_with" : 'fights',
                 "type" : 'player'
             });
             
