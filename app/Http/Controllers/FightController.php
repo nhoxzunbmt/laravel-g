@@ -22,12 +22,7 @@ class FightController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {    
-        /*$id = Str::slug(implode(Request::all()));
-        $figths = Cache::remember('figths' . $id, 60, function(){
-            return Fight::published()->orderBy('id', 'asc')->paginate(12);
-        });*/       
-        
+    {   
         $figths = new Fight();      
         return ApiHelper::parseMultiple($figths, ['title', 'game_id'], $request->all());
     }
@@ -43,15 +38,9 @@ class FightController extends Controller
         $request['start_at'] = substr($request->get('start_at_date'), 0, 10)." ".$request->get('start_at_time');
         $rules = [
             'title' => 'required|max:255',
-            'game_id'  => 'required|regex:#^[0-9]+$#',
-            'type' => 'required',
             'start_at' => 'required|date_format:Y-m-d H:i:s',//|after:now',
         ];
         $input = $request->all();
-        if($input['type']=='team')
-        {
-            $rules['team_id'] = 'required|regex:#^[0-9]+$#';
-        }
         $validator = Validator::make($request->all(), $rules);
         
         if ($validator->fails()) 
@@ -61,26 +50,20 @@ class FightController extends Controller
             
             unset($input["start_at_date"]);
             unset($input["start_at_time"]);
-            $input['created_id'] = $request->user()->id;
             
+            $input['created_id'] = $request->user()->id;
+            $input['game_id'] = $request->user()->game()->id;
             $input['active'] = 0;
             
             $arGame = Game::findOrFail($input["game_id"]);
             $input['count_team_users'] = intval($arGame["min_players"]);
             
             $result = Fight::create($input);
-            if($input['type']=='team')
-            {
-                FightTeam::create([
-                    'team_id' => $input["team_id"],
-                    'fight_id' => $result->id
-                ]);
-            }else{
-                FightUser::create([
-                    'user_id' => $request->user()->id,
-                    'fight_id' => $result->id
-                ]);
-            }
+            
+            FightTeam::create([
+                'team_id' => $request->user()->team()->id,
+                'fight_id' => $result->id
+            ]);
             
             return response()->json($result, 200); 
         }
@@ -132,6 +115,9 @@ class FightController extends Controller
         //
     }
     
+    /**
+     * Get all teams of fight
+     */
     public function teams($id, Request $request)
     {
         $team_ids = Fight::find($id)->teams()
@@ -144,14 +130,18 @@ class FightController extends Controller
         return ApiHelper::parseMultiple($teams, ['title'], $request->all());
     }
     
+    
+    /**
+     * Get users of fight through the teams
+     */
     public function users($id, Request $request)
     {
-        $user_ids = Fight::find($id)->users()
-            ->select(['user_id'])
-            ->pluck('user_id')
+        $team_ids = Fight::find($id)->teams()
+            ->select(['team_id'])
+            ->pluck('team_id')
             ->all();
             
-        $users = User::whereIn("id", $user_ids);
+        $users = User::whereIn("team_id", $team_ids);
               
         return ApiHelper::parseMultiple($users, [], $request->all());
     }

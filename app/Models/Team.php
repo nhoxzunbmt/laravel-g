@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
-    public $timestamps = true;
+    public $timestamps = false;
     protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image'];
     
     const PENDING = 0;
@@ -18,18 +18,18 @@ class Team extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'team_user')->active()->select('name', 'email', 'avatar', 'status', 'sender_id');;
+        return $this->hasMany('App\User');
     }
     
-    /**
-     * Пользователи, которые принадлежат данной команде.
-     * @Relation
-     */
+    /*public function users()
+    {
+        return $this->belongsToMany('App\User', 'team_user')->active()->select('name', 'email', 'avatar', 'status', 'sender_id');;
+    }
     public function usersAccepted()
     {
         return $this->belongsToMany('App\User', 'team_user')->active()
             ->whereStatus(TeamUser::ACCEPTED)->select('name', 'email', 'avatar', 'status', 'sender_id');
-    }
+    }*/
     
     /**
      * Fight which belongs to the team
@@ -37,11 +37,11 @@ class Team extends Model
      */
     public function fights()
     {
-        return $this->belongsToMany('App\Models\Fight');//, 'fight_team');
+        return $this->belongsToMany('App\Models\Fight');
     }
     
     /**
-     * Fight which belongs to the team
+     * Game which belongs to the team
      * @Relation
      */
     public function game()
@@ -49,6 +49,17 @@ class Team extends Model
         return $this->belongsTo('App\Models\Game');
     }
     
+    /**
+     * @Relation
+     */
+    public function streams()
+    {
+        return $this->hasMany('App\Models\Stream', 'team_id');
+    }
+    
+    /**
+     * Search by params
+     */
     public function scopeSearch($query, $request)
     {
         if(!empty($request['id']))

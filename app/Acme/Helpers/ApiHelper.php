@@ -15,10 +15,16 @@ class ApiHelper{
     
     public static function parseMultiple($queryBuilder, $fullTextSearchColumns, $queryParams)
     {
-        if(isset($queryParams["_limit"]) && intval($queryParams["_limit"])>0)
+        if(isset($queryParams["page"]) && intval($queryParams["page"])>0 || (isset($queryParams["_limit"]) && intval($queryParams["_limit"])>0))
         {
             unset($queryParams["page"]);
-            return ApiHandler::parseMultiple($queryBuilder, $fullTextSearchColumns, $queryParams)->getBuilder()->paginate($queryParams["_limit"]);//->getBuilder()->toSql();
+            if(isset($queryParams["_limit"]) && intval($queryParams["_limit"])>0)
+            {
+                $limit = intval($queryParams["_limit"]);
+            }else{
+                $limit = 10;
+            }
+            return ApiHandler::parseMultiple($queryBuilder, $fullTextSearchColumns, $queryParams)->getBuilder()->paginate($limit);//->getBuilder()->toSql();
         }else{
             return ApiHandler::parseMultiple($queryBuilder, $fullTextSearchColumns, $queryParams)->cleanup(true)->getResponse();
         }

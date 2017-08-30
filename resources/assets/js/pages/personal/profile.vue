@@ -31,6 +31,19 @@
                                             </div>
     									</div>
                                     </div>                                                
+                                    <div class="row" v-if="user.type=='player'">
+                                        <div class="col-md-6">
+    										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
+                                                <label class="control-label mb-10">Game</label>
+    											<select v-model="game_id" class='form-control' data-style="form-control btn-default btn-outline" id="game_list">
+                                                    <option v-for="game in games" v-bind:value="game.id">
+                                                        {{ game.title }}
+                                                    </option>
+                                                </select>
+                                                <span class="help-block" v-if="error && response.game_id">{{ response.game_id[0] }}</span>
+                                            </div>
+    									</div>
+                                    </div>                                                
                                     <div class="row">
                                         <div class="col-md-6" :class="{ 'has-error': error && response.nickname }">
                                             <div class="form-group">
@@ -178,14 +191,26 @@ export default {
             success: false,
             error: false,
             response: null,
-            countries: null
+            countries: null,
+            game_id: null,
+            games: []
         }
     },
     mounted() {
+        this.getGames();
         this.getCountries();
         
         var self = this;
         Vue.nextTick(function(){ 
+            
+            $("#game_list").select2({
+                placeholder: "Select game",
+                allowClear: true
+            }).on("select2:select", function(e) { 
+                self.game_id = $(e.currentTarget).find("option:selected").val();
+            }).on("select2:unselecting", function (e) {
+                self.game_id = 0;
+            });
             
             $("#country_list").select2({
                 placeholder: "Select country",
@@ -241,6 +266,23 @@ export default {
                 this.countries = this.$parent.countries;
             }  
         },
+        getGames: function()
+        {
+            if(this.$parent.games==undefined || this.$parent.games.length==0)
+            {
+                var query = this.ArrayToUrl({
+                    '_limit' : 0,
+                    "_sort" : 'title'
+                });
+                
+                axios.get('/api/games?'+query).then((response) => {
+                    this.$set(this, 'games', response.data);
+                    this.$parent.games = this.games;
+                });
+            }else{
+                this.games = this.$parent.games;
+            }  
+        }
         
     },
 }

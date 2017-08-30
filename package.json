@@ -46,5 +46,20 @@
     "less-loader": "^4.0.4",
     "select2": "^4.0.3",
     "svg-sprite-loader": "^0.3.0"
+  },
+  "apidoc": {
+      "name": "Sparta.games",
+      "description": "Sparta.games API Documentation",
+      "title": "Sparta.games API Documentation",
+      "version": "1.0.0",
+      "url" : "http://sparta.games/api",
+      "template": {
+        "withCompare": true,
+        "withGenerator": true
+      },
+       "header": {
+        "title": "API Overview",
+        "filename": "apidoc_header.template.md"
+      }
   }
 }

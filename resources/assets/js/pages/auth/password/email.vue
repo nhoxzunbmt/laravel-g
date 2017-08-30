@@ -12,8 +12,8 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <div v-if="status" class="alert alert-success">
-                                {{ status }}
+                            <div v-if="message" class="alert alert-success">
+                                {{ message }}
                             </div>
                     		<div class="panel-wrapper collapse in">
                     			<div class="panel-body">
@@ -43,7 +43,7 @@ export default {
     data() {
         return {
             email: null,
-            status: null,
+            message: null,
             success: false,
             error: null,
             response: null
@@ -60,8 +60,9 @@ export default {
             ).then(response => {
                 this.success = true
                 this.error = false
-                this.status = response.data.status
+                this.message = response.data.message
             }).catch(error => {
+                this.message = null
                 this.response = error.response.data
                 this.error = true
             });

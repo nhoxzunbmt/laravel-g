@@ -38,8 +38,16 @@ class SocialController extends Controller
             ], 500);
         }
    
-        $data = User::getApiUserData($user, $token);
-        return response()->json($data);
+        $payload = JWTAuth::getPayload($token);
+        $expiration = $payload['exp'];
+        
+        return response()->json([
+            "token_type" => "Bearer",
+            'token' => $token,
+            'expires_in' => $expiration
+        ], 200);
+        //$data = User::getApiUserData($user, $token);
+        //return response()->json($data);
     }
 
 }

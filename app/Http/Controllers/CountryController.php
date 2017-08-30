@@ -18,4 +18,16 @@ class CountryController extends Controller
         $countries = new Countries();      
         return ApiHelper::parseMultiple($countries, ['name'], $request->all());
     }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id, Request $request)
+    {
+        $country = new Countries();
+        return ApiHelper::parseSingle($country, $id, $request->all());
+    }
 }

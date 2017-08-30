@@ -69,7 +69,8 @@ class TeamController extends Controller
             "user_id" => $request->user()->id,
             "team_id" => $result->id,
             "sender_id" => $request->user()->id,
-            "status" => TeamUser::ACCEPTED
+            "status" => TeamUser::ACCEPTED,
+            "start_at" => \Carbon\Carbon::now()->timestamp
         ]);
         
         return response()->json($result);        
@@ -144,7 +145,6 @@ class TeamController extends Controller
         //
     }
     
-    
     /**
      * Get users of the team
      *
@@ -153,16 +153,8 @@ class TeamController extends Controller
      */
     public function users($id)
     {
-        try
-        {
-            $users = Team::findOrFail($id)->users()->select('name', 'email', 'avatar', 'status');
-        }
-        catch(ModelNotFoundException $e)
-        {
-            return response()->json([], 404);
-        }
-        
-        return response()->json($users);
+        $users = Team::findOrFail($id)->users();
+        return ApiHelper::parseMultiple($users, ['name', 'last_name'], $request->all());
     }
     
     /**
@@ -248,33 +240,35 @@ class TeamController extends Controller
     public function inviteUser($teamId, $userId, Request $request)
     {
         $user = $request->user();
-    
+        $userTeam = $user->team();
+
+        if($userTeam && $userTeam->id>0)
+        {
+            return response()->json([
+                "error" => "The user is already in another team"
+            ], 404);
+        }
+        
         $TeamUser = TeamUser::where("user_id", $userId)->where("team_id", $teamId)->first();
     
         if($TeamUser)
         {   
+            //update TeamUser
             $input = $request->all();
             $TeamUser->update($input);
             
-            /*$team = Team::with(['users' => function($query){
-                $query->select('status');
-            }])->where('id', $TeamUser->team_id);
-            
-            $q = intval($team->quantity);
-            
-            $countUsers = 0;
-            foreach($team->users as $player)
+            //update User team_id
+            if($input['status']==1)
             {
-                if($player->status==TeamUser::ACCEPTED)
-                {
-                    $countUsers++;
-                }
-            }*/
+                User::update($userId, [
+                    'team_id' => $teamId
+                ]);
+            }
             
-            $team = Team::findOrFail($TeamUser->team_id);
-            $countUsers = $team->users()->whereStatus(TeamUser::ACCEPTED)->count();
-            
-            if($team->quantity<=$countUsers)
+            //If count users in team more 1 update Team status
+            $team = Team::findOrFail($teamId);
+            $countUsers = $team->users()->count();
+            if($countUsers>1)
             {
                 Team::update($team->id, [
                     'status' => Team::ACCEPTED
@@ -285,13 +279,14 @@ class TeamController extends Controller
         }else{
     
             $team = Team::findOrFail($teamId);
-            
             if($team->capt_id!=$user->id)
             {
                 //check user add himself to the team
                 if($userId!=$user->id)
                 {
-                    return response()->json(["error" => "Only captain can add new user to team."], 404);
+                    return response()->json([
+                        "error" => "Only captain can send invitation to user to team."
+                    ], 404);
                 }
             }
             

@@ -16,6 +16,11 @@ use Mail;
 
 class AuthController extends Controller
 {
+    /**
+     * Verify email by confirmation_code from message
+     * 
+     * @param string $confirmation_code
+     */
     public function verify($confirmation_code)
     {
         if( ! $confirmation_code)
@@ -44,10 +49,19 @@ class AuthController extends Controller
         $user->confirmation_code = null;
         $user->save();
         
-        return response()->json(['status' => 'Your account is now verified!'], 200);
+        return response()->json([
+            'message' => 'Your account is now verified!'
+            //'status' => 'Your account is now verified!'
+        ], 200);
     }
     
     
+    /**
+     * Register user by params
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function register(RegisterFormRequest $request)
     {
         $confirmation_code = str_random(100);
@@ -71,15 +85,26 @@ class AuthController extends Controller
             $message->to($request->json('email'), $request->json('name'))
                 ->subject('Verify your email address');
         });*/
+        
+        return response()->json([
+            'message' => 'We sent you an activation code. Check your email.'
+        ], 200);
     }
     
-    public function signin(LoginFormRequest $request)
+    /**
+     * Login user by params
+     * 
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function login(LoginFormRequest $request)
     {
         $credentials = $request->only('email', 'password');
         
+        $expiration = Carbon::now()->addWeek()->timestamp;
         try {
             if(! $token = JWTAuth::attempt($credentials, [
-                'exp' => Carbon::now()->addWeek()->timestamp,
+                'exp' => $expiration,
             ])){
                 return response()->json([
                     'error' => 'Invalid credentials.'
@@ -100,14 +125,13 @@ class AuthController extends Controller
             $user->update();
             
             $content = [
-        		'url' => url(config('app.url')."/auth/verify/".$confirmation_code),
+        		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
                 'title' => 'Verify your email address',
         		'button' => 'Click Here'
       		];
     
         	Mail::to($user->email)->send(new EmailVerify($content));
             
-                      
             /*Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($user) {
                 $message->to($user->email, $user->name)
                     ->subject('Verify your email address');
@@ -115,12 +139,22 @@ class AuthController extends Controller
             
             return response()->json([
                 'error' => 'You didn\'t confirm email. Check your email box, you should recieve email with confirmation link.',
-                'user' => $request->user()
+                //'user' => $request->user()
             ], 401);
         }
-
-        $data = User::getApiUserData($request->user(), $token);
-        return response()->json($data);
+        
+        //$payload = JWTAuth::parseToken()->getPayload();
+        //$payload = JWTAuth::decode($token);
+        $payload = JWTAuth::getPayload($token);
+        $expiration = $payload['exp'];
+        
+        return response()->json([
+            "token_type" => "Bearer",
+            'token' => $token,
+            'expires_in' => $expiration
+        ], 200);
+        //$data = User::getApiUserData($request->user(), $token);
+        //return response()->json($data);
     }
     
     /**
@@ -132,6 +166,37 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()->pullCache();  //clear UserOnline cache
-        return response()->json(null, 204);
+        $token = JWTAuth::getToken();
+        JWTAuth::setToken($token)->invalidate();
+        return response()->json([
+             "message" => "Token revoked successfully."
+        ], 202);
+    }
+    
+    
+    /**
+     * Get token with refreshing
+     */
+    public function token()
+    {
+        $token = JWTAuth::getToken();
+
+        if (! $token) {
+            throw new BadRequestHttpException('Token not provided');
+        }
+
+        try {
+            $token = JWTAuth::refresh($token);
+        } catch (TokenInvalidException $e) {
+            throw new AccessDeniedHttpException('The token is invalid');
+        }
+        
+        $payload = JWTAuth::parseToken()->getPayload();
+        $expiration = $payload->getExp();
+        return response()->json([
+            "token_type" => "Bearer",
+            'token' => $token,
+            'expires_in' => $expiration
+        ], 200);
     }
 }

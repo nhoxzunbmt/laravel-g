@@ -223,9 +223,7 @@ class GameController extends Controller
                         }
                     }
                     
-                    
-                    
-                    
+
                     if($logo===NULL && count($arImages)>0)
                     {
                         $logo = $arImages[0];
@@ -255,20 +253,5 @@ class GameController extends Controller
             break;
             
         } while ($count<$total);
-    }
-    
-    /**
-     * Popular games.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function popular(Request $request)
-    {
-        $limit = 3;
-        if($request->has('limit')) 
-        {
-            $limit = (int)$request->get('limit'); 
-        }
-        return response()->json(Game::orderBy('id', 'asc')->limit($limit)->get());
     }
 }

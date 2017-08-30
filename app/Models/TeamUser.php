@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeamUser extends Model
 {
-    public $timestamps = false;
-    protected $fillable = ['user_id', 'team_id', 'sender_id', 'status'];
+    public $timestamps = true;
+    protected $fillable = ['user_id', 'team_id', 'sender_id', 'status', 'start_at', 'end_at'];
     
     const PENDING = 0;
     const ACCEPTED = 1;

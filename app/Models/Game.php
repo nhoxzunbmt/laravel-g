@@ -43,6 +43,28 @@ class Game extends Model
         return $this->hasMany('App\Models\Fight');
     }
     
+    /**
+     * Get the users which play the game.
+     * 
+     * @Relation
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function users()
+    {
+        return $this->hasMany('App\User');
+    }
+    
+    /**
+     * Get the teams which play the game.
+     * 
+     * @Relation
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function teams()
+    {
+        return $this->hasMany('App\Models\Team');
+    }
+    
     public function scopeSearch($query, $request)
     {
         if(!empty($request['id']))

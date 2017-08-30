@@ -62,7 +62,7 @@ class ResetPasswordController extends Controller
      */
     protected function sendResetResponse($response)
     {
-        return ['status' => trans($response)];
+        return ['message' => trans($response)];
     }
     
     /**

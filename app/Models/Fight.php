@@ -8,17 +8,7 @@ use Carbon\Carbon;
 class Fight extends Model
 {
     protected $dates = ['start_at'];
-    
-    protected $fillable = ['start_at', 'title', 'type', 'game_id', 'created_id', 'count_team_users', 'count_parts', 'active'];
-    
-    /**
-     * Пользователи, которые принадлежат данному бою.
-     * @Relation
-     */
-    public function users()
-    {
-        return $this->belongsToMany('App\User');//, 'fight_user', 'user_id', 'fight_id');
-    }
+    protected $fillable = ['start_at', 'title', 'game_id', 'created_id', 'count_team_users', 'count_parts', 'active'];
     
     /**
      * Команды, которые принадлежат данному бою.
@@ -26,7 +16,7 @@ class Fight extends Model
      */
     public function teams()
     {
-        return $this->belongsToMany('App\Models\Team');//, 'fight_team', 'team_id', 'fight_id');
+        return $this->belongsToMany('App\Models\Team');
     }
     
     /**
@@ -72,6 +62,14 @@ class Fight extends Model
     public function canceledBy()
     {
         return $this->belongsTo('App\User', 'cancel_user_id');
+    }
+    
+    /**
+     * @Relation
+     */
+    public function streams()
+    {
+        return $this->hasMany('App\Models\Stream', 'fight_id');
     }
     
     public function scopePublished($query)

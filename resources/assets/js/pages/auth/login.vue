@@ -79,7 +79,7 @@ export default {
                 this.error = false
                 
                 this.$store.dispatch('saveToken', {
-                    token: response.data.meta.token,
+                    token: response.data.token,
                     remember: true
                 })
             

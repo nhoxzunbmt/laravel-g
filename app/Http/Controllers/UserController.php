@@ -21,17 +21,19 @@ class UserController extends Controller
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
-     */
+     */     
     public function index(Request $request)
     {
-        $response = [];
+        /*$response = [];
         try{
             $statusCode = 200;
-            $response = User::filter($request->all())->with(['fights', 'country', 'teams'])->active()->orderBy('balance', 'desc')->paginate(12);                    
+            $response = User::filter($request->all())->with(['fights', 'country', 'team'])->active()->orderBy('balance', 'desc')->paginate(12);                    
         }catch (Exception $e){
             $statusCode = 404;
         }        
-        return response()->json($response, $statusCode);
+        return response()->json($response, $statusCode);*/
+        $users = new User();
+        return ApiHelper::parseMultiple($users, ['name', 'last_name'], $request->all());
     }
     
     public function show($id, Request $request)
@@ -41,11 +43,26 @@ class UserController extends Controller
     }
     
     /**
+     * Me with meta token
+     */
+    public function me(Request $request)
+    {
+        //$data = User::getApiUserData($request->user());
+        $user = $request->user();
+        if($user->avatar)
+            $user->avatar = asset('storage/'.$user->avatar);
+        if($user->overlay)
+            $user->overlay = asset('storage/'.$user->overlay);
+        
+        return response()->json($user, 200);
+    }
+    
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function search(Request $request)
+    /*public function search(Request $request)
     {
         $error = ['error' => 'No results found, please try with different keywords.'];
         
@@ -72,20 +89,7 @@ class UserController extends Controller
         }
         
         return response()->json($error);
-    }
-    
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //$user = JWTAuth::parseToken()->authenticate();
-        //$userId = $user->id;
-        return response()->json($request->all());
-    }
+    }*/
     
     /**
 	 * Update the specified resource in storage.
@@ -98,12 +102,21 @@ class UserController extends Controller
 	{
         $data = [];
         $input = $request->except(['avatar', 'overlay']);
-        if(!$id)
+        /*if(!$id)
         {
             $user = JWTAuth::parseToken()->authenticate();
             $id = $user->id;
         }else{
             $user = User::findOrFail($id);
+        }*/
+        
+        $user = $request->user();
+        
+        if($user->team_id>0 && $user->game_id!=$input['game_id'])
+        {
+            return response()->json([
+                'game_id' => ['Game couldnt\'t be changed, you are connected to the team.']
+            ], 422);
         }
         
         if ($request->has('password')) 
@@ -132,7 +145,8 @@ class UserController extends Controller
 	public function avatar(Request $request)
 	{
         $params = $request->all();
-        $user = JWTAuth::parseToken()->authenticate();
+        //$user = JWTAuth::parseToken()->authenticate();
+        $user = $request->user();
         
         if($user->avatar)
         {
@@ -172,7 +186,8 @@ class UserController extends Controller
 	 */
 	public function overlay(Request $request)
 	{
-        $user = JWTAuth::parseToken()->authenticate();
+        //$user = JWTAuth::parseToken()->authenticate();
+        $user = $request->user();
         if($user->overlay)
         {
             $path = public_path() . '/storage/' . $user->overlay;
@@ -213,9 +228,22 @@ class UserController extends Controller
 	}
     
     /**
+	 * Get user's team.
+     * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return Response
+	 */
+    public function team($id)
+    {
+        $team = User::find($id)->team()->get();
+        return response()->json($team, 200);
+    }
+    
+    /**
      * Get all figths of all user's teams
      */
-    public function teamsFights($id, Request $request)
+    public function fights($id, Request $request)
     {
         $team_ids = User::find($id)->teams()
             ->where("team_user.status", 1)

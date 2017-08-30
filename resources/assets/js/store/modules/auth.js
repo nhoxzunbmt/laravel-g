@@ -17,7 +17,7 @@ const mutations = {
   },
 
   [types.FETCH_USER_SUCCESS] (state, { user }) {
-    state.user = user.data
+    state.user = user;
   },
 
   [types.FETCH_USER_FAILURE] (state) {

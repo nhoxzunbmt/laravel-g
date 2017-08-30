@@ -52,13 +52,12 @@ export default {
                 this.$router.push({ name: 'auth.login' })
             })
         },
-        getPopularGames () {
-            var queryStartParams = {
+        getPopularGames () 
+        {
+            var query = this.ArrayToUrl({
                 '_limit' : 3,
                 "_sort" : 'id'
-            };
-            
-            var query = this.ArrayToUrl(queryStartParams);
+            });
             
             axios.get('/api/games?'+query).then((res) => {
                 this.popularGames = res.data.data;

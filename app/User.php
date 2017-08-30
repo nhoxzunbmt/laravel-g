@@ -30,7 +30,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $fillable = [
         'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
-        'overlay', 'description', 'type', 'country_id', 'confirmation_code'
+        'overlay', 'description', 'type', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams'
     ];
 
     /**
@@ -40,6 +40,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = [
         'password', 'remember_token', 'api_token', 'confirmation_code'
+    ];
+    
+    
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'streams' => 'array',
     ];
     
     protected $searchableColumns = [
@@ -87,32 +97,40 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     }
     
     /**
-     * Команды, к которым принадлежит пользователь.
+     * User's team.
+     * @Relation
+     */
+    public function team()
+    {
+        return $this->belongsTo('App\Models\Team');
+    }
+    
+    /**
+     * User's team history.
      * @Relation
      */
     public function teams()
     {
-        return $this->belongsToMany('App\Models\Team');//, 'team_user');
+        return $this->belongsToMany('App\Models\Team');
     }
     
     /**
-     * Команды, к которым принадлежит пользователь.
+     * User's game
      * @Relation
      */
-    public function teamsActive()
+    public function game()
     {
-        return $this->belongsToMany('App\Models\Team')->where("status", 1);//, 'team_user');
+        return $this->belongsTo('App\Models\Game');
     }
     
     /**
      * Бои, к которым принадлежит пользователь.
      * @Relation
      */
-    public function fights()
+    /*public function fights()
     {
         return $this->belongsToMany('App\Models\Fight');
-        //return $this->belongsToMany('App\Models\FightUser', 'fight_user', 'fight_id', 'user_id');
-    }
+    }*/
     
     /**
      * Fights which are created by user
@@ -186,6 +204,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $query->where('type', '=', 'investor');
     }   
     
+    
+    /**
+     * Create user from social account
+     */
     public static function createBySocialProvider($providerUser)
     {
         $email = $providerUser->getEmail();
@@ -214,7 +236,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $email;
     }
     
-    public static function getApiUserData($user, $token = false)
+    /*public static function getApiUserData($user, $token = false)
     {
         $data = [];
         $meta = [];
@@ -237,8 +259,19 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'data' => $data,
             'meta' => $meta
         ];
+    }*/
+    
+    /**
+     * @Relation
+     */
+    public function fightStreams()
+    {
+        return $this->hasMany('App\Models\Stream', 'user_id');
     }
     
+    /**
+     * Search by params
+     */
     public function scopeFilter($query, $request)
     {
         if(!empty($request['type']))
