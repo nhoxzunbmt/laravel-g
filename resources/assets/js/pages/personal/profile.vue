@@ -33,17 +33,27 @@
                                     </div>                                                
                                     <div class="row" v-if="user.type=='player'">
                                         <div class="col-md-6">
-    										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
+    										<div class="form-group" :class="{ 'has-error': error && response.user.game_id }">
                                                 <label class="control-label mb-10">Game</label>
-    											<select v-model="game_id" class='form-control' data-style="form-control btn-default btn-outline" id="game_list">
+    											<select v-model="user.game_id" class='form-control' :disabled="user.team_id!=null ? 'disabled' : null" data-style="form-control btn-default btn-outline" id="game_list">
                                                     <option v-for="game in games" v-bind:value="game.id">
                                                         {{ game.title }}
                                                     </option>
                                                 </select>
-                                                <span class="help-block" v-if="error && response.game_id">{{ response.game_id[0] }}</span>
+                                                <span class="help-block" v-if="error && response.user.game_id">{{ response.user.game_id[0] }}</span>
                                             </div>
     									</div>
-                                    </div>                                                
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{ 'has-error': error && response.user.streams }">
+                                                <label class="control-label mb-10">Streams</label>
+                                                <div v-for="stream in streams">
+                                                    <input type="text" class="form-control" v-model="stream.value" :disabled="user.team_id!=null && user.team.status==1 ? 'disabled' : null">
+                                                </div>
+                                                <button type="button" v-if="user.team_id==null || user.team_id!=null && user.team.status!=1" class="btn btn-primary btn-xs form-control" @click="addAnother"><i class="fa fa-plus-circle"></i></button>
+                                                <span class="help-block" v-if="error && response.user.streams">{{ response.user.streams[0] }}</span>
+                                            </div>
+                                        </div>
+                                    </div>                                     
                                     <div class="row">
                                         <div class="col-md-6" :class="{ 'has-error': error && response.nickname }">
                                             <div class="form-group">
@@ -138,7 +148,7 @@
                                         <button type="submit" class="btn btn-primary btn-icon left-icon mr-10">
                                             <i class="zmdi zmdi-edit"></i> <span>Update profile</span>
                                         </button>			
-    								</div>				
+    								</div>			
     							</form>
                                 <div class="alert alert-success alert-dismissable mt-20" v-if="success">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -192,13 +202,14 @@ export default {
             error: false,
             response: null,
             countries: null,
-            game_id: null,
-            games: []
+            games: [],
+            streams: []
         }
     },
     mounted() {
         this.getGames();
         this.getCountries();
+        this.getUserTeam();
         
         var self = this;
         Vue.nextTick(function(){ 
@@ -207,9 +218,9 @@ export default {
                 placeholder: "Select game",
                 allowClear: true
             }).on("select2:select", function(e) { 
-                self.game_id = $(e.currentTarget).find("option:selected").val();
+                self.user.game_id = $(e.currentTarget).find("option:selected").val();
             }).on("select2:unselecting", function (e) {
-                self.game_id = 0;
+                self.user.game_id = 0;
             });
             
             $("#country_list").select2({
@@ -239,19 +250,29 @@ export default {
                 }
             };
         });
+        
+        this.streams = this.user.streams;
     },
     methods: {
         
         save(event) {
             event.preventDefault()
             
-            axios.post('/api/user', this.user).then(response => {
+            this.user.streams = this.streams;
+            
+            axios.post('/api/users', this.user).then(response => {
                 this.error = false;
                 this.success = true;
             }).catch(error => {
                 this.response = error.response.data
                 this.error = true
                 this.success = false;                
+            });
+        },
+        getUserTeam: function()
+        {
+            axios.get('/api/users/'+this.user.id+"/team").then((response) => {
+                this.$set(this.user, 'team', response.data);
             });
         },
         getCountries: function()
@@ -282,6 +303,14 @@ export default {
             }else{
                 this.games = this.$parent.games;
             }  
+        },
+        addAnother: function() 
+        {
+            if(this.streams==null)
+            {
+                this.streams  = [];
+            }
+            this.streams.push({ value: '' });
         }
         
     },

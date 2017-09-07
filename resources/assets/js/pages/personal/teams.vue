@@ -19,28 +19,26 @@
                                                 <th>Logo</th>
                                                 <th>Name</th>
                                                 <th>Need players</th>
-                                                <th>Game</th>
                                                 <th>Balance, <i aria-hidden="true" class="fa fa-btc"></i></th>
                                                 <th class="text-nowrap">Action</th>
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="team in invitations">
+                                            <tr v-for="invitation in invitations">
                                                 <td>
-                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
-                                                        <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
+                                                    <router-link  :to="{ name: 'team.detail', params: { slug: invitation.team.slug }}">
+                                                        <img :src="getImageLink(invitation.team.image)" class="img-responsive team-image" :alt="invitation.team.title" />
                                                     </router-link>
                                                 </td>
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
-                                                        {{ team.title}}
+                                                        {{ invitation.team.title}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center">{{ team.quantity}}</td>
-                                                <td class="text-center">{{ team.game.title}}</td>
-                                                <td class="text-center">{{ team.balance}}</td>
+                                                <td class="text-center">{{ invitation.team.quantity}}</td>
+                                                <td class="text-center">{{ invitation.team.balance}}</td>
                                                 <td class="text-nowrap text-center">
-                                                    <select @change="answerToInvite(team.id, $event)" class='form-control' data-style="form-control btn-default btn-outline">
+                                                    <select @change="answerToInvite(invitation.team.id, $event)" class='form-control' data-style="form-control btn-default btn-outline">
                                                         <option v-for="status in statuses" v-bind:value="status.id">
                                                             {{ status.title }}
                                                         </option>
@@ -58,13 +56,65 @@
     		</div>
         </div>
     
-    
-        <div class="row">
+        <div class="row" v-if="team!==null">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
-                            <h4 class="mb-10">Teams</h4>
+                            <h4 class="mb-10">Current team</h4>
+                            <div class="table-wrap">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Logo</th>
+                                                <th>Name</th>
+                                                <th>Need players</th>
+                                                <th>Balance, <i aria-hidden="true" class="fa fa-btc"></i></th>
+                                                <th class="text-nowrap">Action</th>
+                                            </tr>
+                                        </thead>
+    								    <tbody>
+                                            <tr>
+                                                <td>
+                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
+                                                        <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
+                                                    </router-link>
+                                                </td>
+                                                <td>
+                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
+                                                        {{ team.title}}
+                                                    </router-link>
+                                                </td>
+                                                <td class="text-center">{{ team.quantity}}</td>
+                                                <td class="text-center">{{ team.balance}}</td>
+                                                <td class="text-nowrap text-center">
+                                                    <router-link  :to="{ name: 'teams.edit', params: { id: team.id }}" class="mr-25" v-if="team.capt_id==user.id">
+                                                        <i class="fa fa-pencil text-inverse m-r-10"></i>
+                                                    </router-link>
+                                                    
+                                                    <a href="#" @click="leaveTeam(team.id, $event)" title="Leave the team">
+                                                        <i class="fa fa-trash text-inverse m-r-10"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+    				</div>	
+    			</div>	
+    		</div>
+        </div>
+        
+        <!--
+        <div class="row" v-if="teams!==null">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    			<div class="panel panel-default card-view">
+    				<div class="panel-wrapper collapse in">
+    					<div class="panel-body">
+                            <h4 class="mb-10">Teams history</h4>
                             <div class="table-wrap">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
@@ -140,6 +190,7 @@
         	    </nav>
             </div>
         </div>
+        -->
     </div>    
 </template>
 
@@ -182,12 +233,13 @@
             }
         },
         mounted() {
-            
+            this.getUserTeam();
             this.getInvitations();
-            this.getVueItems();
+            //this.getVueItems();
         },
         data : function() {
             return {
+                team: null,
                 teams: [],
                 invitations: [],
                 inviteAnswerSuccess: false,
@@ -210,24 +262,34 @@
             }
         },
         methods : {
-            getInvitations(){
-                axios.get('/api/user/'+this.user.id+'/teams/invites').then((response) => {
-                    this.$set(this, 'invitations', response.data);
-                });                
+            getUserTeam()
+            {
+                axios.get('/api/users/'+this.user.id+"/team").then((response) => {
+                    this.$set(this, 'team', response.data);
+                    this.$set(this.user, 'team', response.data);
+                });
             },
-            getVueItems: function(){
+            getInvitations()
+            {
+                var query = this.ArrayToUrl({
+                    'user_id' : this.user.id,
+                    'status' : 0,
+                    'sender_id-not': this.user.id,
+                    "_with" : 'user,team'
+                });
                 
-                //var limit = 1;
-                //var page = this.$route.query.page || 1;
-                //var offset = (page-1)*limit;
-                
+                axios.get('/api/team_user?'+query).then((response) => {
+                    this.$set(this, 'invitations', response.data);
+                });               
+            },
+            /*getVueItems: function()
+            {
                 var queryStartParams = {
                     'page' : 1,
                     '_limit' : 3, //limit,
                     '_offset' : 0,
                     "_with" : 'users,game',
                     "_sort" : '-id'
-                    //'_config': 'meta-total-count,meta-filter-count,response-envelope'
                 };
                 
                 if(location.search)
@@ -254,7 +316,7 @@
                     delete response.data.data;
                     this.pagination = response.data;
                 });
-            },
+            },*/
             getLink(page){
                 let link = location.search;
                 link = this.$route.path + this.updateUrlParameter(link, "page", page);

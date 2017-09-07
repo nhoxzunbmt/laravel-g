@@ -22,9 +22,9 @@ class TeamStoreRequest extends FormRequest {
 	{
 		return [
 			'title'  => 'required|unique:teams,title',
-            'quantity' => 'required|integer|min:2|regex:#^[0-9]+$#',
+            //'quantity' => 'required|integer|min:2|regex:#^[0-9]+$#',
             'slug'  => 'required|unique:teams,slug',
-            'game_id'  => 'required|regex:#^[0-9]+$#',
+            //'game_id'  => 'required|regex:#^[0-9]+$#',
 		];
 	}
     public function messages()

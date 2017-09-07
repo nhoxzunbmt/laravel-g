@@ -18,9 +18,7 @@
     									<span class="name block capitalize-font">{{ user.nickname}}</span>
     									<span class="time block truncate txt-grey">{{ user.name}} {{ user.last_name}}</span>
     								</div>
-    								<button class="btn btn-primary pull-right btn-xs fixed-btn mt-20 btn-outline" @click="accept(user)" v-if="!user.accepted">Accept</button>
-    								<button class="btn btn-default pull-right btn-xs fixed-btn mt-20 btn-outline" v-if="user.accepted">Accepted</button>
-                                    <div class="clearfix"></div>
+    								<div class="clearfix"></div>
     							</div>
                             </div>
                         </div>

@@ -24,16 +24,8 @@ class UserController extends Controller
      */     
     public function index(Request $request)
     {
-        /*$response = [];
-        try{
-            $statusCode = 200;
-            $response = User::filter($request->all())->with(['fights', 'country', 'team'])->active()->orderBy('balance', 'desc')->paginate(12);                    
-        }catch (Exception $e){
-            $statusCode = 404;
-        }        
-        return response()->json($response, $statusCode);*/
         $users = new User();
-        return ApiHelper::parseMultiple($users, ['name', 'last_name'], $request->all());
+        return ApiHelper::parseMultiple($users, ['name', 'last_name', 'email'], $request->all());
     }
     
     public function show($id, Request $request)
@@ -58,40 +50,6 @@ class UserController extends Controller
     }
     
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    /*public function search(Request $request)
-    {
-        $error = ['error' => 'No results found, please try with different keywords.'];
-        
-        if($request->has('q')) 
-        {
-            $items = User::search($request->get('q'))->orderBy('id', 'asc');
-            
-            if($request->has('type')) 
-            {
-                $items = $items->whereType($request->get('type'));
-            }
-            
-            if($request->has('active')) 
-            {
-                $items = $items->active();
-            }
-            
-            $items = $items->paginate(12);
-            
-            if($items->count()==0)
-                return response()->json($error);
-
-            return response()->json($items);
-        }
-        
-        return response()->json($error);
-    }*/
-    
-    /**
 	 * Update the specified resource in storage.
      * 
 	 * @param  \Illuminate\Http\Request  $request
@@ -112,27 +70,56 @@ class UserController extends Controller
         
         $user = $request->user();
         
+        //Game needs for player
+        if(($input['type']=='player' || $user->type=='player') && empty($input['game_id']))
+        {
+            return response()->json([
+                'game_id' => ['Game needs for creation the team and fights.']
+            ], 422);
+        }
+        
         if($user->team_id>0 && $user->game_id!=$input['game_id'])
         {
             return response()->json([
-                'game_id' => ['Game couldnt\'t be changed, you are connected to the team.']
+                'game_id' => ['Game couldn\'t be changed, you are connected to the team.']
             ], 422);
         }
         
         if ($request->has('password')) 
             $user->password = bcrypt($request->password);
-            
+        
+        //If confirmed -> active 
         if($user->confirmed)
         {
             $user->active = 1;
         }
         
-        if($result = $user->update($input))
+        //If team exist & active Player cannot change streams
+        if($user->team_id>0 && $request->user()->team()->first()->status==Team::ACCEPTED)
         {
-            $data = User::getApiUserData($user);
+            unset($input['streams']);
+        }
+        elseif($input['streams'])
+        {
+            $streams = [];
+            foreach($input['streams'] as $arStream)
+            {
+                if(!empty($arStream["value"]))
+                {
+                    $streams[] = ['value' => trim($arStream["value"])];
+                }
+            }
+            $input['streams'] = $streams;
         }
         
-        return response()->json($data);
+        if($result = $user->update($input))
+        {
+            return response()->json($user);
+        }
+        
+        return response()->json([
+            'update' => 'Something wrong'
+        ], 422);
 	}
     
     /**
@@ -207,13 +194,15 @@ class UserController extends Controller
         return response()->json($data);
 	}
     
-    /**
-	 * Get teams of user.
-     * 
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return Response
-	 */
+    
+    
+    /*
+    public static function invitations($id, Request  $request)
+    {
+        $team_users = TeamUser::where("user_id", $id);      
+        return ApiHelper::parseMultiple($team_users, [''], $request->all());
+    }
+    
 	public function teams($id, Request $request)
 	{
         $team_ids = User::find($id)->teams()
@@ -226,23 +215,7 @@ class UserController extends Controller
               
         return ApiHelper::parseMultiple($teams, ['title'], $request->all());
 	}
-    
-    /**
-	 * Get user's team.
-     * 
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return Response
-	 */
-    public function team($id)
-    {
-        $team = User::find($id)->team()->get();
-        return response()->json($team, 200);
-    }
-    
-    /**
-     * Get all figths of all user's teams
-     */
+
     public function fights($id, Request $request)
     {
         $team_ids = User::find($id)->teams()
@@ -273,14 +246,7 @@ class UserController extends Controller
             return response()->json([], 200);
         }
     }
-    
-    /**
-	 * Get invitation list to teams.
-     * 
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return Response
-	 */
+
     public function invitesToTeam($id, Request $request)
     {
         $user = User::findOrFail($id);
@@ -291,5 +257,19 @@ class UserController extends Controller
             ->get();
         
         return response()->json($items, 200);
+    }*/
+    
+        
+    /**
+	 * Get user's team.
+     * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return Response
+	 */
+    public function team($id)
+    {
+        $team = User::find($id)->team()->first();
+        return response()->json($team, 200);
     }
 }

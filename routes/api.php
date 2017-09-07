@@ -79,6 +79,17 @@ Route::get('/users/', 'UserController@index');//apiHandler
 }
  */
 Route::get('/users/{id}', 'UserController@show');//apiHandler
+
+/**
+ * @api {get} /users/:id/team User's team data
+ * @apiName team
+ * @apiGroup User
+ * @apiPermission none
+ * @apiDescription Get data of user's team.
+ * 
+ * @apiParam {Number} id Users unique ID.
+ */
+Route::get('/users/{id}/team', 'UserController@team');
 Route::get('/users/{id}/teams', 'UserController@teams');//apiHandler
 Route::get('/users/{id}/fights', 'UserController@fights');//apiHandler
 
@@ -92,17 +103,30 @@ Route::resource('genres', 'GenreController', ['only' => [
 /**
  * Games
  */
+Route::get('/games/import', 'GameController@importByTwitchGiantbomb');
 Route::resource('games', 'GameController', ['only' => [
     'index', 'show'
 ]]);//apiHandler
-
 
 /**
  * Teams
  */
 Route::get('/teams/{param}', 'TeamController@show');//apiHandler
 Route::get('/teams', 'TeamController@index');//apiHandler
+Route::get('/teams/{id}/invitations', 'TeamController@invitations');
 
+
+/**
+ * TeamUsers (Invitations)
+ */
+/**
+ * @api {get} /team_user Get all users & teams connections
+ * @apiName index
+ * @apiGroup TeamUser
+ * @apiPermission guest:api
+ * @apiDescription Get all users & teams connections with statuses. Uses for team's & user's history.  _With: user,sender,team
+ */
+Route::get('/team_user', 'TeamUserController@index');//apiHandler
 
 /**
  * Twitch & streams

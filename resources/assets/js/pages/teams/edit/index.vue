@@ -125,7 +125,7 @@ export default {
         getTeam()
         {
             var query = this.ArrayToUrl({
-                "_with" : 'users'
+                "_with" : 'game'
             });
             
             axios.get('/api/teams/'+this.$route.params.id+'/edit?'+query).then((response) => {
@@ -137,7 +137,7 @@ export default {
                     team: team
                 });
             });
-        },
+        }
     },
 }
 </script>

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
-    public $timestamps = false;
-    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image'];
+    public $timestamps = true;
+    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status'];
     
     const PENDING = 0;
     const ACCEPTED = 1;
@@ -21,9 +21,18 @@ class Team extends Model
         return $this->hasMany('App\User');
     }
     
+    /**
+     * Many to many (teams to users)
+     * @Relation
+     */
+    public function invitations()
+    {
+        return $this->belongsToMany('App\User')->active();
+    }
+    
     /*public function users()
     {
-        return $this->belongsToMany('App\User', 'team_user')->active()->select('name', 'email', 'avatar', 'status', 'sender_id');;
+        return $this->belongsToMany('App\User', 'team_user')->active()->select('name', 'email', 'avatar', 'status', 'sender_id');
     }
     public function usersAccepted()
     {

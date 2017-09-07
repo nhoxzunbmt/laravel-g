@@ -3,14 +3,16 @@ import $ from 'jquery'
 import Tether from 'tether'
 import Meta from 'vue-meta'
 import Router from 'vue-router'
+import VModal from 'vue-js-modal'
 
 import './components'
 import './util/interceptors'
 
 Vue.config.productionTip = false
 
-Vue.use(Router)
 Vue.use(Meta)
+Vue.use(Router)
+Vue.use(VModal)
 
 window.jQuery = $
 window.Tether = Tether

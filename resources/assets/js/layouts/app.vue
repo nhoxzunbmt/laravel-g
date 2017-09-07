@@ -19,6 +19,8 @@
 				</div>
 			</footer>
 			<!-- /Footer -->
+            
+            <team-create-modal v-if="authenticated && user.type=='player'"></team-create-modal>
 		</div>
     </div>
 </template>
@@ -438,5 +440,21 @@ var setHeightWidth = function () {
     background: #284152;
     color: #fff;
     border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: rgba(255,255,255,.15);
+    opacity: 1;
+}
+
+/**Modal**/
+.v--modal-overlay{
+    background: rgba(0, 0, 0, 0.7) !important;
+    z-index: 10000 !important;
+}
+.v--modal-overlay .v--modal-box
+{
+    background: #102e42 !important;
+    padding: 10px 30px !important;
 }
 </style>

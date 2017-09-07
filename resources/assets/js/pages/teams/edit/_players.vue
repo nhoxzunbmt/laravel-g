@@ -87,7 +87,7 @@
                                 <p>Your response to the invitation has been saved.</p>
                             </div>
                         
-                            <div class="table-wrap" v-if="team.users!==null">
+                            <div class="table-wrap" v-if="invitations!==null">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
@@ -101,27 +101,27 @@
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="player in team.users" v-bind:class="{'danger' : player.status==2, 'success' : player.status==1 }">
+                                            <tr v-for="invitation in invitations" v-bind:class="{'danger' : invitation.status==2, 'success' : invitation.status==1 }">
                                                 <td>
-                                                    <router-link  :to="{ name: 'player', params: { id: player.pivot.user_id }}">
-                                                        <img :src="getImageLink(player.avatar)" class="img-responsive team-image" />
+                                                    <router-link  :to="{ name: 'player', params: { id: invitation.user_id }}">
+                                                        <img :src="getImageLink(invitation.user.avatar)" class="img-responsive team-image" />
                                                     </router-link>
                                                 </td>
                                                 <td>
-                                                    <router-link  :to="{ name: 'player', params: { id: player.pivot.user_id }}">
-                                                        {{ player.name}}
+                                                    <router-link  :to="{ name: 'player', params: { id: invitation.user_id }}">
+                                                        {{ invitation.user.name}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center">{{ player.email}}</td>
-                                                <td class="text-center"><i class="fa fa-check text-danger" v-if="player.pivot.user_id==team.capt_id"></i></td>
+                                                <td class="text-center">{{ invitation.user.email}}</td>
+                                                <td class="text-center"><i class="fa fa-check text-danger" v-if="invitation.user_id==team.capt_id && team.status==1"></i></td>
                                                 <td class="text-center">
-                                                    <span v-if="player.status==0">pending</span>
-                                                    <span v-if="player.status==1">accepted</span>
-                                                    <span v-if="player.status==2">denied</span>
+                                                    <span v-if="invitation.status==0">pending</span>
+                                                    <span v-if="invitation.status==1">accepted</span>
+                                                    <span v-if="invitation.status==2">denied</span>
                                                 </td>
                                                 <td class="text-nowrap text-center">
-                                                   <span v-if="team.capt_id!=player.sender_id && player.status==0">
-                                                        <select @change="answerToInvite(team.id, player.pivot.user_id, $event)" class='form-control' data-style="form-control btn-default btn-outline">
+                                                   <span v-if="team.capt_id!=invitation.sender_id && invitation.status==0">
+                                                        <select @change="answerToInvite(team.id, invitation.user_id, $event)" class='form-control' data-style="form-control btn-default btn-outline">
                                                             <option v-for="status in statuses" v-bind:value="status.id">
                                                                 {{ status.title }}
                                                             </option>
@@ -169,7 +169,8 @@ export default {
                 {id:1, title: 'accept'},
                 {id:2, title: 'denied'}
             ],
-            inviteAnswerSuccess: false
+            inviteAnswerSuccess: false,
+            invitations: null
         }
     },
     computed: {
@@ -199,8 +200,8 @@ export default {
             
             if(this.friends.length)
             {
-                this.team.users.forEach(function (user) {
-                    usersInTeam.push(user.pivot.user_id);
+                this.invitations.forEach(function (invitation) {
+                    usersInTeam.push(invitation.user_id);
                 });
             }
             
@@ -214,7 +215,11 @@ export default {
         
         this.team = this.$parent.team;
         
+        //Get friends of user
         this.getFriends();
+        
+        //Get all invitations to the team
+        this.getTeamUsers();
     },
     methods: {
         
@@ -236,7 +241,14 @@ export default {
             this.error = false;
             this.loading = true;
             
-            axios.get('/api/user/search'+"?q="+this.q+"&type=player&active=1").then(response => {
+            var query = this.ArrayToUrl({
+                "_q" : this.q,
+                "type" : 'player',
+                "active" : 1,
+                "game_id" : this.user.game_id
+            });
+            
+            axios.get('/api/users/?'+query).then(response => {
                 
                 if(response.data.error!==undefined)
                     this.error = response.data.error
@@ -274,7 +286,17 @@ export default {
         },
         checkInTeam: function (value) {
             return this.usersInTeam.indexOf(value) > -1 ? true : false;
-        }
+        },
+        getTeamUsers()
+        {
+            var query = this.ArrayToUrl({
+                "_with" : 'user'
+            });
+            
+            axios.get('/api/teams/'+this.$route.params.id+'/invitations?'+query).then((response) => {
+                this.$set(this, 'invitations', response.data);
+            });
+        },
     },
 }
 </script>

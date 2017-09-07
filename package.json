@@ -22,6 +22,7 @@
     "vform": "^0.7.4",
     "vue": "^2.2.1",
     "vue-core-image-upload": "^2.2.4",
+    "vue-js-modal": "^1.2.9",
     "vue-meta": "^0.5.3",
     "vue-nice-scrollbar": "^0.1.4",
     "vue-router": "^2.3.0",
@@ -48,18 +49,18 @@
     "svg-sprite-loader": "^0.3.0"
   },
   "apidoc": {
-      "name": "Sparta.games",
-      "description": "Sparta.games API Documentation",
-      "title": "Sparta.games API Documentation",
-      "version": "1.0.0",
-      "url" : "http://sparta.games/api",
-      "template": {
-        "withCompare": true,
-        "withGenerator": true
-      },
-       "header": {
-        "title": "API Overview",
-        "filename": "apidoc_header.template.md"
-      }
+    "name": "Sparta.games",
+    "description": "Sparta.games API Documentation",
+    "title": "Sparta.games API Documentation",
+    "version": "1.0.0",
+    "url": "http://sparta.games/api",
+    "template": {
+      "withCompare": true,
+      "withGenerator": true
+    },
+    "header": {
+      "title": "API Overview",
+      "filename": "apidoc_header.template.md"
+    }
   }
 }

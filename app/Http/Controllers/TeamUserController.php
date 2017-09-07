@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Team;
 use App\Models\TeamUser;
+use App\Acme\Helpers\ApiHelper;
 
 class TeamUserController extends Controller
 {
@@ -13,9 +14,10 @@ class TeamUserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request  $request)
     {
-        //
+        $team_users = new TeamUser();      
+        return ApiHelper::parseMultiple($team_users, [], $request->all());
     }
 
     /**

@@ -40,19 +40,13 @@
         									<div class="col-md-6">
         										<div class="form-group" :class="{ 'has-error': error && response.quantity }">
                                                     <label class="control-label mb-10">Quantity</label>
-                                                    <input v-model.number="team.quantity" type="number" class="form-control" placeholder="quantity">
-                                                    <span class="help-block" v-if="error && response.quantity">{{ response.quantity[0] }}</span>  
+                                                    <p>{{team.quantity}}</p>
                                                 </div>
         									</div>
                                             <div class="col-md-6">
         										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
                                                     <label class="control-label mb-10">Game</label>
-        											<select v-model="team.game_id" class='form-control' data-style="form-control btn-default btn-outline" id="game_list">
-                                                        <option v-for="game in games" v-bind:value="game.id">
-                                                            {{ game.title }}
-                                                        </option>
-                                                    </select>
-                                                    <span class="help-block" v-if="error && response.game_id">{{ response.game_id[0] }}</span>
+                                                    <p>{{ team.game.title }}</p>
                                                 </div>
         									</div>
                                         </div>
@@ -105,7 +99,6 @@ export default {
             success: false,
             error: false,
             team: null,
-            games: [],
             response: null
         }
     },
@@ -115,22 +108,6 @@ export default {
         });
         
         this.team = this.$parent.team;
-               
-        this.getGames();
-        
-        var self = this;
-        Vue.nextTick(function(){
-            setTimeout(function(){
-                $("#game_list").select2({
-                    placeholder: "Select game",
-                    allowClear: true
-                }).on("select2:select", function(e) { 
-                    self.team.game_id = $(e.currentTarget).find("option:selected").val();
-                }).on("select2:unselecting", function (e) {
-                    self.team.game_id = 0;
-                });
-            }, 1000)
-        });
     },
     methods: {       
         save(event) {
@@ -144,25 +121,6 @@ export default {
                 this.error = true
                 this.success = false;                
             });
-        },
-        getGames: function()
-        {
-            if(this.$parent.games==undefined || this.$parent.games.length==0)
-            {
-                var queryStartParams = {
-                    '_limit' : 0,
-                    "_sort" : 'title'
-                };
-                
-                var query = this.ArrayToUrl(queryStartParams);
-                
-                axios.get('/api/games?'+query).then((response) => {
-                    this.$set(this, 'games', response.data);
-                    this.$parent.games = this.games;
-                });
-            }else{
-                this.games = this.$parent.games;
-            }  
         },
         getLink(slug)
         {

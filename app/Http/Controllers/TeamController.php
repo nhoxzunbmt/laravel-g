@@ -51,11 +51,15 @@ class TeamController extends Controller
         $input = $request->all();
         
         //Validation min game's players count
-        $arGame = Game::findOrFail($input["game_id"]);
-        if(intval($input["quantity"]) < intval($arGame["min_players"]))
+        $arGame = Game::findOrFail($request->user()->game_id);
+        $input['game_id'] = $arGame["id"];
+        $input["quantity"] = $arGame["min_players"];
+
+        //Check if exist team
+        if($request->user()->team_id>0/* && $request->user()->team()->first()->status==Team::ACCEPTED*/)
         {
             return response()->json([
-                'quantity' => ['The quantity must be at least '.$arGame["min_players"]]
+                'title' => ['You are already have the team! If you want to create new team delete all users from your current team and then delete the team!']
             ], 422);
         }
         
@@ -72,6 +76,9 @@ class TeamController extends Controller
             "status" => TeamUser::ACCEPTED,
             "start_at" => \Carbon\Carbon::now()->timestamp
         ]);
+        
+        $user = $request->user();
+        $user->update(['team_id' => $result->id]);
         
         return response()->json($result);        
     }
@@ -144,6 +151,26 @@ class TeamController extends Controller
     {
         //
     }
+    
+    /**
+     * Get invitations to team
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function invitations($id, Request  $request)
+    {
+        $team_users = TeamUser::where("team_id", $id);      
+        return ApiHelper::parseMultiple($team_users, [''], $request->all());
+    }
+    
+    
+    
+    
+    
+    
+    
     
     /**
      * Get users of the team

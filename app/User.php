@@ -99,6 +99,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     /**
      * User's team.
      * @Relation
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function team()
     {

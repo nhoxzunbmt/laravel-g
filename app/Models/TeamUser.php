@@ -19,4 +19,28 @@ class TeamUser extends Model
 	 * @var string
 	 */
 	protected $table = 'team_user';
+    
+    /**
+     * @Relation
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id');
+    }
+    
+    /**
+     * @Relation
+     */
+    public function sender()
+    {
+        return $this->belongsTo('App\User', 'sender_id');
+    }
+    
+    /**
+     * @Relation
+     */
+    public function team()
+    {
+        return $this->belongsTo('App\Models\Team', 'team_id');
+    }
 }
