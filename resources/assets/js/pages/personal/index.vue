@@ -14,7 +14,7 @@
                                     :headers="header"
                                     @imageuploaded="overlayuploaded"
                                     :maxWidth="1000"
-                                    url="/api/user/overlay">
+                                    url="/api/users/overlay">
                                     <i class="fa fa-camera"></i>
                                 </vue-core-image-upload>
     							<div class="profile-image-overlay" v-if="user.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(user.overlay) + ')' }"></div>
@@ -41,7 +41,7 @@
                                         :headers="header"
                                         @imageuploaded="imageuploaded"
                                         :maxWidth="150"
-                                        url="/api/user/avatar">
+                                        url="/api/users/avatar">
                                         <i class="fa fa-camera"></i>
                                     </vue-core-image-upload>
     							</div>

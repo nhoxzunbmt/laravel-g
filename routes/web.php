@@ -25,7 +25,7 @@ Route::get('{path}', function () {
 })->where('path', '(.*)');
 
 
-
+/*
 //Register and auth by email
 Auth::routes();
 
@@ -36,7 +36,7 @@ Route::get('/games/search/{q}', 'GameController@search');
 
 //Fights
 Route::get('/fights', 'FightController@index')->name('fights');
-Route::get('/fights/create', 'FightController@create');
+Route::get('/fights/create', 'FightController@create');*/
 /*Route::get('/fights/{id}', 'FightController@show')->name('fight');
 Route::get('/fights/{id}', 'FightController@show')->name('fight');
 Route::get('/games/search/{q}', 'GameController@search');*/

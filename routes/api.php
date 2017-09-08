@@ -16,9 +16,48 @@ use Illuminate\Http\Request;
 /**
  * Countries
  */
+/**
+ * @api {get} /countries Get list all
+ * @apiName index
+ * @apiGroup Country
+ * @apiPermission guest:api
+ */
+ 
+/**
+ * @api {get} /countries/:id Get detail
+ * @apiName show
+ * @apiGroup Country
+ * @apiPermission guest:api
+ * @apiParam {Number} id Country unique ID.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+{
+  "id": 4,
+  "capital": "Kabul",
+  "citizenship": "Afghan",
+  "country_code": "004",
+  "currency": "afghani",
+  "currency_code": "AFN",
+  "currency_sub_unit": "pul",
+  "currency_symbol": "؋",
+  "currency_decimals": 2,
+  "full_name": "Islamic Republic of Afghanistan",
+  "iso_3166_2": "AF",
+  "iso_3166_3": "AFG",
+  "name": "Afghanistan",
+  "region_code": "142",
+  "sub_region_code": "034",
+  "eea": 0,
+  "calling_code": "93",
+  "flag": "AF.png"
+}
+*/
 Route::resource('countries', 'CountryController', ['only' => [
     'index', 'show'
 ]]);//apiHandler
+
+/*************************************************************************************************************************/
 
 /**
  * Users
@@ -30,21 +69,20 @@ Route::resource('countries', 'CountryController', ['only' => [
  * @apiPermission Authenticated User
  */
 Route::get('/users/me', 'UserController@me')->middleware('jwt.auth');
-//Route::get('/users/search', 'UserController@search');
 
 /**
  * @api {get} /users List all users
  * @apiName all
  * @apiGroup User
- * @apiPermission none
+ * @apiPermission guest:api
  */
-Route::get('/users/', 'UserController@index');//apiHandler
+Route::get('/users', 'UserController@index');//apiHandler
 
 /**
  * @api {get} /users/:id Read data of a User
  * @apiName show
  * @apiGroup User
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Realations: country, team, game, teams, fights, createdFights, judgeOfFights, commentatorOfFights, canceledFights
  * 
  * @apiParam {Number} id Users unique ID.
@@ -84,14 +122,27 @@ Route::get('/users/{id}', 'UserController@show');//apiHandler
  * @api {get} /users/:id/team User's team data
  * @apiName team
  * @apiGroup User
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Get data of user's team.
  * 
- * @apiParam {Number} id Users unique ID.
+ * @apiParam {Number} id User unique ID.
  */
 Route::get('/users/{id}/team', 'UserController@team');
+
+/**
+ * @api {get} /users/:id/friends User's friends
+ * @apiName friends
+ * @apiGroup User
+ * @apiPermission guest:api
+ * @apiDescription Get data of user's friends.
+ * 
+ * @apiParam {Number} id User unique ID.
+ */
+Route::get('/users/{id}/friends', 'UserController@friends');
 Route::get('/users/{id}/teams', 'UserController@teams');//apiHandler
 Route::get('/users/{id}/fights', 'UserController@fights');//apiHandler
+/*************************************************************************************************************************/
+
 
 /**
  *Genres
@@ -100,19 +151,95 @@ Route::resource('genres', 'GenreController', ['only' => [
     'index', 'show'
 ]]);
 
+/*************************************************************************************************************************/
+
 /**
  * Games
  */
-Route::get('/games/import', 'GameController@importByTwitchGiantbomb');
+/**
+ * @api {get} /games/import Import games
+ * @apiName import
+ * @apiGroup Game
+ * @apiPermission Authenticated User Admin
+ * @apiDescription Import games from twtich & giantbomb.
+ */
+Route::get('/games/import', 'GameController@importByTwitchGiantbomb')->middleware('jwt.auth');
+/**
+ * @api {get} /games Get list all
+ * @apiName index
+ * @apiGroup Game
+ * @apiPermission guest:api
+ * @apiDescription Get  list of all games.
+ */
+/**
+ * @api {get} /games/:id Get detail
+ * @apiName show
+ * @apiGroup Game
+ * @apiPermission guest:api
+ * @apiDescription Get data of game.
+ * 
+ * @apiParam {Number} id Game unique ID.
+ * 
+  * @apiSuccessExample {json} Success-Response:
+ * HTTP/1.1 200 OK
+{
+  "id": 1,
+  "active": 1,
+  "giantbomb_id": 24024,
+  "twitch_id": 21779,
+  "genre_id": 50,
+  "title": "League of Legends",
+  "alias": "LoL",
+  "images": "[\"games\\/2847560-dsc01166.jpg\",\"games\\/2847559-dsc00543.jpg\",\"games\\/2847489-dsc01164.jpg\",\"games\\/2847476-dsc00925.jpg\",\"games\\/2847475-dsc00924.jpg\",\"games\\/2847474-dsc00923.jpg\"]",
+  "logo": "games/League20of20Legends-272x380.jpg",
+  "body": "A free-to-play competitive MOBA game with a large following in eSports. From the original developers of DotA: Allstars, the game expands the gameplay found in DotA by adding persistent Summoner profiles and a variety of original champions who fight for you on the battlefield against bots or one another.",
+  "site_url": null,
+  "rules": null,
+  "video_count": 0,
+  "online": 1,
+  "min_players": 2,
+  "overlay": null
+}
+ */
 Route::resource('games', 'GameController', ['only' => [
     'index', 'show'
 ]]);//apiHandler
 
+/*************************************************************************************************************************/
+
+
 /**
  * Teams
  */
+/**
+ * @api {get} /teams/:param Team's data
+ * @apiName show
+ * @apiGroup Team
+ * @apiPermission none
+ * @apiDescription Get data of team by slug or id.
+ * 
+ * @apiParam {String} param Team unique slug or id.
+ */
 Route::get('/teams/{param}', 'TeamController@show');//apiHandler
+
+/**
+ * @api {get} /teams Get list all
+ * @apiName index
+ * @apiGroup Team
+ * @apiPermission none
+ * @apiDescription Get list of teams.
+ */
 Route::get('/teams', 'TeamController@index');//apiHandler
+
+/**
+ * @api {get} /teams/:id/invitations Invitations to team
+ * @apiName invitations
+ * @apiGroup Team
+ * @apiPermission none
+ * @apiDescription Get invitations to the team by id.
+ * 
+ * @apiParam {Number} param Team unique id.
+ */
 Route::get('/teams/{id}/invitations', 'TeamController@invitations');
 
 
@@ -142,7 +269,7 @@ Route::get('/team_user', 'TeamUserController@index');//apiHandler
 Route::get('/twitch/', '\App\Acme\Helpers\TwitchHelper@getFeaturedStreams');
 /**
  * @api {get} /twitch/search/:game Search by the game
- * @apiName password-email
+ * @apiName search
  * @apiGroup Twitch
  * @apiPermission guest:api
  * @apiDescription Search streams by the name of the game
@@ -250,6 +377,16 @@ Route::group(['middleware' => 'guest:api'], function () {
 }
      */
     Route::post('/password/reset', 'Auth\ResetPasswordController@postReset');
+    
+    /**
+     * @api {get} /email/verify/:confirmationCode Email verify
+     * @apiName verify-email
+     * @apiGroup OAuth2
+     * @apiPermission guest:api
+     * @apiDescription Verifing email by confirmation code.
+     * 
+     * @apiParam {String} confirmationCode confirmation code from email
+     */
     Route::get('/email/verify/{confirmationCode}', [
         'as' => 'confirmation_path',
         'uses' => 'Auth\AuthController@verify'
@@ -362,7 +499,6 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::post('/friends/acceptFriendRequest', 'FriendController@acceptFriendRequest');
     Route::get('/friends/getPendingOutFriends', 'FriendController@getPendingOutFriends');
     Route::get('/friends/getPendingInFriends', 'FriendController@getPendingInFriends');    
-    Route::get('/friends/getFriends', 'FriendController@getFriends');
     Route::get('/friends/searchPotential', 'FriendController@searchPotentialFriends');
     
 });

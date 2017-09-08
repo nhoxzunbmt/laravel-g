@@ -74,7 +74,7 @@
                                                         {{ team.title}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center"><router-link  :to="{ name: 'team.detail.players', params: { slug: team.slug }}">{{ team.users_accepted.length}}</router-link> / {{ team.quantity}}</td>
+                                                <td class="text-center"><router-link  :to="{ name: 'team.detail.players', params: { slug: team.slug }}">{{ team.users.length}}</router-link> / {{ team.quantity}}</td>
                                                 <td class="text-center" v-if="team.game!==null">{{ team.game.title}}</td>
                                                 <td class="text-center" v-else></td>
                                                 
@@ -88,7 +88,7 @@
                                                 <td class="text-center">
                                                     <span v-if="team.status==0">pending</span>
                                                     <span v-if="team.status==1">accepted</span>
-                                                    <button v-if="team.quantity>team.users_accepted.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
+                                                    <button v-if="team.quantity>team.users.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -227,7 +227,7 @@
                 var queryStartParams = {
                     'page' : 1,
                     '_limit' : 12,
-                    '_with' : 'game,fights,usersAccepted',
+                    '_with' : 'game,fights,users',
                     "_sort" : '-id'
                 };
                 

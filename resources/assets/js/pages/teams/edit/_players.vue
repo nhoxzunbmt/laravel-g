@@ -223,18 +223,29 @@ export default {
     },
     methods: {
         
-        getFriends(){
-            axios.get('/api/friends/getFriends'+location.search).then(response => {
-                
+        getFriends()
+        {
+            var queryStartParams = {
+                "type" : 'player',
+                "active" : 1,
+                "game_id" : this.user.game_id,
+                "free_player" : true
+            };
+            
+            var query = this.UrlParamsMerge(queryStartParams);
+            
+            axios.get('/api/users/'+this.user.id+'/friends/?'+query).then(response => {
+
                 if(response.data.error!==undefined)
                     this.error = response.data.error
                 
                 this.$set(this, 'friends', response.data.data);
+                this.loading = false;
                 delete response.data.data;
-                this.pagination = response.data;
             });
         },
-        search(){
+        search()
+        {
             if(this.q.length<2)
                 return false;
             
@@ -245,7 +256,8 @@ export default {
                 "_q" : this.q,
                 "type" : 'player',
                 "active" : 1,
-                "game_id" : this.user.game_id
+                "game_id" : this.user.game_id,
+                "free_player" : true
             });
             
             axios.get('/api/users/?'+query).then(response => {

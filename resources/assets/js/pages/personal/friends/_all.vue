@@ -56,6 +56,7 @@
 </template>
 
 <script> 
+    import { mapGetters } from 'vuex'
     import axios from 'axios'
     import swal from 'sweetalert2';
        
@@ -85,6 +86,10 @@
             }
         },
         computed: {
+            ...mapGetters({
+                user: 'authUser',
+                authenticated: 'authCheck',
+            }),
             isActived: function () {
                 return this.pagination.current_page;
             },
@@ -110,8 +115,17 @@
         },
         methods : {
             getVueItems: function(){
-                axios.get('/api/friends/getFriends'+location.search).then(response => {
-                    
+                
+                var queryStartParams = {
+                    'page' : 1,
+                    '_limit' : 12,
+                    "_sort" : 'id'
+                };
+                
+                var query = this.UrlParamsMerge(queryStartParams);
+                
+                axios.get('/api/users/'+this.user.id+'/friends/?'+query).then(response => {
+    
                     if(response.data.error!==undefined)
                         this.error = response.data.error
                     

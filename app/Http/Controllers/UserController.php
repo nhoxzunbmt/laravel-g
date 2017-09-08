@@ -14,6 +14,8 @@ use App\Models\TeamUser;
 use App\Models\Fight;
 use ApiHandler;
 use App\Acme\Helpers\ApiHelper;
+use Hootlex\Friendships\Models\Friendship;
+use Hootlex\Friendships\Status;
 
 class UserController extends Controller
 {
@@ -59,15 +61,7 @@ class UserController extends Controller
 	public function update($id = false, UserUpdateRequest $request)
 	{
         $data = [];
-        $input = $request->except(['avatar', 'overlay']);
-        /*if(!$id)
-        {
-            $user = JWTAuth::parseToken()->authenticate();
-            $id = $user->id;
-        }else{
-            $user = User::findOrFail($id);
-        }*/
-        
+        $input = $request->except(['avatar', 'overlay']);        
         $user = $request->user();
         
         //Game needs for player
@@ -269,7 +263,30 @@ class UserController extends Controller
 	 */
     public function team($id)
     {
-        $team = User::find($id)->team()->first();
+        $team = User::findOrFail($id)->team()->first();
         return response()->json($team, 200);
+    }
+    
+    /**
+	 * Get user's friends.
+     * 
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return Response
+	 */
+    public function friends($id, Request $request)
+    {
+        $user = User::findOrFail($id); //$request->user();
+                
+        $friendships = $user->getAcceptedFriendships();
+        $recipients  = $friendships->pluck('recipient_id')->all();
+        $senders     = $friendships->pluck('sender_id')->all();
+
+        $users = $user->where('id', '!=', $user->getKey())
+            ->whereIn('id', array_merge($recipients, $senders))
+            ->where('type', $user->type)->active();
+
+        return ApiHelper::parseMultiple($users, ['name', 'last_name', 'email'], $request->all());
+        //return response()->json($result, 200);
     }
 }

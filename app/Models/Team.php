@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     public $timestamps = true;
-    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status'];
+    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status', 'category_id'];
     
     const PENDING = 0;
     const ACCEPTED = 1;
@@ -18,7 +18,7 @@ class Team extends Model
      */
     public function users()
     {
-        return $this->hasMany('App\User');
+        return $this->hasMany('App\User')->active();
     }
     
     /**

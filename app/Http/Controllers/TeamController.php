@@ -8,6 +8,7 @@ use App\Http\Requests\TeamUpdateRequest;
 use App\Models\Team;
 use App\Models\TeamUser;
 use App\Models\Game;
+use App\User;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Storage;
@@ -165,25 +166,6 @@ class TeamController extends Controller
         return ApiHelper::parseMultiple($team_users, [''], $request->all());
     }
     
-    
-    
-    
-    
-    
-    
-    
-    /**
-     * Get users of the team
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function users($id)
-    {
-        $users = Team::findOrFail($id)->users();
-        return ApiHelper::parseMultiple($users, ['name', 'last_name'], $request->all());
-    }
-    
     /**
 	 * Update avatar.
      * 
@@ -266,9 +248,10 @@ class TeamController extends Controller
      */
     public function inviteUser($teamId, $userId, Request $request)
     {
-        $user = $request->user();
-        $userTeam = $user->team();
-
+        //$user = $request->user();
+        
+        $user = User::findOrFail($userId);
+        $userTeam = $user->team()->first();
         if($userTeam && $userTeam->id>0)
         {
             return response()->json([
@@ -276,6 +259,7 @@ class TeamController extends Controller
             ], 404);
         }
         
+        //Check user in team
         $TeamUser = TeamUser::where("user_id", $userId)->where("team_id", $teamId)->first();
     
         if($TeamUser)
@@ -285,9 +269,9 @@ class TeamController extends Controller
             $TeamUser->update($input);
             
             //update User team_id
-            if($input['status']==1)
+            if(isset($input['status']) && $input['status']==1)
             {
-                User::update($userId, [
+                $user->update([
                     'team_id' => $teamId
                 ]);
             }
@@ -297,19 +281,32 @@ class TeamController extends Controller
             $countUsers = $team->users()->count();
             if($countUsers>1)
             {
-                Team::update($team->id, [
+                $team->update([
                     'status' => Team::ACCEPTED
                 ]);
+                
+                //update User free_player
+                foreach($team->users()->get() as $player)
+                {
+                    $player->update([
+                        'free_player' => false
+                    ]);
+                    
+                    $TeamUser = TeamUser::where("user_id", $player->id)->where("team_id", $teamId)->first();
+                    $TeamUser->update([
+                        'start_at' => \Carbon\Carbon::now()
+                    ]);
+                }
             }
             
             return response()->json($TeamUser);
         }else{
     
             $team = Team::findOrFail($teamId);
-            if($team->capt_id!=$user->id)
+            if($team->capt_id!=$request->user()->id)
             {
                 //check user add himself to the team
-                if($userId!=$user->id)
+                if($userId!=$request->user()->id)
                 {
                     return response()->json([
                         "error" => "Only captain can send invitation to user to team."
@@ -331,6 +328,17 @@ class TeamController extends Controller
         ], 200);
     }
     
+    /**
+     * Get users of the team
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function users($id)
+    {
+        $users = Team::findOrFail($id)->users();
+        return ApiHelper::parseMultiple($users, ['name', 'last_name'], $request->all());
+    }
     
     public function getRequestsOut($id, Request $request)
     {

@@ -21,11 +21,11 @@
                                                 <th>Logo</th>
                                                 <th>Name</th>
                                                 <th>Country</th>
-                                                <th>Teams</th>
+                                                <th>Team</th>
                                                 <th>Total fights</th>
-                                                <th>Team wins</th>
-                                                <th>Personal wins</th>
+                                                <th>Wins</th>
                                                 <th>Victory rate</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
     								    <tbody>
@@ -41,12 +41,22 @@
                                                     </router-link>
                                                 </td>
                                                 <td class="text-center"><span v-if="player.country_id>0 && player.country!==null"><img :src="'/images/flags/'+player.country.flag" :title="player.country.full_name" /></span><span v-else> - </span></td>
-                                                <td class="text-center">{{player.teams.length}}</td>
-                                                <td class="text-center"><span v-if="player.fights.length>0">{{player.fights.length}}</span><span v-else>0</span></td>
+                                                <td class="text-center"><span v-if="player.team_id>0 && player.team!==null">
+                                                    
+                                                    <router-link  :to="{ name: 'team.detail', params: {slug : player.team.slug }}">
+                                                        <img :src="getImageLink(player.team.image)" class="img-responsive team-image" v-if="player.team.image!==null"/>
+                                                        <span v-if="player.team.image==null">{{player.team.title}}</span>
+                                                    </router-link>
+                                                    
+                                                </span></td>
+                                                <td class="text-center"><span v-if="player.team_id>0 && player.team.fights.length>0">{{player.team.fights.length}}</span><span v-else>0</span></td>
                                                 <td class="text-center"><span v-if="player.team_wins>0">{{player.team_wins}}</span><span v-else>0</span></td>
-                                                <td class="text-center"><span v-if="player.person_wins>0">{{player.person_wins}}</span><span v-else>0</span></td>
-                                                <td class="text-center" v-if="player.fights.length>0">{{ Number(((player.team_wins+player.person_wins)/player.fights.length).toFixed(2))}}</td>
+                                                <td class="text-center" v-if="player.team_id>0 && player.team.fights.length>0">{{ Number((player.team_wins/player.team.fights.length).toFixed(2))}}</td>
                                                 <td class="text-center" v-else>0</td>
+                                                <td class="text-center">
+                                                    <span v-if="player.free_player">Free</span>
+                                                    <span v-else>In team</span>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -145,14 +155,18 @@
         methods : {
             getVueItems: function(){
                 
-                var adding = location.search;
-                if(adding)
-                {
-                    adding+="&type=player";
-                }else{
-                    adding="?type=player";
-                }
-                axios.get('/api/user/all'+adding).then((response) => {
+                var queryStartParams = {
+                    'page' : 1,
+                    '_limit' : 12,
+                    'type' : 'player',
+                    '_with' : 'team,country,team.fights',
+                    "active" : 1,
+                    "_sort" : '-id'
+                };
+                
+                var query = this.UrlParamsMerge(queryStartParams);
+                
+                axios.get('/api/users/?'+query).then((response) => {
                     this.$set(this, 'players', response.data.data);
                     
                     delete response.data.data;

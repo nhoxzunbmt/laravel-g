@@ -90,7 +90,7 @@ export default {
         getTeam()
         {
             var query = this.ArrayToUrl({
-                "_with" : 'game,fights,usersAccepted'
+                "_with" : 'game,fights,users'
             });
             
             axios.get('/api/teams/'+this.$route.params.slug+"?"+query).then((response) => {

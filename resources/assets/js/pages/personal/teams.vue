@@ -56,7 +56,7 @@
     		</div>
         </div>
     
-        <div class="row" v-if="team!==null">
+        <div class="row" v-if="team!==null && user.team_id>0">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">

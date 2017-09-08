@@ -2,7 +2,6 @@
 /public/hot
 /public/storage
 /public/bower_resources
-/public/api/documentation
 /storage/*.key
 /vendor
 /.idea

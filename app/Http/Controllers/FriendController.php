@@ -100,27 +100,7 @@ class FriendController extends Controller
             
         return response()->json($result, 200);
     }
-    
-    /**
-     * Get a list of friends
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getFriends(Request $request)
-    {
-        $user = $request->user();        
 
-        $friendships = $user->getAcceptedFriendships();
-        $recipients  = $friendships->pluck('recipient_id')->all();
-        $senders     = $friendships->pluck('sender_id')->all();
-
-        $result = $user->where('id', '!=', $user->getKey())->whereIn('id', array_merge($recipients, $senders))
-            ->where('type', $user->type)->active()
-            ->select(['id', 'name', 'last_name', 'avatar', 'nickname', 'type'])->paginate(12);
-        
-        return response()->json($result, 200);
-    }
-    
     /**
      * Get a list of potential friends
      *
