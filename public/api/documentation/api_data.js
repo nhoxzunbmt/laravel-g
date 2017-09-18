@@ -471,6 +471,106 @@ define({ "api": [
     "groupTitle": "SocialAuth"
   },
   {
+    "type": "post",
+    "url": "/streams",
+    "title": "Save stream",
+    "name": "store",
+    "group": "Stream",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Save stream of user from xsplit for the fight.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "gcore_id",
+            "description": "<p>Unique id of stream.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": "<p>User's nickname on the site and xsplit. Must be the same.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stream_url",
+            "description": "<p>Link to the stream</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stream_start",
+            "description": "<p>Timestamp start of stream</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Stream"
+  },
+  {
+    "type": "put",
+    "url": "/streams",
+    "title": "Update stream",
+    "name": "update",
+    "group": "Stream",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Update stream of user from xsplit for the fight.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "gcore_id",
+            "description": "<p>Unique id of stream.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "nickname",
+            "description": "<p>Not required. User's nickname on the site and xsplit. Must be the same.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stream_record",
+            "description": "<p>Link to the stream video</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "stream_end",
+            "description": "<p>Timestamp end of stream</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Stream"
+  },
+  {
     "type": "get",
     "url": "/team_user",
     "title": "Get all users & teams connections",

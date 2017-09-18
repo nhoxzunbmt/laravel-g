@@ -22,9 +22,10 @@
                                         <p>We sent you an activation code. Check your email.</p>
                                     </div>
                                     <form autocomplete="off" v-on:submit="register" v-if="!success">
-                                        <div class="form-group">
-                                            <label for="name">Name</label>
-                                            <input type="text" class="form-control" v-model="name" required>
+                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.nickname }">
+                                            <label for="name">Nickname</label>
+                                            <input type="text" class="form-control" v-model="nickname" required>
+                                            <span class="help-block" v-if="error && response.nickname">{{ response.nickname[0] }}</span>
                                         </div>
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.email }">
                                             <label for="email">E-mail</label>
@@ -61,7 +62,7 @@ export default {
     },
     data() {
         return {
-            name: null,
+            nickname: null,
             email: null,
             password: null,
             success: false,
@@ -75,7 +76,7 @@ export default {
             axios.post(
                 '/api/register',
                 {
-                    name: this.name,
+                    nickname: this.nickname,
                     email: this.email,
                     password: this.password
                 }

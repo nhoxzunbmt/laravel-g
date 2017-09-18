@@ -210,7 +210,20 @@ export default {
         invite()
         {
             axios.put('/api/teams/'+this.team.id+'/users/'+this.user.id).then(response => {
-                console.log(response);
+            
+                swal({
+                    type: 'success',
+                    title: 'Request sent!',
+                    html: 'You sent request to the team!'
+                });
+                
+            }).catch(error => {
+                
+                swal({
+                    type: 'warning',
+                    title: 'Error!',
+                    html: error.response.data.error
+                });              
             });
         },
         sendToInvestor()

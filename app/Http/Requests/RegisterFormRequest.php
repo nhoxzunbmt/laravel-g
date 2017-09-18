@@ -22,7 +22,7 @@ class RegisterFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'A name is required',
+            'nickname.required' => 'A name is required',
             'email.required'  => 'A email is required',
             'password.required'  => 'A email is required'
         ];
@@ -36,8 +36,8 @@ class RegisterFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
+            'nickname' => 'required|unique:users',
+            'email' => 'required|email',
             'password' => 'required|min:6',
         ];
     }

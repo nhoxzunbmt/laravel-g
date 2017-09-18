@@ -13,10 +13,12 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Storage;
 use Image;
-use App\Mail\TeamLinkToInvestor;
 use Mail;
 use ApiHandler;
 use App\Acme\Helpers\ApiHelper;
+use App\Mail\EmailVerify;
+use App\Mail\InvitationToTeam;
+
 
 class TeamController extends Controller
 {    
@@ -52,9 +54,16 @@ class TeamController extends Controller
         $input = $request->all();
         
         //Validation min game's players count
+        if(!$request->user()->game_id)
+        {
+            return response()->json([
+                'title' => ['Before create a team You must set the in profile']
+            ], 422);
+        }
         $arGame = Game::findOrFail($request->user()->game_id);
         $input['game_id'] = $arGame["id"];
         $input["quantity"] = $arGame["min_players"];
+        $input["created_at"] = \Carbon\Carbon::now()->timestamp;
 
         //Check if exist team
         if($request->user()->team_id>0/* && $request->user()->team()->first()->status==Team::ACCEPTED*/)
@@ -248,15 +257,13 @@ class TeamController extends Controller
      */
     public function inviteUser($teamId, $userId, Request $request)
     {
-        //$user = $request->user();
-        
         $user = User::findOrFail($userId);
         $userTeam = $user->team()->first();
-        if($userTeam && $userTeam->id>0)
+        if($userTeam && $userTeam->id>0 && $user->free_player)
         {
             return response()->json([
                 "error" => "The user is already in another team"
-            ], 404);
+            ], 422);
         }
         
         //Check user in team
@@ -270,7 +277,19 @@ class TeamController extends Controller
             
             //update User team_id
             if(isset($input['status']) && $input['status']==1)
-            {
+            {                
+                //Change team & and delete
+                if($user->team_id>0 && $user->team_id!=$teamId)
+                {
+                    if($userTeam->capt_id==$user->id)
+                    {
+                        TeamUser::where("team_id", $user->team_id)->delete();
+                        Team::find($user->team_id)->delete();
+                    }else{
+                        TeamUser::where("user_id", $user->id)->where("team_id", $user->team_id)->delete();
+                    }
+                }
+                
                 $user->update([
                     'team_id' => $teamId
                 ]);
@@ -303,23 +322,54 @@ class TeamController extends Controller
         }else{
     
             $team = Team::findOrFail($teamId);
+            
+            //Check if current user is captain
             if($team->capt_id!=$request->user()->id)
             {
-                //check user add himself to the team
+                //check user add himself to the team. User sends request to the captain of the team.
                 if($userId!=$request->user()->id)
                 {
                     return response()->json([
                         "error" => "Only captain can send invitation to user to team."
-                    ], 404);
+                    ], 422);
+                }
+                
+                if(!$user->game_id)
+                {
+                    $user->update([
+                        'game_id' => $team->game_id
+                    ]);
                 }
             }
-            
+                      
             $result = TeamUser::create([
                 "user_id" => $userId,
                 "team_id" => $team->id,
                 "sender_id" => $request->user()->id,
                 "status" => TeamUser::PENDING
             ]);
+            
+            if($request->user()->id==$team->capt_id)
+            {
+                $content = [
+            		'url' => url(config('app.url')."/teams/".$team->slug),
+                    'title' => $request->user()->name.' invites you to the team '.$team->title,
+            		'button' => 'Click Here'
+          		];
+        
+            	Mail::to($user->email)->send(new InvitationToTeam($content));
+            }else{
+                
+                $captain = $team->captain()->get();
+                
+                $content = [
+            		'url' => url(config('app.url')."/players/".$user->id),
+                    'title' => $user->name.' wants to be a part of team '.$team->title,
+            		'button' => 'Watch the player'
+          		];
+        
+            	Mail::to($captain->email)->send(new InvitationToTeam($content));
+            }
         }
         
         return response()->json([
@@ -362,7 +412,7 @@ class TeamController extends Controller
         }else{
             return response()->json([
                 'error' => 'Error of system. Try to make it later'
-            ], 200);
+            ], 422);
         }
     }    
     

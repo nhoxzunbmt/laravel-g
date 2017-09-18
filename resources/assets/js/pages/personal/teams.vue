@@ -324,9 +324,33 @@
             },
             answerToInvite(team_id, event)
             {
-                axios.put('/api/teams/'+team_id+'/users/'+this.user.id, {status:event.target.value}).then(response => {
-                    this.inviteAnswerSuccess = true;
-                });
+                var team_id = team_id; 
+                var user_id = this.user.id;
+                var status = event.target.value;
+                    
+                if(this.user.free_player && this.user.team_id!==null)
+                {
+                    
+                    swal({
+                        title: 'Are you sure you want to connect the team?',
+                        text: "Your current team will be deleted and all invitations to your team to!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, accept invitation!'
+                    }).then(function () {
+                      
+                        axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:status}).then(response => {
+                            this.inviteAnswerSuccess = true;
+                        })
+                    })
+                    
+                }else{
+                    axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:status}).then(response => {
+                        this.inviteAnswerSuccess = true;
+                    })
+                }
             },
             leaveTeam(team_id)
             {

@@ -19,10 +19,10 @@
                                         <p>{{ response.error }}</p>
                                     </div>
                                     <form autocomplete="off" v-on:submit="login">
-                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.email }">
-                                            <label for="email">E-mail</label>
-                                            <input type="email" id="email" class="form-control" v-model="email" required>
-                                            <span class="help-block" v-if="error && response.email">{{ response.email[0] }}</span>
+                                        <div class="form-group" v-bind:class="{ 'has-error': error && response.nickname }">
+                                            <label for="nickname">Nickname</label>
+                                            <input type="nickname" id="nickname" class="form-control" v-model="nickname" required>
+                                            <span class="help-block" v-if="error && response.nickname">{{ response.nickname[0] }}</span>
                                         </div>
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.password }">
                                             <label for="password">Password</label>
@@ -61,7 +61,7 @@ export default {
     components: {Socials},
     data() {
         return {
-            email: null,
+            nickname: null,
             password: null,
             success: false,
             error: false,
@@ -73,7 +73,7 @@ export default {
             event.preventDefault()
             axios.post('/api/login',
             {
-                email: this.email,
+                nickname: this.nickname,
                 password: this.password
             }).then(response => {
                 this.error = false

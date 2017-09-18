@@ -22,8 +22,8 @@ class LoginFormRequest extends FormRequest
     public function messages()
     {
         return [
-            'email.required'  => 'A email is required',
-            'password.required'  => 'A email is required',
+            'nickname.required'  => 'A nickname is required',
+            'password.required'  => 'A password is required',
         ];
     }
 
@@ -35,7 +35,7 @@ class LoginFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'nickname' => 'required',
             'password' => 'required|min:6',
         ];
     }

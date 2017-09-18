@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     public $timestamps = true;
-    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status', 'category_id'];
+    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status', 'category_id', 'created_at'];
     
     const PENDING = 0;
     const ACCEPTED = 1;
@@ -56,6 +56,15 @@ class Team extends Model
     public function game()
     {
         return $this->belongsTo('App\Models\Game');
+    }
+    
+    /**
+     * Game which belongs to the team
+     * @Relation
+     */
+    public function captain()
+    {
+        return $this->belongsTo('App\User', 'capt_id');
     }
     
     /**

@@ -259,6 +259,33 @@ Route::get('/team_user', 'TeamUserController@index');//apiHandler
  * Twitch & streams
  */
 /**
+ * @api {post} /streams Save stream
+ * @apiName store
+ * @apiGroup Stream
+ * @apiPermission guest:api
+ * @apiDescription Save stream of user from xsplit for the fight.
+ * 
+ * @apiParam {String} gcore_id Unique id of stream.
+ * @apiParam {String} nickname User's nickname on the site and xsplit. Must be the same.
+ * @apiParam {String} stream_url Link to the stream
+ * @apiParam {String} stream_start Timestamp start of stream
+ */
+Route::post('/streams', 'StreamController@store');
+/**
+ * @api {put} /streams Update stream
+ * @apiName update
+ * @apiGroup Stream
+ * @apiPermission guest:api
+ * @apiDescription Update stream of user from xsplit for the fight.
+ * 
+ * @apiParam {String} gcore_id Unique id of stream.
+ * @apiParam {String} nickname Not required. User's nickname on the site and xsplit. Must be the same.
+ * @apiParam {String} stream_record Link to the stream video
+ * @apiParam {String} stream_end Timestamp end of stream
+ */
+Route::put('/streams', 'StreamController@update');
+
+/**
  * @api {get} /twitch Featured streams
  * @apiName featured
  * @apiGroup Twitch

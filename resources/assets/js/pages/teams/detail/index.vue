@@ -79,7 +79,8 @@ export default {
                 forName: 0,
                 className: 'stuck'
             },
-            response: null
+            response: null,
+            invitations: null
         }
     },
     mounted() {
@@ -99,11 +100,25 @@ export default {
                 this.title = "Team: "+this.team.title;
                 this.$meta().refresh();
                 
+                this.getInvitations(this.team.id);
+                
                 Event.fire('teamEditLoad', {
                     team: response.data
                 });
             });
         },
+        getInvitations(team_id)
+        {
+            var query = this.ArrayToUrl({
+                'team_id' : team_id,
+                //'status' : 0,
+                "_with" : 'user,team'
+            });
+            
+            axios.get('/api/team_user?'+query).then((response) => {
+                this.$set(this, 'invitations', response.data);
+            });               
+        }
     },
 }
 </script>

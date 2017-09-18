@@ -16,6 +16,8 @@ use Mail;
 
 class AuthController extends Controller
 {
+    protected $username = 'nickname';
+    
     /**
      * Verify email by confirmation_code from message
      * 
@@ -67,7 +69,8 @@ class AuthController extends Controller
         $confirmation_code = str_random(100);
         
         User::create([
-            'name' => $request->json('name'),
+            'name' => $request->json('nickname'),
+            'nickname' => $request->json('nickname'),
             'email' => $request->json('email'),
             'password' => $request->json('password'),
             'confirmation_code' => $confirmation_code
@@ -80,11 +83,6 @@ class AuthController extends Controller
   		];
 
     	Mail::to($request->json('email'))->send(new EmailVerify($content));
-        
-        /*Mail::send('email.verify', ['confirmation_code' => $confirmation_code], function($message) use ($request) {
-            $message->to($request->json('email'), $request->json('name'))
-                ->subject('Verify your email address');
-        });*/
         
         return response()->json([
             'message' => 'We sent you an activation code. Check your email.'
@@ -99,7 +97,8 @@ class AuthController extends Controller
      */
     public function login(LoginFormRequest $request)
     {
-        $credentials = $request->only('email', 'password');
+        //$credentials = $request->only('email', 'password');
+        $credentials = $request->only('nickname', 'password');
         
         $expiration = Carbon::now()->addWeek()->timestamp;
         try {
@@ -124,11 +123,14 @@ class AuthController extends Controller
             $user->confirmation_code = $confirmation_code;
             $user->update();
             
-            $content = [
-        		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
-                'title' => 'Verify your email address',
-        		'button' => 'Click Here'
-      		];
+            if(!empty($user->email))
+            {
+                $content = [
+            		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
+                    'title' => 'Verify your email address',
+            		'button' => 'Click Here'
+          		];
+            }
     
         	Mail::to($user->email)->send(new EmailVerify($content));
             

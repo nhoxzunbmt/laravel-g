@@ -33,24 +33,24 @@
                                     </div>                                                
                                     <div class="row" v-if="user.type=='player'">
                                         <div class="col-md-6">
-    										<div class="form-group" :class="{ 'has-error': error && response.user.game_id }">
+    										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
                                                 <label class="control-label mb-10">Game</label>
     											<select v-model="user.game_id" class='form-control' :disabled="user.team_id!=null ? 'disabled' : null" data-style="form-control btn-default btn-outline" id="game_list">
                                                     <option v-for="game in games" v-bind:value="game.id">
                                                         {{ game.title }}
                                                     </option>
                                                 </select>
-                                                <span class="help-block" v-if="error && response.user.game_id">{{ response.user.game_id[0] }}</span>
+                                                <span class="help-block" v-if="error && response.game_id">{{ response.game_id[0] }}</span>
                                             </div>
     									</div>
                                         <div class="col-md-6">
-                                            <div class="form-group" :class="{ 'has-error': error && response.user.streams }">
+                                            <div class="form-group" :class="{ 'has-error': error && response.streams }">
                                                 <label class="control-label mb-10">Streams</label>
                                                 <div v-for="stream in streams">
-                                                    <input type="text" class="form-control" v-model="stream.value" :disabled="user.team_id!=null && user.team.status==1 ? 'disabled' : null">
+                                                    <input type="text" class="form-control" v-model="stream.value" :disabled="user.team_id!=null && user.team!=null && user.team.status==1 ? 'disabled' : null">
                                                 </div>
-                                                <button type="button" v-if="user.team_id==null || user.team_id!=null && user.team.status!=1" class="btn btn-primary btn-xs form-control" @click="addAnother"><i class="fa fa-plus-circle"></i></button>
-                                                <span class="help-block" v-if="error && response.user.streams">{{ response.user.streams[0] }}</span>
+                                                <button type="button" v-if="user.team_id==null || user.team_id!=null && user.team!=null &&  user.team.status!=1" class="btn btn-primary btn-xs form-control" @click="addAnother"><i class="fa fa-plus-circle"></i></button>
+                                                <span class="help-block" v-if="error && response.streams">{{ response.streams[0] }}</span>
                                             </div>
                                         </div>
                                     </div>                                     
@@ -168,6 +168,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
     metaInfo: {
@@ -207,9 +208,9 @@ export default {
         }
     },
     mounted() {
+        this.getUserTeam();
         this.getGames();
         this.getCountries();
-        this.getUserTeam();
         
         var self = this;
         Vue.nextTick(function(){ 
@@ -263,6 +264,16 @@ export default {
             axios.post('/api/users', this.user).then(response => {
                 this.error = false;
                 this.success = true;
+                
+                if(response.data.streams==null && this.user.type=='player')
+                {
+                    swal(
+                        'About streams!',
+                        'The player is much easier to find a Team, if he adds links to the records of battles in which he participated!',
+                        'warning'
+                    );
+                }
+                
             }).catch(error => {
                 this.response = error.response.data
                 this.error = true
