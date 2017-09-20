@@ -132,7 +132,7 @@ define({ "api": [
         "name": "guest:api"
       }
     ],
-    "description": "<p>Login Users using their email and password.</p>",
+    "description": "<p>Login Users using their nickname and password.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -140,8 +140,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "email",
-            "description": "<p>user email</p>"
+            "field": "nickname",
+            "description": "<p>user nickname</p>"
           },
           {
             "group": "Parameter",
@@ -342,7 +342,7 @@ define({ "api": [
         "name": "guest:api"
       }
     ],
-    "description": "<p>Register Users using their email, password, name. After user'll recieve email with confirmation link to verify the email.</p>",
+    "description": "<p>Register Users using their email, password, nickname. After user'll recieve email with confirmation link to verify the email.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -364,8 +364,8 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "name",
-            "description": "<p>user name</p>"
+            "field": "nickname",
+            "description": "<p>user nickname</p>"
           }
         ]
       }

@@ -323,11 +323,11 @@ Route::group(['middleware' => 'guest:api'], function () {
      * @apiName register
      * @apiGroup OAuth2
      * @apiPermission guest:api
-     * @apiDescription Register Users using their email, password, name. After user'll recieve email with confirmation link to verify the email.
+     * @apiDescription Register Users using their email, password, nickname. After user'll recieve email with confirmation link to verify the email.
      * 
      * @apiParam {String} email user email
      * @apiParam {String} password user password
-     * @apiParam {String} name user name
+     * @apiParam {String} nickname user nickname
      */
     Route::post('/register', 'Auth\AuthController@register');
     
@@ -336,9 +336,9 @@ Route::group(['middleware' => 'guest:api'], function () {
      * @apiName login
      * @apiGroup OAuth2
      * @apiPermission guest:api
-     * @apiDescription Login Users using their email and password.
+     * @apiDescription Login Users using their nickname and password.
      * 
-     * @apiParam {String} email user email
+     * @apiParam {String} nickname user nickname
      * @apiParam {String} password user password
      * 
      * @apiSuccessExample {json} Success-Response:

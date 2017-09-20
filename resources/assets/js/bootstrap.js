@@ -25,6 +25,9 @@ window.Vue = require('vue');
 require('vue-resource');
 require('select2');
 
+import FullCalendar from 'vue-full-calendar'
+Vue.use(FullCalendar)
+
 var SocialSharing = require('vue-social-sharing');
 Vue.use(SocialSharing);
 

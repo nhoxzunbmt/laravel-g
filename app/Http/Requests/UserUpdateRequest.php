@@ -25,7 +25,7 @@ class UserUpdateRequest extends FormRequest {
 		return [
 			'nickname'  => 'required|unique:users,nickname,'.$id,
             //'phone'     => 'regex:#^[-+()0-9]+$#',
-            'email'     => 'email|required|unique:users,email,'.$id,
+            'email'     => 'email|required',//|unique:users,email,'.$id,
             'password'  => 'min:6|confirmed',
 		];
 	}

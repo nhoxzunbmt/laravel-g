@@ -8,9 +8,9 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     
-	<meta name="description" content="Doodle is a Dashboard & Admin Site Responsive Template by hencework." />
-	<meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Doodle Admin, Doodleadmin, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
-	<meta name="author" content="hencework"/>
+	<meta name="description" content="Crowdsourcing Platform for  junior eSport teams." />
+	<meta name="keywords" content="eSport,games" />
+	<meta name="author" content="hawkart"/>
 	
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">

@@ -13,6 +13,9 @@
 									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You should set person's type. </p>
 									<div class="clearfix"></div>
 								</div>
+                                
+                                <!--<full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>-->
+                                
     							<form autocomplete="off" @submit="save">
                                     <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Info</h6>
                                     <hr class="light-grey-hr">
@@ -204,7 +207,21 @@ export default {
             response: null,
             countries: null,
             games: [],
-            streams: []
+            streams: [],
+            events:[],
+            calConfig:{
+                slotDuration:'00:60:00',
+                slotLabelInterval:'00:60:00',
+                slotEventOverlap:false,
+                allDaySlot: false,
+                height: 400
+                //contentHeight: 600
+            },
+            calHeader:{
+                left:   '',
+                center: 'title',
+                right:  'today prev,next'
+            }
         }
     },
     mounted() {
@@ -253,6 +270,30 @@ export default {
         });
         
         this.streams = this.user.streams;
+        this.events = this.user.schedule!==null ? this.user.schedule : [];
+        //console.log(this.events);
+        //this.$refs.calendar.$emit('refetch-events');
+        
+        /*this.events = 
+        [
+            {
+                title  : 'event1',
+                start  : '2017-09-22T12:00:00',
+                allDay : false,
+            },
+            {
+                title  : 'event2',
+                start  : '2017-09-19T16:00:00',
+                allDay : false,
+            },
+            {
+                title  : 'event3',
+                start  : '2017-09-19T12:00:00',
+                allDay : false,
+            },
+          ];
+          this.$refs.calendar.$emit('refetch-events');*/
+          
     },
     methods: {
         
@@ -260,6 +301,7 @@ export default {
             event.preventDefault()
             
             this.user.streams = this.streams;
+            this.user.schedule = this.events;
             
             axios.post('/api/users', this.user).then(response => {
                 this.error = false;
@@ -322,8 +364,64 @@ export default {
                 this.streams  = [];
             }
             this.streams.push({ value: '' });
+        },
+        eventSelected(event, jsEvent, view)
+        {
+            //console.log(event, jsEvent, view)
+            
+            var event = event;
+            var events = this.events;
+            this.events = events.filter(function(el) { 
+                return el.start != event.start.format() && el.end!=event.end.format(); 
+            });
+            
+            console.log(this.events);
+        },
+        eventCreate(event)
+        {
+            /*console.log(event);
+            console.log(event.start.format());
+            console.log(event.end.format());*/
+            
+            if(this.events==null)
+            {
+                this.events  = [];
+            }
+            
+            this.events.push({
+                start: event.start.format(),
+                end: event.end.format()
+            });
         }
         
     },
 }
 </script>
+<style>
+    @import '~fullcalendar/dist/fullcalendar.css';
+    .fc-time-grid .fc-slats td{
+        height: 40px;
+    }
+    .fc th.fc-day-header{
+        height: 40px;
+        vertical-align: middle;
+    }
+    .fc-unthemed td.fc-today {
+        background: transparent;
+        border-left: 2px solid #469408;
+        border-right: 2px solid #469408; 
+    }
+    .fc button{
+        padding: 5px 10px;
+    }
+    .fc-event .fc-bg{
+        background: #177ec1;
+        opacity: 1;
+    }
+    .fc-time-grid-event .fc-time{
+        text-align: center;
+        vertical-align: middle;
+        line-height: 40px;
+        cursor: pointer;
+    }
+</style>

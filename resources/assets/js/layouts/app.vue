@@ -21,6 +21,7 @@
 			<!-- /Footer -->
             
             <team-create-modal v-if="authenticated && user.type=='player'"></team-create-modal>
+            <fight-create-modal v-if="authenticated && user.type=='player'"></fight-create-modal>
 		</div>
     </div>
 </template>

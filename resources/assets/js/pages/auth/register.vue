@@ -12,7 +12,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <socials></socials>
+                            <!--<socials></socials>-->
                     		<div class="panel-wrapper collapse in">
                     			<div class="panel-body">
                                     <div class="alert alert-danger" v-if="error && !success">
