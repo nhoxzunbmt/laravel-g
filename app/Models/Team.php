@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     public $timestamps = true;
-    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status', 'category_id', 'created_at'];
+    protected $fillable = ['game_id', 'capt_id', 'slug', 'title', 'quantity', 'overlay', 'image', 'status', 'category_id', 'created_at', 'schedule'];
+    
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'schedule' => 'array'
+    ];
     
     const PENDING = 0;
     const ACCEPTED = 1;

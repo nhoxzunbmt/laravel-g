@@ -14,13 +14,11 @@
 									<div class="clearfix"></div>
 								</div>
                                 
-                                <!--<full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>-->
-                                
     							<form autocomplete="off" @submit="save">
                                     <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Info</h6>
                                     <hr class="light-grey-hr">
                                     <div class="row">
-    									<div class="col-md-12">
+    									<div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label mb-10">Type*</label>
                                                 <div class="radio-list">
@@ -33,7 +31,22 @@
 												</div>
                                             </div>
     									</div>
-                                    </div>                                                
+                                        
+                                        <div class="col-md-6" v-if="user.type=='player' && (user.schedule==null || user.schedule.length==0)">
+    										<div class="form-group">
+                                                <label class="control-label mb-10">Calendar of games</label>
+										          
+                                                <div class="alert alert-warning alert-dismissable">
+                									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You should fill in <router-link :to="{ name: 'personal.calendar' }"><u>Calendar</u>
+                                                    </router-link> of future games. </p>
+                									<div class="clearfix"></div>
+                								</div>
+                                                
+                                            </div>
+    									</div>
+                                        
+                                    </div>     
+                                                                          
                                     <div class="row" v-if="user.type=='player'">
                                         <div class="col-md-6">
     										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
@@ -165,6 +178,8 @@
         </div>
     </div>
 </div>
+
+
 </div>
 </template>
 
@@ -183,20 +198,6 @@ export default {
     }),
     data() {
         return {
-            tabs: [
-                {
-                    name: 'Info',
-                    route: 'profile'
-                },
-                {
-                    name: 'Friends',
-                    route: 'friends.all'
-                },
-                {
-                    name: 'Teams',
-                    route: 'teams.all'
-                },
-            ],
             types: {
                 investor: 'investor',
                 player: 'player'
@@ -207,21 +208,7 @@ export default {
             response: null,
             countries: null,
             games: [],
-            streams: [],
-            events:[],
-            calConfig:{
-                slotDuration:'00:60:00',
-                slotLabelInterval:'00:60:00',
-                slotEventOverlap:false,
-                allDaySlot: false,
-                height: 400
-                //contentHeight: 600
-            },
-            calHeader:{
-                left:   '',
-                center: 'title',
-                right:  'today prev,next'
-            }
+            streams: []
         }
     },
     mounted() {
@@ -269,31 +256,7 @@ export default {
             };
         });
         
-        this.streams = this.user.streams;
-        this.events = this.user.schedule!==null ? this.user.schedule : [];
-        //console.log(this.events);
-        //this.$refs.calendar.$emit('refetch-events');
-        
-        /*this.events = 
-        [
-            {
-                title  : 'event1',
-                start  : '2017-09-22T12:00:00',
-                allDay : false,
-            },
-            {
-                title  : 'event2',
-                start  : '2017-09-19T16:00:00',
-                allDay : false,
-            },
-            {
-                title  : 'event3',
-                start  : '2017-09-19T12:00:00',
-                allDay : false,
-            },
-          ];
-          this.$refs.calendar.$emit('refetch-events');*/
-          
+        this.streams = this.user.streams;     
     },
     methods: {
         
@@ -301,7 +264,6 @@ export default {
             event.preventDefault()
             
             this.user.streams = this.streams;
-            this.user.schedule = this.events;
             
             axios.post('/api/users', this.user).then(response => {
                 this.error = false;
@@ -364,64 +326,7 @@ export default {
                 this.streams  = [];
             }
             this.streams.push({ value: '' });
-        },
-        eventSelected(event, jsEvent, view)
-        {
-            //console.log(event, jsEvent, view)
-            
-            var event = event;
-            var events = this.events;
-            this.events = events.filter(function(el) { 
-                return el.start != event.start.format() && el.end!=event.end.format(); 
-            });
-            
-            console.log(this.events);
-        },
-        eventCreate(event)
-        {
-            /*console.log(event);
-            console.log(event.start.format());
-            console.log(event.end.format());*/
-            
-            if(this.events==null)
-            {
-                this.events  = [];
-            }
-            
-            this.events.push({
-                start: event.start.format(),
-                end: event.end.format()
-            });
         }
-        
     },
 }
 </script>
-<style>
-    @import '~fullcalendar/dist/fullcalendar.css';
-    .fc-time-grid .fc-slats td{
-        height: 40px;
-    }
-    .fc th.fc-day-header{
-        height: 40px;
-        vertical-align: middle;
-    }
-    .fc-unthemed td.fc-today {
-        background: transparent;
-        border-left: 2px solid #469408;
-        border-right: 2px solid #469408; 
-    }
-    .fc button{
-        padding: 5px 10px;
-    }
-    .fc-event .fc-bg{
-        background: #177ec1;
-        opacity: 1;
-    }
-    .fc-time-grid-event .fc-time{
-        text-align: center;
-        vertical-align: middle;
-        line-height: 40px;
-        cursor: pointer;
-    }
-</style>

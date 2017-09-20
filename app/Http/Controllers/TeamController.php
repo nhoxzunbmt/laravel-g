@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\TeamStoreRequest;
 use App\Http\Requests\TeamUpdateRequest;
 use App\Models\Team;
 use App\Models\TeamUser;
@@ -18,7 +17,7 @@ use ApiHandler;
 use App\Acme\Helpers\ApiHelper;
 use App\Mail\EmailVerify;
 use App\Mail\InvitationToTeam;
-
+use App\Http\Requests\TeamStoreRequest;
 
 class TeamController extends Controller
 {    
@@ -458,4 +457,89 @@ class TeamController extends Controller
         
         return response()->json(null, 200);
     }
+    
+    public function calculateSchedule($id)
+    {
+        $team = Team::findOrFail($id);
+        $users = $team->users();
+        $count = $users->count();
+        if($count>1)
+        {
+            $arSchedules = false;
+            
+            //get crossing of schedule of all players
+            foreach($users->get() as $player)
+            {
+                if(!$arSchedules)
+                {
+                    $arSchedules = $player->schedule;
+                }else{
+                    $arSchedules = array_uintersect($arSchedules, $player->schedule, "diffSchedules");
+                }
+            }
+            
+            usort($arSchedules, 'sortSchedule');
+            
+            
+            //Calculate blocks schedules
+            $blockHours = 3;
+            $countInBlock = 0;
+            $arBlock = [];
+            $blockSchedules = false;
+            $lastSchedule = false;
+            foreach($arSchedules as $arSchedule)
+            {
+                if(!$lastSchedule)
+                {
+                    $lastSchedule = $arSchedule;
+                    $arBlock[] = $lastSchedule; 
+                    $countInBlock++;
+                }else{
+                    
+                    if($lastSchedule['end']==$arSchedule['start'])
+                    {
+                        $lastSchedule = $arSchedule;
+                        $arBlock[] = $lastSchedule;
+                        $countInBlock++;
+                    }else{
+                        
+                        if($countInBlock>=$blockHours)
+                        {
+                            $blockSchedules = array_merge($blockSchedules, $arBlock);
+                        }
+                        
+                        $countInBlock = 1;
+                        $lastSchedule = $arSchedule;
+                    }
+                    
+                }
+            }
+            
+            
+            //send notify captain none crossing schedule
+            if(count($blockSchedules)==0)
+            {
+                
+            }
+            
+            $team->update([
+                'schedule' => $blockSchedules
+            ]);
+        }
+    }
+}
+
+function sortSchedule($a, $b)
+{
+    return strtotime($a['start'])-strtotime($b['start']);
+}
+
+function diffSchedules($v1, $v2)
+{
+    if ($v1['start']==$v2['start'] && $v1['end']==$v2['end'])
+    {
+        return 0;
+    }
+
+    return -1;
 }

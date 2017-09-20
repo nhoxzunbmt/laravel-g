@@ -29,6 +29,12 @@
                                                 {{ tab.name }}
                                             </router-link>
                                         </li>
+                                        
+                                        <li class="nav-item" v-if="user.type=='player'">
+                                            <router-link :to="{ name: 'personal.calendar' }" class="nav-link" active-class="active">
+                                                Calendar
+                                            </router-link>
+                                        </li>  
         							</ul>
         						</div>
                                 

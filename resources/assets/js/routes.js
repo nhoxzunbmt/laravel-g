@@ -69,6 +69,7 @@ export default [
             { path: '', redirect: { name: 'profile' }},
             { path: 'info', name: 'profile', component: require('./pages/personal/profile.vue') },
             { path: 'teams', name: 'personal.teams', component: require('./pages/personal/teams.vue') },
+            { path: 'calendar', name: 'personal.calendar', component: require('./pages/personal/calendar.vue') },
             
             { path: 'friends', component: require('./pages/personal/friends/index.vue'), children: [
                 { path: '', redirect: { name: 'friends.all' }},
