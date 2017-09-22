@@ -257,7 +257,7 @@ export default {
                 "type" : 'player',
                 "active" : 1,
                 "game_id" : this.user.game_id,
-                "free_player" : true
+                "free_player" : 1
             });
             
             axios.get('/api/users/?'+query).then(response => {
