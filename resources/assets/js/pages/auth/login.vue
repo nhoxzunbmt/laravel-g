@@ -83,8 +83,15 @@ export default {
                     remember: true
                 })
             
-                this.$store.dispatch('fetchUser').then(() => {
-                    this.$router.push({ name: 'home' })
+                this.$store.dispatch('fetchUser').then(response => {
+                    
+                    if(response.type==null)
+                    {
+                        this.$router.push({ name: 'profile' })
+                    }else{
+                        this.$router.push({ name: 'home' })
+                    }
+                    
                 })
                 
                 Vue.nextTick(function(){

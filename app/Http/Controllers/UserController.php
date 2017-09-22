@@ -133,18 +133,18 @@ class UserController extends Controller
 	public function avatar(Request $request)
 	{
         $params = $request->all();
-        //$user = JWTAuth::parseToken()->authenticate();
         $user = $request->user();
         
         if($user->avatar)
         {
             $path = public_path() . '/storage/' . $user->avatar;
+            
             if(file_exists($path)) 
             {
                 unlink($path);
             }
         }
-            
+
         $path = Storage::disk('public')->putFile(
             'avatars', $request->file('files')
         );
@@ -160,9 +160,8 @@ class UserController extends Controller
         
         $user->avatar = $path;
         $user->update();
-        $data = User::getApiUserData($user);
         
-        return response()->json($data);
+        return response()->json($user, 200);
 	}
     
     /**
@@ -190,9 +189,8 @@ class UserController extends Controller
         );
         $user->overlay = $path;
         $user->update();
-        $data = User::getApiUserData($user);
         
-        return response()->json($data);
+        return response()->json($user, 200);
 	}
     
     

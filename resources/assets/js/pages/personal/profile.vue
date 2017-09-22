@@ -50,7 +50,7 @@
                                     <div class="row" v-if="user.type=='player'">
                                         <div class="col-md-6">
     										<div class="form-group" :class="{ 'has-error': error && response.game_id }">
-                                                <label class="control-label mb-10">Game</label>
+                                                <label class="control-label mb-10">Game*</label>
     											<select v-model="user.game_id" class='form-control' :disabled="user.team_id!=null ? 'disabled' : null" data-style="form-control btn-default btn-outline" id="game_list">
                                                     <option v-for="game in games" v-bind:value="game.id">
                                                         {{ game.title }}

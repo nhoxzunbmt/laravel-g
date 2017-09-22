@@ -14,9 +14,9 @@
                 <span class="btn-text">Create Team</span>
             </a>
             
-            <a v-if="authenticated && user.type=='player'" class="btn btn-primary inline-block ml-20 pull-left btn-sm btn-outline" @click="showFightModalCreate">
+            <!--<a v-if="authenticated && user.type=='player'" class="btn btn-primary inline-block ml-20 pull-left btn-sm btn-outline" @click="showFightModalCreate">
                 <span class="btn-text">Create Fight</span>
-            </a>
+            </a>-->
         </div>
     </div>
 </div>

@@ -123,10 +123,11 @@ export default {
     },
     methods: {
         imageuploaded(response) {
-            this.user.avatar = response.data.avatar;
+            this.user.avatar = response.avatar;
         },
         overlayuploaded(response) {
-            this.user.overlay = response.data.overlay;
+            console.log(response);
+            this.user.overlay = response.overlay;
         },
     },
 }

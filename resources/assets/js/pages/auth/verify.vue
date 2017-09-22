@@ -14,7 +14,7 @@
                             </div>
                             <div v-if="message" class="alert alert-success">
                                 {{ message }}
-                                 Now you can <router-link :to="{ name: 'auth.login' }">login</router-link>.
+                                 Now you can <router-link :to="{ name: 'auth.login' }"><u>login</u></router-link>.
                             </div>
                         </div>
                     </div><!--card-view-->
