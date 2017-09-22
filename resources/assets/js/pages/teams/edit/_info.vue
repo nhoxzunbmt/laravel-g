@@ -39,7 +39,7 @@
                                         <div class="row">
         									<div class="col-md-6">
         										<div class="form-group" :class="{ 'has-error': error && response.quantity }">
-                                                    <label class="control-label mb-10">Quantity</label>
+                                                    <label class="control-label mb-10">Minimum players to activate the team</label>
                                                     <p>{{team.quantity}}</p>
                                                 </div>
         									</div>
