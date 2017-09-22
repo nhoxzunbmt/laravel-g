@@ -109,7 +109,7 @@ export default [
     { path: '/auth/register', name: 'auth.register', component: require('./pages/auth/register.vue') },
     { path: '/password/reset', name: 'password.request', component: require('./pages/auth/password/email.vue') },
     { path: '/password/reset/:token', name: 'password.reset', component: require('./pages/auth/password/reset.vue') },
-    { path: '/auth/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') }
+    { path: '/email/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') }
   ]),
     
   {

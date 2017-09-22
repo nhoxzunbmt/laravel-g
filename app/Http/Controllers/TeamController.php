@@ -458,88 +458,116 @@ class TeamController extends Controller
         return response()->json(null, 200);
     }
     
+    public function checkCrossingSchedule($teamId, $userId)
+    {
+        $team = Team::findOrFail($teamId)->get();
+        $player = User::findOrFail($userId)->get();
+        
+        //get crossing schedules team and potential player
+        $arSchedules = array_uintersect($team->schedule, $player->schedule, "diffSchedules");        
+        usort($arSchedules, 'sortSchedule');
+        
+        //Calculate blocks schedules
+        $blockHours = 3;
+        $countInBlock = 0;
+        $arBlock = [];
+        $blockSchedules = false;
+        $lastSchedule = false;
+        foreach($arSchedules as $arSchedule)
+        {
+            if(!$lastSchedule)
+            {
+                $lastSchedule = $arSchedule;
+                $arBlock[] = $lastSchedule; 
+                $countInBlock++;
+            }else{
+                
+                if($lastSchedule['end']==$arSchedule['start'])
+                {
+                    $lastSchedule = $arSchedule;
+                    $arBlock[] = $lastSchedule;
+                    $countInBlock++;
+                }else{
+                    
+                    if($countInBlock>=$blockHours)
+                    {
+                        $blockSchedules = array_merge($blockSchedules, $arBlock);
+                    }
+                    
+                    $countInBlock = 1;
+                    $lastSchedule = $arSchedule;
+                }
+
+            }
+        }
+        
+        return response()->json([
+            'count' => count($blockSchedules)
+        ], 200);
+    }
+    
     public function calculateSchedule($id)
     {
         $team = Team::findOrFail($id);
         $users = $team->users();
-        $count = $users->count();
-        if($count>1)
+        $arSchedules = false;
+        
+        //get crossing of schedule of all players
+        foreach($users->get() as $player)
         {
-            $arSchedules = false;
-            
-            //get crossing of schedule of all players
-            foreach($users->get() as $player)
+            if(!$arSchedules)
             {
-                if(!$arSchedules)
-                {
-                    $arSchedules = $player->schedule;
-                }else{
-                    $arSchedules = array_uintersect($arSchedules, $player->schedule, "diffSchedules");
-                }
+                $arSchedules = $player->schedule;
+            }else{
+                $arSchedules = array_uintersect($arSchedules, $player->schedule, "diffSchedules");
             }
-            
-            usort($arSchedules, 'sortSchedule');
-            
-            
-            //Calculate blocks schedules
-            $blockHours = 3;
-            $countInBlock = 0;
-            $arBlock = [];
-            $blockSchedules = false;
-            $lastSchedule = false;
-            foreach($arSchedules as $arSchedule)
+        }
+        
+        usort($arSchedules, 'sortSchedule');
+        
+        //Calculate blocks schedules
+        $blockHours = 3;
+        $countInBlock = 0;
+        $arBlock = [];
+        $blockSchedules = false;
+        $lastSchedule = false;
+        foreach($arSchedules as $arSchedule)
+        {
+            if(!$lastSchedule)
             {
-                if(!$lastSchedule)
+                $lastSchedule = $arSchedule;
+                $arBlock[] = $lastSchedule; 
+                $countInBlock++;
+            }else{
+                
+                if($lastSchedule['end']==$arSchedule['start'])
                 {
                     $lastSchedule = $arSchedule;
-                    $arBlock[] = $lastSchedule; 
+                    $arBlock[] = $lastSchedule;
                     $countInBlock++;
                 }else{
                     
-                    if($lastSchedule['end']==$arSchedule['start'])
+                    if($countInBlock>=$blockHours)
                     {
-                        $lastSchedule = $arSchedule;
-                        $arBlock[] = $lastSchedule;
-                        $countInBlock++;
-                    }else{
-                        
-                        if($countInBlock>=$blockHours)
-                        {
-                            $blockSchedules = array_merge($blockSchedules, $arBlock);
-                        }
-                        
-                        $countInBlock = 1;
-                        $lastSchedule = $arSchedule;
+                        $blockSchedules = array_merge($blockSchedules, $arBlock);
                     }
                     
+                    $countInBlock = 1;
+                    $lastSchedule = $arSchedule;
                 }
-            }
-            
-            
-            //send notify captain none crossing schedule
-            if(count($blockSchedules)==0)
-            {
                 
             }
-            
-            $team->update([
-                'schedule' => $blockSchedules
-            ]);
         }
+        
+        
+        //send notify captain none crossing schedule
+        if(count($blockSchedules)==0)
+        {
+            
+        }
+        
+        $team->update([
+            'schedule' => $blockSchedules
+        ]);
     }
-}
-
-function sortSchedule($a, $b)
-{
-    return strtotime($a['start'])-strtotime($b['start']);
-}
-
-function diffSchedules($v1, $v2)
-{
-    if ($v1['start']==$v2['start'] && $v1['end']==$v2['end'])
-    {
-        return 0;
-    }
-
-    return -1;
 }

@@ -53,7 +53,6 @@ class AuthController extends Controller
         
         return response()->json([
             'message' => 'Your account is now verified!'
-            //'status' => 'Your account is now verified!'
         ], 200);
     }
     
@@ -77,7 +76,7 @@ class AuthController extends Controller
         ]);
         
         $content = [
-    		'url' => url(config('app.url')."/auth/verify/".$confirmation_code),
+    		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
             'title' => 'Verify your email address',
     		'button' => 'Click Here'
   		];

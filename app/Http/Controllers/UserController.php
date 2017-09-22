@@ -16,6 +16,7 @@ use ApiHandler;
 use App\Acme\Helpers\ApiHelper;
 use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Status;
+use App\Acme\Helpers\ScheduleHelper;
 
 class UserController extends Controller
 {
@@ -104,6 +105,12 @@ class UserController extends Controller
                 }
             }
             $input['streams'] = $streams;
+        }
+        
+        if(!empty($input['schedule']))
+        {
+            $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
+            //usort($input['schedule'], 'sortSchedule');
         }
         
         if($result = $user->update($input))

@@ -12,8 +12,8 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <div v-if="status" class="alert alert-success">
-                                {{ status }}
+                            <div v-if="message" class="alert alert-success">
+                                {{ message }}
                                  Now you can <router-link :to="{ name: 'auth.login' }">login</router-link>.
                             </div>
                         </div>
@@ -39,22 +39,22 @@ export default {
             success: false,
             error: false,
             response: null,
-            status: null
+            message: null
         }
     },
     methods: {
         verify() {
             this.token = this.$route.params.token
             axios.get(
-                '/api/auth/verify/'+this.token
+                '/api/email/verify/'+this.token
             ).then(response => {
                 this.success = true
                 this.error = false
-                this.status = response.data.status
+                this.message = response.data.message
             }).catch(error => {
                 this.response = error.response.data
                 this.error = true
-                this.status = false
+                this.message = false
             });
         }
     }

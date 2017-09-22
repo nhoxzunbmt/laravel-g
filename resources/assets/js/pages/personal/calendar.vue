@@ -7,30 +7,21 @@
     					<div class="panel-body">
                             <h4 class="mb-10">Calendar</h4>
                             <div class="row">
-                            	<div class="col-lg-12 col-md-12 col-xs-12">
-                                    <div class="panel panel-default card-view">
-                            			<div class="panel-wrapper collapse in">
-                            				<div class="panel-body">
-                                                <div class="row">
-                                					<div class="col-md-12 col-sm-12 col-xs-12">
-                                                    
-                                                        <full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>
-                                                        
-                                                        <div class="form-actions mt-10">
-                                                            <button type="submit" class="btn btn-primary mr-10" @click="save">
-                                                                <span>Save</span>
-                                                            </button>			
-                        								</div>
-                                                        
-                                                        <div class="alert alert-success alert-dismissable mt-20" v-if="success">
-                                                            <p>Calendar data is updated.</p>
-                                                        </div>
-                    
-                                					</div>
-                                            	</div>
-                                            </div>
-                                        </div>
+                            	
+            					<div class="col-md-12 col-sm-12 col-xs-12">
+                                
+                                    <full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>
+                                    
+                                    <div class="form-actions mt-10">
+                                        <button type="submit" class="btn btn-primary mr-10" @click="save">
+                                            <span>Save</span>
+                                        </button>			
+    								</div>
+                                    
+                                    <div class="alert alert-success alert-dismissable mt-20" v-if="success">
+                                        <p>Calendar data is updated.</p>
                                     </div>
+                    
                                 </div>
                             </div>
                         </div>
@@ -66,12 +57,13 @@ export default {
                 slotLabelInterval:'00:60:00',
                 slotEventOverlap:false,
                 allDaySlot: false,
-                height: 600
+                height: 600,
+                columnFormat: 'ddd'
             },
             calHeader:{
                 left:   '',
-                center: 'title',
-                right:  'today prev,next'
+                center: '',// 'title',
+                right:  ''//'today prev,next'
             }
         }
     },
@@ -113,6 +105,8 @@ export default {
                 this.events  = [];
             }
             
+            console.log(event.start.format());
+            
             this.events.push({
                 start: event.start.format(),
                 end: event.end.format()
@@ -148,5 +142,12 @@ export default {
         vertical-align: middle;
         line-height: 40px;
         cursor: pointer;
+    }
+    .fc-toolbar h2{
+        font-size: 22px;
+        line-height: 34px;
+    }
+    .fc-toolbar.fc-header-toolbar{
+        display: none;
     }
 </style>
