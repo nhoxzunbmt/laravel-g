@@ -265,9 +265,8 @@ export default {
                 if(response.data.error!==undefined)
                     this.error = response.data.error
                 
-                this.$set(this, 'friends', response.data.data);
+                this.$set(this, 'friends', response.data);
                 this.loading = false;
-                delete response.data.data;
             });
         },
         sendInvites(){
