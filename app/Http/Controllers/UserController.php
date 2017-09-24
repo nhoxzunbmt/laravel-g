@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -17,6 +18,7 @@ use App\Acme\Helpers\ApiHelper;
 use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Status;
 use App\Acme\Helpers\ScheduleHelper;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -110,11 +112,15 @@ class UserController extends Controller
         if(!empty($input['schedule']))
         {
             $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
-            //usort($input['schedule'], 'sortSchedule');
         }
+        
+        //return response()->json($input['schedule']);
         
         if($result = $user->update($input))
         {
+            if(intval($user->team_id)>0)
+                TeamController::updateSchedule($user->team_id);
+            
             return response()->json($user);
         }
         
@@ -139,7 +145,7 @@ class UserController extends Controller
         {
             $path = public_path() . '/storage/' . $user->avatar;
             
-            if(file_exists($path)) 
+            if(file_exists($path) && $user->avatar!='users/default.png') 
             {
                 unlink($path);
             }

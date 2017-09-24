@@ -71,6 +71,10 @@ export default {
                 {
                     name: 'Players',
                     route: 'team.detail.players'
+                },
+                {
+                    name: 'Schedule',
+                    route: 'team.detail.schedule'
                 }
             ],
             team: null,

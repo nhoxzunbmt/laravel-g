@@ -121,7 +121,8 @@ export default [
   { path: '/teams/:slug', component: require('./pages/teams/detail/index.vue'), children: [
         { path: '', redirect: { name: 'team.detail' }},
         { path: 'info', name: 'team.detail', component: require('./pages/teams/detail/_info.vue') },
-        { path: 'players', name: 'team.detail.players', component: require('./pages/teams/detail/_players.vue') }
+        { path: 'players', name: 'team.detail.players', component: require('./pages/teams/detail/_players.vue') },
+        { path: 'schedule', name: 'team.detail.schedule', component: require('./pages/teams/detail/_schedule.vue') }
   ]},
   
   {

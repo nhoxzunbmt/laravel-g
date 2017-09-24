@@ -79,7 +79,7 @@
 				</li>
 				<li class="dropdown auth-drp" v-if="authenticated">
 					<a href="#" class="dropdown-toggle pr-0" data-toggle="dropdown" @click="showDropdown">
-                        <img :src="user.avatar" alt="user_auth" class="user-auth-img img-circle"/>
+                        <img :src="getImageLink(user.avatar)" alt="user_auth" class="user-auth-img img-circle"/>
                         <span class="user-online-status"></span>
                         <span class="user-title">{{user.name}}</span>
                         <span class="user-balance text-info">
