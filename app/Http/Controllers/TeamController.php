@@ -80,12 +80,13 @@ class TeamController extends Controller
         $arSchedules = $request->user()->schedule();
         usort($arSchedules, 'sortSchedule');
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
+        $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         if(count($blockSchedules)==0)
         {
             return response()->json([
                 'schedule' => ['Your schedule has to consist of mininmum 1 three hours block!']
             ], 422);
-        }
+        }        
         
         $input['schedule'] = $blockSchedules;
         
@@ -284,6 +285,17 @@ class TeamController extends Controller
     
         if($TeamUser)
         {   
+            if(isset($input['status']) && $input['status']==1)
+            {
+                $blockSchedules = self::checkCrossingScheduleTeamUser($teamId, $userId);
+                if(count($blockSchedules)==0)
+                {
+                    return response()->json([
+                        "error" => "User don't have 3-hours blocks crossing with team schedule. Edit schedule before connect to the team."
+                    ], 422);
+                }
+            }
+            
             //update TeamUser
             $input = $request->all();
             $TeamUser->update($input);
@@ -331,6 +343,8 @@ class TeamController extends Controller
                 }
             }
             
+            self::updateSchedule($teamId);
+            
             return response()->json($TeamUser);
         }else{
     
@@ -344,6 +358,14 @@ class TeamController extends Controller
                 {
                     return response()->json([
                         "error" => "Only captain can send invitation to user to team."
+                    ], 422);
+                }
+                
+                $blockSchedules = self::checkCrossingScheduleTeamUser($teamId, $userId);
+                if(count($blockSchedules)==0)
+                {
+                    return response()->json([
+                        "error" => "You don't have 3-hours blocks crossing with team schedule. Edit you schedule before connect to the team."
                     ], 422);
                 }
                 
@@ -479,21 +501,17 @@ class TeamController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public function checkCrossingScheduleTeamUser($teamId, $userId)
+    public static function checkCrossingScheduleTeamUser($teamId, $userId)
     {
-        $team = Team::findOrFail($teamId)->get();
+        $team = Team::findOrFail($teamId);
+        $users = $team->users();
         $player = User::findOrFail($userId)->get();
         
-        $arSchedules = ScheduleHelper::getCrossingSchedule([$team, $player]);
+        $arSchedules = ScheduleHelper::getCrossingSchedule([$users->get(), $player]);
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
+        $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         
-        //get crossing schedules team and potential player
-        //$arSchedules = array_uintersect($team->schedule, $player->schedule, "diffSchedules");        
-        //usort($arSchedules, 'sortSchedule');
-        
-        return response()->json([
-            'count' => count($blockSchedules)
-        ], 200);
+        return $blockSchedules;
     }
     
     public static function updateSchedule($id)

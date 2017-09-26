@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row" v-if="team!==null">
+        <div class="row" v-if="team!==null && team.schedule!=null">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">
@@ -10,7 +10,7 @@
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
                                 
-                                    <full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false"></full-calendar>
+                                    <full-calendar ref="calendar" :events="team.schedule" :header="calHeader" :config="calConfig" :editable="false"></full-calendar>
                                     
                                 </div>
                             </div>
@@ -56,9 +56,9 @@ export default {
     {
         Event.listen('teamEditLoad', event => {
             this.team = event.team;
-            this.events = this.team.schedule!==null ? this.team.schedule : [];
         });
-        this.team = this.$parent.team;      
+        this.team = this.$parent.team;
+        //this.events = this.team.schedule!==null ? this.team.schedule : [];      
     }
 }
 </script>

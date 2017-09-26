@@ -293,7 +293,16 @@ export default {
         {
             axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:event.target.value}).then(response => {
                 this.inviteAnswerSuccess = true;
+                
+            }).catch(error => {
+                
+                swal({
+                    type: 'warning',
+                    title: 'Error!',
+                    html: error.response.data.error
+                });              
             });
+            
         },
         checkInTeam: function (value) {
             return this.usersInTeam.indexOf(value) > -1 ? true : false;

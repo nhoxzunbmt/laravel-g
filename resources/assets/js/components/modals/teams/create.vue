@@ -27,6 +27,13 @@
                                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                                             <p>Team is created!</p>
                                         </div>
+                                        
+                                        <div class="alert alert-warning alert-dismissable" v-if="error && response.schedule">
+            								<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            								<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">{{ response.schedule[0] }}</p>
+            								<div class="clearfix"></div>
+            							</div>
+                                   
             							<form autocomplete="off" @submit="save">                                              
                                             <div class="row">
             									<div class="col-md-12" :class="{ 'has-error': error && response.title }">

@@ -343,13 +343,27 @@
                       
                         axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:status}).then(response => {
                             this.inviteAnswerSuccess = true;
-                        })
+                        }).catch(error => {
+                        
+                            swal({
+                                type: 'warning',
+                                title: 'Error!',
+                                html: error.response.data.error
+                            });              
+                        });
                     })
                     
                 }else{
                     axios.put('/api/teams/'+team_id+'/users/'+user_id, {status:status}).then(response => {
                         this.inviteAnswerSuccess = true;
-                    })
+                    }).catch(error => {
+                    
+                        swal({
+                            type: 'warning',
+                            title: 'Error!',
+                            html: error.response.data.error
+                        });              
+                    });
                 }
             },
             leaveTeam(team_id)

@@ -259,7 +259,20 @@
             joinTeam(team_id)
             {
                 axios.put('/api/teams/'+team_id+'/users/'+this.user.id).then(response => {
-                    console.log(response);
+                    
+                    swal({
+                        type: 'success',
+                        title: 'Request sent!',
+                        html: 'You sent request to the team!'
+                    });
+                    
+                }).catch(error => {
+                    
+                    swal({
+                        type: 'warning',
+                        title: 'Error!',
+                        html: error.response.data.error
+                    });              
                 });
             },
         },
