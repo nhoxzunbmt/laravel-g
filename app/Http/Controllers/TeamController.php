@@ -507,10 +507,7 @@ class TeamController extends Controller
         $users = $team->users();
         $player = User::findOrFail($userId)->get();
         
-        $players = $users->get();
-        $players[] = $player;
-        
-        $arSchedules = ScheduleHelper::getCrossingSchedule($players);
+        $arSchedules = ScheduleHelper::getCrossingSchedule($users->get(), $player);
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
         $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         

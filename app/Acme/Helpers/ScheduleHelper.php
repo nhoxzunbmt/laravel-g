@@ -40,11 +40,11 @@ class ScheduleHelper{
     /**
      * Get crossing schedules with sorting by time
      */
-    public static function getCrossingSchedule($arSchedules)
+    public static function getCrossingSchedule($collection, $obj = false)
     {
         $arCrossingSchedules = false;
         
-        foreach($arSchedules as $object)
+        foreach($collection as $object)
         {
             if(!$arCrossingSchedules)
             {
@@ -52,6 +52,11 @@ class ScheduleHelper{
             }else{
                 $arCrossingSchedules = array_uintersect($arCrossingSchedules, $object->schedule, "diffSchedules");
             }
+        }
+        
+        if($obj)
+        {
+            $arCrossingSchedules = array_uintersect($arCrossingSchedules, $obj->schedule, "diffSchedules");
         }
         
         usort($arCrossingSchedules, 'sortSchedule');
