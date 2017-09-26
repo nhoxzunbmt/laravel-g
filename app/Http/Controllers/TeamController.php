@@ -273,7 +273,7 @@ class TeamController extends Controller
     {
         $user = User::findOrFail($userId);
         $userTeam = $user->team()->first();
-        if($userTeam && $userTeam->id>0 && $user->free_player)
+        if($userTeam && $userTeam->id>0 && !$user->free_player)
         {
             return response()->json([
                 "error" => "The user is already in another team"
