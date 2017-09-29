@@ -449,8 +449,15 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::get('/social/{provider}/callback', 'SocialController@callback');
 });
 
+Route::get('/comments/{pageId}', 'CommentController@index');
+
 Route::group(['middleware' => 'jwt.auth'], function () {
     
+    // Route for store comment
+    Route::post('/comments', 'CommentController@store');
+    // Route for update comment
+    //Route::post('/comments/{commentId}/{type}', 'CommentController@update');
+
     /**
      * Users & auth
      */    

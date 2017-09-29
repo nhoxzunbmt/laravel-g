@@ -1,7 +1,7 @@
 import { authGuard, guestGuard } from './util/router'
 
 export default [
-  { path: '/', name: 'home', component: require('./pages/home.vue'), redirect: { name: 'games' } },
+  { path: '/', name: 'home', component: require('./pages/home.vue')/*, redirect: { name: 'games' }*/ },
   {
         path: '/games',
         name: 'games',
