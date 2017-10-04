@@ -533,4 +533,45 @@ class TeamController extends Controller
             'schedule' => $blockSchedules
         ]);
     }
+    
+    /**
+     * To find teams to play against.
+     * @param  int  $teamId
+     * @param  int  $userId
+     * @return \Illuminate\Http\Response
+     */
+    public static function findTeamsAgainst()
+    {
+        $team = Team::findOrFail($id);
+        
+        $cats = [];
+        $category = $team->category;
+        $balance = ceil($team->balance);
+        $game_id = intval($tem->game_id);
+        $schedule = $team->schedule;
+        
+        $percent_range = 30;
+        $from = ceil($balance*(100-$percent_range)/100);
+        $to = ceil($balance*(100+$percent_range)/100);
+        
+        switch($category)
+        {
+            case "0":
+                $cats = [0];
+            break;
+            
+            case "1":
+                $cats = [0, 1];
+            break;
+            case "2":
+                $cats = [2, 1];
+            break;
+        }
+        
+        $teams = Team::whereIn('category', $cats)
+            ->where('balance', '>=', $from)->where('balance', '<=', $to)
+            ->where("game_id", $game_id)->get();
+            
+        //TODO: search by json field. Update mysql to 5.7+
+    }
 }

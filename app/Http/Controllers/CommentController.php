@@ -15,7 +15,8 @@ class CommentController extends Controller
             $pageId = 'main';
         }
         
-		return $comments = Comment::where('url', $pageId)->where('reply_id', 0)->with(['user', 'replies'])
+		return $comments = Comment::where('url', $pageId)->where('reply_id', 0)->where("active", 1)
+            ->with(['user', 'replies'])
             ->orderBy('created_at', 'desc')
             ->paginate(3);
 		/*$commentsData = [];

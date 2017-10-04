@@ -18,12 +18,12 @@
                         
                                     <form class="form" name="form">
                                         <div class="form-row"  :class="{ 'has-error': errorComment }">
-                                            <textarea class="input" placeholder="Add comment..." required v-model="message"></textarea>
+                                            <textarea class="form-control" placeholder="Add comment..." required v-model="message"></textarea>
                                             <span class="input help-block" v-if="errorComment">{{ errorComment }}</span>
                                         </div>
                                         
                                         <div class="form-row">
-                                            <input class="input" placeholder="user name" type="text" disabled :value="user.name">
+                                            <input class="form-control" placeholder="user name" type="text" disabled :value="user.name">
                                         </div>
                                         <div class="form-row">
                                             <input type="button" class="btn btn-primary" @click="saveComment" value="Add Comment">
@@ -47,7 +47,7 @@
                                 
                                 <hr class="light-grey-hr mb-20 mt-10">
                                 
-                                <a v-if="curPage>1" v-on:click="showPrevComments">Show previous comments</a>
+                                <a class="btn btn-primary center-block mb-20" v-if="curPage>1" v-on:click="showPrevComments">Show previous comments</a>
                                 
                                 <!-- Comments List -->
                                 <div class="comments" v-if="comments" v-for="comment in commentsData">
@@ -65,7 +65,7 @@
                                                     <span class="comment-author">
                                                        <em>{{ comment.user.name}}</em>
                                                     </span>
-                                                    <span class="comment-date">{{ comment.date}}</span>
+                                                    <span class="comment-date">{{ comment.created_at}}</span>
                                                 </div>
                                                 <div class="comment-actions">
                                                     <ul class="list">
@@ -113,7 +113,7 @@
                                                                 <span class="comment-author">
                                                                    {{replies.user.name}}
                                                                 </span>
-                                                                <span class="comment-date">{{replies.date}}</span>
+                                                                <span class="comment-date">{{replies.created_at}}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -124,7 +124,7 @@
                                     </div>
                                 </div>
                                 
-                                <a v-if="curPage<totalPages" v-on:click="showMoreComments">Show more comment</a>
+                                <a class="btn btn-primary center-block" v-if="curPage<totalPages" v-on:click="showMoreComments">Show more comment</a>
                                 
                             </div>
     	               </div>
@@ -255,8 +255,7 @@
                 this.curPage++;
                 this.fetchComments(this.curPage);
             },
-            showprevComments()
-            {
+            showPrevComments(){
                 this.curPage--;
                 this.fetchComments(this.curPage);
             }
@@ -274,6 +273,10 @@
   margin: 20px auto;
   padding: 0 20px;
   width: 100%;
+}
+
+.comments-app .btn{
+    max-width: 250px;
 }
 
 .comments-app h5{
@@ -310,7 +313,7 @@
   transition: 350ms box-shadow;
 }
 
-.comment-form .form textarea.input{
+.comment-form .form textarea{
   height: 100px;
   padding: 15px;
 }
