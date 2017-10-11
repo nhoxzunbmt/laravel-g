@@ -18,7 +18,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         \SocialiteProviders\Manager\SocialiteWasCalled::class => [
             // Прописываем здесь обработку события провайдерами от SocialiteProviders
-            'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',
+            //'SocialiteProviders\VKontakte\VKontakteExtendSocialite@handle',
             'SocialiteProviders\Steam\SteamExtendSocialite@handle',
             'SocialiteProviders\Twitch\TwitchExtendSocialite@handle',
         ],

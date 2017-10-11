@@ -11,6 +11,8 @@ use Hootlex\Friendships\Traits\Friendable;
 use \HighIdeas\UsersOnline\Traits\UsersOnlineTrait;
 use Cache;
 use Sofa\Eloquence\Eloquence;
+use File;
+use Image;
   
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract 
 {
@@ -30,7 +32,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $fillable = [
         'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
-        'overlay', 'description', 'type', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule'
+        'overlay', 'description', 'type', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule',
+        'confirmed', 'active'
     ];
 
     /**
@@ -55,7 +58,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     protected $searchableColumns = [
         'nickname' => 20,
-        'email' => 10,
+        //'email' => 10,
         'name' => 10,
         'last_name' => 5
     ];
@@ -216,6 +219,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         if(empty($email))
         {
             $email = self::generateEmail($providerUser);
+            $confirmed = 0;
+            $active = 0;
+        }else{
+            $confirmed = 1;
+            $active = 1;
+        }
+                            
+        $avatar = $providerUser->getAvatar();
+        if(!empty($avatar))
+        {
+            $extension = strtolower(File::extension(basename($avatar)));
+            if(in_array($extension, ["jpg", "jpeg", "png"]) && !empty($avatar) && @getimagesize($avatar))
+            {
+                $image = 'avatars/'.basename($avatar);
+                $image = str_replace(array("%", "+", ":"), "", $image);
+                Image::make($avatar)->save(public_path("storage/".$image));
+                $avatar = $image;
+            }
+        }else{
+            $avatar = null;
         }
                               
         $data = [
@@ -223,8 +246,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'nickname' => $providerUser->getNickname(),
             'name' => $providerUser->getName() ? $providerUser->getName() : $providerUser->getNickname(),
             'password' => str_random(10),
-            'avatar' => $providerUser->getAvatar(),
-            'confirmed' => 1           
+            'avatar' => $avatar,
+            'confirmed' => $confirmed,
+            'active' => $active          
         ];                               
         
         return self::create($data);
@@ -232,7 +256,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     
     public static function generateEmail($providerUser)
     {
-        $site = env('APP_URL', "games.dev");
+        $site = env('APP_URL', "sparta.games");
         $site = str_replace(["http://", "https://"], "", $site);
         $email = $providerUser->getNickname()."@".$site;
         return $email;

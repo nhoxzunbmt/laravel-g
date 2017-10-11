@@ -66,7 +66,7 @@
                                                 <!--<td>{{ moment(team.created_at, "YYYY-MM-DD h:mm:ss").fromNow()}}</td>-->
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
-                                                        <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
+                                                        <img :src="getImageLink(team.image, 'avatar_team')" class="img-responsive team-image" :alt="team.title" />
                                                     </router-link>
                                                 </td>
                                                 <td>
@@ -88,7 +88,7 @@
                                                 <td class="text-center">
                                                     <span v-if="team.status==0">pending</span>
                                                     <span v-if="team.status==1">accepted</span>
-                                                    <button v-if="team.quantity>team.users.length && authenticated && user.id!==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
+                                                    <button v-if="team.quantity>team.users.length && authenticated && user.id!==team.capt_id && user.type=='player' && user.active" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10"><i aria-hidden="true" class="fa fa-check"></i>&nbsp; join the team</button>
                                                 </td>
                                             </tr>
                                         </tbody>

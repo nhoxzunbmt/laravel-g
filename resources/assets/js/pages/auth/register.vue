@@ -12,7 +12,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <!--<socials></socials>-->
+                            <socials></socials>
                     		<div class="panel-wrapper collapse in">
                     			<div class="panel-body">
                                     <div class="alert alert-danger" v-if="error && !success">
@@ -22,6 +22,19 @@
                                         <p>We sent you an activation code. Check your email.</p>
                                     </div>
                                     <form autocomplete="off" v-on:submit="register" v-if="!success">
+                                    
+                                        <div class="form-group">
+                                            <label>Type</label>
+                                            <div class="radio-list">
+                                                <div class="radio-inline pl-0" v-for="(value, key) in types">
+                                                    <span class="radio radio-info">
+                                                    	<input type="radio" :value="key" v-model="type" :id="'radio_'+key">
+                                                    	<label :for="'radio_'+key">{{ value }}</label>
+                                                    </span>
+                                                </div>
+											</div>
+                                        </div>
+                                    
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.nickname }">
                                             <label for="name">Nickname</label>
                                             <input type="text" class="form-control" v-model="nickname" required>
@@ -62,7 +75,12 @@ export default {
     },
     data() {
         return {
+            types: {
+                investor: 'investor',
+                player: 'player'
+            },
             nickname: null,
+            type: this.$route.query.type || 'player',
             email: null,
             password: null,
             success: false,
@@ -78,7 +96,8 @@ export default {
                 {
                     nickname: this.nickname,
                     email: this.email,
-                    password: this.password
+                    password: this.password,
+                    type: this.type
                 }
             ).then(response => {
                 this.success = true

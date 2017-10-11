@@ -20,7 +20,6 @@
                                             <tr>
                                                 <th>Start at</th>
                                                 <th>Title</th>
-                                                <th>Type</th>
                                                 <th>Game</th>
                                                 <th>Quantity</th>
                                                 <th>Winner</th>
@@ -38,11 +37,9 @@
                                                         {{ fight.title}}
                                                     </router-link>
                                                 </td>
-                                                <td class="text-center">{{ fight.type}}</td>
                                                 <td class="text-center" v-if="fight.game!==null">{{ fight.game.title}}</td>
                                                 <td class="text-center" v-else></td>
-                                                <td class="text-center" v-if="fight.type=='personal'">{{fight.users.length}}/{{fight.count_parts}}</td>
-                                                <td class="text-center" v-else>{{fight.teams.length}}/{{fight.count_parts}}</td>
+                                                <td class="text-center">{{fight.teams.length}}/{{fight.count_parts}}</td>
                                                 <td class="text-center">{{fight.winner}}</td>
                                                 <td class="text-center" v-if="fight.canceled==1">{{fight.cancel_text | truncate(40, '...') }}</td>
                                                 <td class="text-center" v-else></td>
@@ -152,7 +149,7 @@
                     'page' : 1,
                     '_limit' : 12,
                     "_sort" : '-start_at',
-                    '_with' : 'game,teams,users'
+                    '_with' : 'game,teams'
                 });
                 
                 axios.get('/api/fights?'+query).then((response) => {

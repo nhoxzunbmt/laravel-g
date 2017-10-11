@@ -75,12 +75,6 @@ export default {
         Vue.nextTick(function(){
             
             var $wrapper = $(".wrapper");
-       	    /*Counter Animation*/
-        	var counterAnim = $('.counter-anim');
-        	if( counterAnim.length > 0 ){
-        		counterAnim.counterUp({ delay: 10,
-                time: 1000});
-        	}
         	
         	/*Tooltip*/
         	if( $('[data-toggle="tooltip"]').length > 0 )
@@ -297,8 +291,9 @@ var setHeightWidth = function () {
 }
 .profile-box .profile-info .profile-img-wrap {
     bottom: 0px !important;
-    margin: -8px 15px !important;
+    margin: -8px 15px 0 !important;
     position: absolute !important;
+    padding: 4px 4px 0;
 }
 
 .profile-box .profile-info .profile-img-wrap img, .profile-box .profile-info .profile-img-wrap {
@@ -457,5 +452,31 @@ var setHeightWidth = function () {
 {
     background: #102e42 !important;
     padding: 10px 30px !important;
+}
+
+/*Index*/
+.parallax-simple {
+    background-attachment: fixed;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 80px 15px;
+    margin-left: -9px;
+    margin-right: -9px;
+}
+.color-overlay-dark {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #000000;
+    opacity: .5;
+    width: 100%;
+    height: 100%;
+}
+.rel{
+    position: relative;
 }
 </style>

@@ -85,16 +85,43 @@ window.Echo = new Echo({
 **/
 Vue.mixin({
     methods: {
-        getImageLink(image)
+        getImageLink(image, t = false)
         {
             if(image!==undefined && image!=null && image!="")
             {
                 if(!image.includes("http:") && !image.includes("https:"))
                 {
                     image = '/storage/'+image;
+                }else{
+                    image = '/storage/default/avatar_team.jpg';
                 }
             }else{
-                image = '/storage/users/default.png';
+                
+                if(t)
+                {
+                    switch(t)
+                    {
+                        case 'overlay_team':
+                            image = '/storage/default/overlay_team.jpg';
+                        break;
+                        case 'overlay_game':
+                            image = '/storage/default/overlay_game.jpg';
+                        break;
+                        case 'overlay_user':
+                            image = '/storage/default/overlay_user.jpg';
+                        break;
+                        
+                        case 'avatar_user':
+                            image = '/storage/default/avatar_user.jpg';
+                        break;
+                        case 'avatar_team':
+                            image = '/storage/default/avatar_team.jpg';
+                        break;
+                    }
+                }else{
+                    image = '/storage/default/avatar_user.jpg';
+                }
+                                
             }
             
             return image;

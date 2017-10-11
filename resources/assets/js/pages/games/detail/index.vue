@@ -1,14 +1,14 @@
 <template>
 <div data-sticky-container>
-    <div class="row mt-20">
+    <div class="row mt-20" v-if="game!==null">
         <div class="col-lg-12 col-md-12 col-xs-12">
     		<div class="panel panel-default card-view  pa-0">
     			<div class="panel-wrapper collapse in">
     				<div class="panel-body  pa-0">
     					<div class="profile-box">
     						<div class="profile-cover-pic">
-    							<div class="profile-image-overlay" v-if="game.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(game.overlay) + ')' }"></div>
-                                <div class="profile-image-overlay" v-else></div>
+    							<div class="profile-image-overlay" v-bind:style="{ 'background-image': 'url(' + getImageLink(game.overlay, 'overlay_game') + ')' }"></div>
+                                <!--<div class="profile-image-overlay" v-else  v-bind:style="{ 'background-image': 'url(' + getImageLink(game.images[0]) + ')' }"></div>-->
     						</div>
     						<div class="profile-info text-center stickyNav" data-margin-top="67" data-sticky-class="sticky">
     							

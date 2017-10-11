@@ -18,7 +18,7 @@
                                     <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Info</h6>
                                     <hr class="light-grey-hr">
                                     <div class="row">
-    									<div class="col-md-6">
+    									<div class="col-md-6" v-if="type==null">
                                             <div class="form-group">
                                                 <label class="control-label mb-10">Type*</label>
                                                 <div class="radio-list">
@@ -208,13 +208,16 @@ export default {
             response: null,
             countries: null,
             games: [],
-            streams: []
+            streams: [],
+            type: null
         }
     },
     mounted() {
         this.getUserTeam();
         this.getGames();
         this.getCountries();
+        
+        this.type = this.user.type;
         
         var self = this;
         Vue.nextTick(function(){ 

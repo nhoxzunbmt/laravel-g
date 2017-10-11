@@ -7,8 +7,7 @@
     				<div class="panel-body  pa-0">
     					<div class="profile-box">
     						<div class="profile-cover-pic">
-    							<div class="profile-image-overlay" v-if="player.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(player.overlay) + ')' }"></div>
-                                <div class="profile-image-overlay" v-else></div>
+    							<div class="profile-image-overlay" v-bind:style="{ 'background-image': 'url(' + getImageLink(player.overlay, 'overlay_user') + ')' }"></div>
     						</div>
     						<div class="profile-info text-center stickyNav" data-margin-top="67" data-sticky-class="sticky">
     							
@@ -23,7 +22,7 @@
         						</div>
                                 
                                 <div class="profile-img-wrap">
-    								<img class="inline-block" :src="getImageLink(player.avatar)" alt="user"/>
+    								<img class="inline-block" :src="getImageLink(player.avatar, 'avatar_user')" alt="user"/>
     							</div>
                                 <h5 class="profile-title">
                                     <span class="font-24 weight-600">{{ player.name }} {{ player.last_name }}</span>
@@ -92,14 +91,13 @@ export default {
         getItem()
         {
             var query = this.ArrayToUrl({
-                "_with" : 'fights',
                 "type" : 'player'
             });
             
-            axios.get('/api/user/'+this.$route.params.id+"?"+query).then((response) => {
+            axios.get('/api/users/'+this.$route.params.id+"?"+query).then((response) => {
                 this.$set(this, 'player', response.data);
                 
-                this.title = this.player.name+" "+this.player.last_name;
+                this.title = this.player.name+" "+this.player.last_name || this.player.nickname;
                 this.$meta().refresh();
                 
                 Event.fire('playerDetailLoad', {

@@ -1,6 +1,7 @@
 <template>
 <div>
-    <div class="row" v-if="player!==null && teams!==null">
+
+    <div class="row" v-if="player!==null && team!==null && player.team_id>0">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
                     <div class="panel-heading">
@@ -9,7 +10,7 @@
                             Teams
                         </h3></div> 
                         <div class="clearfix"></div>
-                </div>
+                    </div>
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
                             <div class="table-wrap">
@@ -28,7 +29,7 @@
                                             </tr>
                                         </thead>
     								    <tbody>
-                                            <tr v-for="team in teams">
+                                            <tr>
                                                 <td>
                                                     <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
                                                         <img :src="getImageLink(team.image)" class="img-responsive team-image" :alt="team.title" />
@@ -88,7 +89,7 @@ export default {
             error: false,
             player: null,
             response: null,
-            teams: []
+            team: null
         }
     },
     mounted() {
@@ -106,18 +107,8 @@ export default {
     },
     methods: {       
         getTeams: function(){
-            
-            var queryStartParams = {
-                '_limit' : 0,
-                "_with" : 'users,game',
-                "_sort" : '-id',
-                'status': 1
-            };
-             
-            var query = this.ArrayToUrl(queryStartParams);
-            
-            axios.get('/api/user/'+this.$route.params.id+'/teams?'+query).then((response) => {
-                this.$set(this, 'teams', response.data);
+            axios.get('/api/users/'+this.$route.params.id+'/team').then((response) => {
+                this.$set(this, 'team', response.data);
             });
         },
     },

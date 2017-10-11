@@ -72,7 +72,8 @@ class AuthController extends Controller
             'nickname' => $request->json('nickname'),
             'email' => $request->json('email'),
             'password' => $request->json('password'),
-            'confirmation_code' => $confirmation_code
+            'confirmation_code' => $confirmation_code,
+            'type' => $request->json('type')
         ]);
         
         $content = [

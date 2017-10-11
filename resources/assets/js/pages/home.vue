@@ -1,5 +1,114 @@
 <template>
     <div>
+    
+        <div class="container-fluid parallax-simple rel mt-30" style="background-image: url(http://spartacoin.com/images/BlizzCon8.jpg);">
+    		<div class="color-overlay-dark"></div>
+    		<div class="container">
+    		    <div class="row">
+                    
+    		    	<div class="col-md-12 text-center mb-50">
+                        <!--<h4 class="mb-20">We are presenting platform for</h4>-->
+                        <h2 class="mt-40">Lead your team into eSports Pro League</h2>
+                        <h4 class="mt-20 mb-40">Earn your money from gaming</h4>
+                                            
+                        <!--<h3 class="mb-30">Token Symbol: <strong>SPT</strong></h3>-->
+                        <a href="/spartacoin_whitepaper.pdf" target="_blank" class="btn btn-warning inline-block ml-20 mt-15">White Paper</a>
+                        <a href="//www.youtube.com/watch?v=XSGBVzeBUbk" data-lity="" class="btn btn-danger inline-block ml-20 mt-15"><i class="fa fa-youtube-play" aria-hidden="true"></i> Whatch our video</a>
+                        
+                    </div>
+    		    </div>
+    		</div>
+    	</div>
+        
+    
+        <div class="row  mb-30 mt-30">
+			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+				<div class="panel panel-default card-view pa-0">
+					<div class="panel-wrapper collapse in">
+						<div class="panel-body pa-0">
+							<div class="sm-data-box bg-red">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countPlayers"></animated-number></span></span>
+											<span class="weight-500 uppercase-font txt-light block font-13">Players in teams</span>
+										</div>
+										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+											<i class="fa fa-user txt-light data-right-rep-icon"></i>
+										</div>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+				<div class="panel panel-default card-view pa-0">
+					<div class="panel-wrapper collapse in">
+						<div class="panel-body pa-0">
+							<div class="sm-data-box bg-yellow">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countTeamsNeedPlayers"></animated-number></span></span>
+											<span class="weight-500 uppercase-font txt-light block">Teams need players</span>
+										</div>
+										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+											<i class="fa fa-users txt-light data-right-rep-icon"></i>
+										</div>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+				<div class="panel panel-default card-view pa-0">
+					<div class="panel-wrapper collapse in">
+						<div class="panel-body pa-0">
+							<div class="sm-data-box bg-green">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countFights"></animated-number></span></span>
+											<span class="weight-500 uppercase-font txt-light block">Fights</span>
+										</div>
+										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+											<i class="ti-shield txt-light data-right-rep-icon"></i>
+										</div>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+				<div class="panel panel-default card-view pa-0">
+					<div class="panel-wrapper collapse in">
+						<div class="panel-body pa-0">
+							<div class="sm-data-box bg-blue">
+								<div class="container-fluid">
+									<div class="row">
+										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+											<span class="txt-light block counter"><span class="counter-anim">46.43</span>%</span>
+											<span class="weight-500 uppercase-font txt-light block">growth rate</span>
+										</div>
+										<div class="col-xs-6 text-center  pl-0 pr-0 pt-25  data-wrap-right">
+								            <i class="ti-shield txt-light data-right-rep-icon"></i>
+                                        </div>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>-->
+		</div>
+    
+        <!--
         <div class="panel panel-default card-view mb-30 mt-30">
 			<div class="panel-wrapper collapse in">
 				<div class="panel-body">
@@ -19,7 +128,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
             
         <comments :comment-url="pageId"></comments>
     </div>

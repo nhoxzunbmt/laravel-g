@@ -20,7 +20,7 @@ class SocialController extends Controller
     }
 
     public function callback(SocialAccountService $service, $provider)
-    {
+    {        
         $driver = Socialite::driver($provider);
         $user = $service->createOrGetUser($driver, $provider);
         
@@ -41,13 +41,17 @@ class SocialController extends Controller
         $payload = JWTAuth::getPayload($token);
         $expiration = $payload['exp'];
         
-        return response()->json([
+        /*return response()->json([
             "token_type" => "Bearer",
             'token' => $token,
             'expires_in' => $expiration
-        ], 200);
-        //$data = User::getApiUserData($user, $token);
-        //return response()->json($data);
+        ], 200);*/
+        
+        return view('social_callback', [
+            "token_type" => "Bearer",
+            'token' => $token,
+            'expires_in' => $expiration
+        ]);
     }
 
 }

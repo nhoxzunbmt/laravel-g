@@ -403,7 +403,7 @@ Route::group(['middleware' => 'guest:api'], function () {
     ]
 }
      */
-    Route::post('/password/reset', 'Auth\ResetPasswordController@postReset');
+    Route::post('/password/reset', 'Auth\ResetPasswordController@postReset');//->name('password.reset');
     
     /**
      * @api {get} /email/verify/:confirmationCode Email verify

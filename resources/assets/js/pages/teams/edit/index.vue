@@ -34,7 +34,7 @@
         						</div>
                             
     							<div class="profile-img-wrap" v-if="team!==null">
-    								<img class="inline-block" :src="getImageLink(team.image)" alt="logo"/>
+    								<img class="inline-block" :src="getImageLink(team.image, 'avatar_team')" alt="logo"/>
                                     <vue-core-image-upload
                                         crop-ratio="1:1"
                                         class="fileupload btn btn-primary mb-10"

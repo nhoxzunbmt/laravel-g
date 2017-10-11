@@ -3210,15 +3210,14 @@ a#toggle_mobile_nav {
   width: 100%;
 }
 .navbar.navbar-inverse.navbar-fixed-top .top-nav-search .input-group input {
-  background: #fff;
   border-radius: 50px;
   height: 36px;
   padding-right: 30px;
   border: 1px solid rgba(33, 33, 33, 0.12);
-  color: #212121;
+  color: #fff;
 }
 .navbar.navbar-inverse.navbar-fixed-top .top-nav-search .input-group input:focus {
-  border: 1px solid rgba(33, 33, 33, 0.3);
+  border: solid 1px rgba(230, 154, 42, 0.5);
 }
 .navbar.navbar-inverse.navbar-fixed-top .top-nav-search .input-group .input-group-btn {
   position: absolute;

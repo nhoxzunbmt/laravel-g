@@ -18,7 +18,11 @@ Route::group(['prefix' => 'admin'], function () {
 
 //social auth
 Route::get('/social/{provider}', 'SocialController@login')->name('social.auth');
-//Route::get('/social/{provider}/callback', 'SocialController@callback');
+Route::get('/social/{provider}/callback', 'SocialController@callback');
+
+Route::get('/password/reset/{token?}', function () {
+    return view('index');
+})->name('password.reset');
 
 Route::get('{path}', function () {
     return view('index');

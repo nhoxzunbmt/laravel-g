@@ -10,9 +10,14 @@
             </router-link>
             -->
             
-            <a v-if="authenticated && user.type=='player'" class="btn btn-info inline-block pull-left btn-sm btn-outline" @click="showTeamModalCreate">
+            <a v-if="authenticated && user.type=='player' && user.active" class="btn btn-info inline-block pull-left btn-sm btn-outline" @click="showTeamModalCreate">
                 <span class="btn-text">Create Team</span>
             </a>
+            
+            <div class="alert alert-warning alert-dismissable" v-if="authenticated && !user.active">
+				<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You have cut access. Fill email's field in the profile and confirm by url from mailbox.</p>
+				<div class="clearfix"></div>
+			</div>
             
             <!--<a v-if="authenticated && user.type=='player'" class="btn btn-primary inline-block ml-20 pull-left btn-sm btn-outline" @click="showFightModalCreate">
                 <span class="btn-text">Create Fight</span>

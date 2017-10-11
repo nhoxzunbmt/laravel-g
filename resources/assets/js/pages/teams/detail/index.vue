@@ -7,8 +7,7 @@
     				<div class="panel-body  pa-0">
     					<div class="profile-box">
     						<div class="profile-cover-pic" v-if="team!==null">
-    							<div class="profile-image-overlay" v-if="team.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(team.overlay) + ')' }"></div>
-                                <div class="profile-image-overlay" v-else></div>
+    							<div class="profile-image-overlay" v-bind:style="{ 'background-image': 'url(' + getImageLink(team.overlay, 'overlay_team') + ')' }"></div>
     						</div>
     						<div class="profile-info text-center stickyNav">
                             
@@ -23,7 +22,7 @@
         						</div>
                             
     							<div class="profile-img-wrap" v-if="team!==null">
-    								<img class="inline-block" :src="getImageLink(team.image)" alt="logo"/>
+    								<img class="inline-block" :src="getImageLink(team.image, 'avatar_team')" alt="logo"/>
     							</div>
     						</div>
     					</div>

@@ -17,8 +17,7 @@
                                     url="/api/users/overlay">
                                     <i class="fa fa-camera"></i>
                                 </vue-core-image-upload>
-    							<div class="profile-image-overlay" v-if="user.overlay!==null" v-bind:style="{ 'background-image': 'url(' + getImageLink(user.overlay) + ')' }"></div>
-                                <div class="profile-image-overlay" v-else></div>
+    							<div class="profile-image-overlay" v-bind:style="{ 'background-image': 'url(' + getImageLink(user.overlay, 'overlay_user') + ')' }"></div>
     						</div>
     						<div class="profile-info text-center stickyNav" data-margin-top="67" data-sticky-class="sticky">
     							
@@ -27,6 +26,12 @@
                                         <li v-for="tab in tabs" class="nav-item">
                                             <router-link :to="{ name: tab.route }" class="nav-link" active-class="active">
                                                 {{ tab.name }}
+                                            </router-link>
+                                        </li>
+                                        
+                                        <li class="nav-item" v-if="user.type=='player'">
+                                            <router-link :to="{ name: 'personal.teams' }" class="nav-link" active-class="active">
+                                                Teams
                                             </router-link>
                                         </li>
                                         
@@ -102,11 +107,7 @@ export default {
                 {
                     name: 'Friends',
                     route: 'friends.all'
-                },
-                {
-                    name: 'Teams',
-                    route: 'personal.teams'
-                },
+                }
             ],
             stickyOptions: {
                 marginTop: 20,

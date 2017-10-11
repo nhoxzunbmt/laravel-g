@@ -25,7 +25,7 @@
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                         <div class="input-group mb-15 mt-15">
-                                        	<input type="text" v-model="q" name="q" @keyup.enter="search()" class="form-control" placeholder="Search by name or email">
+                                        	<input type="text" v-model="q" name="q" @keyup.enter="search()" class="form-control" placeholder="Search by name or nickname">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-primary" v-if="!loading" @click="search()"><i class="fa fa-search"></i></button>
                                                 <button class="btn btn-default" type="button" disabled="disabled" v-if="loading">Searching...</button>

@@ -37,7 +37,7 @@
         <div class="col-lg-4 col-md-6 col-xs-12">
             <div class="panel panel-default card-view pa-0">
                 <h6 class="ml-10 mt-10">Players wanted: {{team.quantity-team.users.length}}</h6>
-                <div class="mb-15 mt-15">
+                <div class="mb-15 mt-15" v-if="authenticated && user.type=='player' && user.active">
                     <button class="btn btn-primary btn-icon left-icon ml-10" v-if="authenticated && !checkInTeam(user.id)" @click="invite()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp; Join to Team</button>
                     <span class="btn btn-primary btn-icon left-icon ml-10" v-else-if="authenticated"><i class="fa fa-check"></i>&nbsp; Your are in the team</span>
                 </div>

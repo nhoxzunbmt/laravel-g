@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a01e51e78540f7e540ee4ad28f20223b",
+    "content-hash": "3b2bf83deb4e8b58695f4ab4c7549cf7",
     "packages": [
         {
             "name": "arrilot/laravel-widgets",
@@ -2713,21 +2713,21 @@
         },
         {
             "name": "socialiteproviders/twitch",
-            "version": "v3.0.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SocialiteProviders/Twitch.git",
-                "reference": "a7ad148c0b42d0c607d8a034b6e47faf5fc85e93"
+                "reference": "9f265d7c0ee5327a99509a3ad3a016da09f344fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Twitch/zipball/a7ad148c0b42d0c607d8a034b6e47faf5fc85e93",
-                "reference": "a7ad148c0b42d0c607d8a034b6e47faf5fc85e93",
+                "url": "https://api.github.com/repos/SocialiteProviders/Twitch/zipball/9f265d7c0ee5327a99509a3ad3a016da09f344fd",
+                "reference": "9f265d7c0ee5327a99509a3ad3a016da09f344fd",
                 "shasum": ""
             },
             "require": {
                 "php": "^5.6 || ^7.0",
-                "socialiteproviders/manager": "~3.0"
+                "socialiteproviders/manager": "~2.0 || ~3.0"
             },
             "type": "library",
             "autoload": {
@@ -2746,7 +2746,7 @@
                 }
             ],
             "description": "Twitch OAuth2 Provider for Laravel Socialite",
-            "time": "2017-01-25T09:48:29+00:00"
+            "time": "2017-07-19T09:30:14+00:00"
         },
         {
             "name": "socialiteproviders/vkontakte",
@@ -5601,6 +5601,7 @@
     "stability-flags": {
         "giantbomb/giantbomb-php-api": 20,
         "marcelgwerder/laravel-api-handler": 20,
+        "socialiteproviders/twitch": 20,
         "webpatser/laravel-countries": 20
     },
     "prefer-stable": false,

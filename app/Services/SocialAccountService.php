@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\UserSocialAccount;
 use App\User;
 use Illuminate\Http\Request;
+use App\Acme\Helpers\TwitchHelper;
 
 class SocialAccountService
 {
@@ -28,14 +29,28 @@ class SocialAccountService
                 'provider' => $providerName
             ]);
 
-            $email = $providerUser->getEmail();
+            $nickname = $providerUser->getNickname();
             
-            if(!empty($email))
-                $user = User::whereEmail($email)->first();
+            if(!empty($nickname))
+                $user = User::where('nickname', $nickname)->first();
 
             if (!$user) 
             {
                 $user = User::createBySocialProvider($providerUser);
+                
+                if($providerName=='twitch')
+                {
+                    $streams = [];
+                    $data = TwitchHelper::getVideosByUsername($nickname);
+                    foreach($data as $stream)
+                    {
+                        $streams[] = $stream['url'];
+                    }
+                    
+                    $user->update([
+                        'streams' => $streams
+                    ]);
+                }
             }
 
             $account->user()->associate($user);

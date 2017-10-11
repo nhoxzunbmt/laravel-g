@@ -19,6 +19,8 @@ use Hootlex\Friendships\Models\Friendship;
 use Hootlex\Friendships\Status;
 use App\Acme\Helpers\ScheduleHelper;
 use Carbon\Carbon;
+use App\Mail\EmailVerify;
+use Mail;
 
 class UserController extends Controller
 {
@@ -109,12 +111,24 @@ class UserController extends Controller
             $input['streams'] = $streams;
         }
         
-        if(!empty($input['schedule']))
+        if(!empty($input['schedule']) && $input['schedule']!=null)
         {
             $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
         }
         
-        //return response()->json($input['schedule']);
+        if(!$user->confirmed && $user->email!=$input['email'])
+        {
+            $confirmation_code = str_random(100);
+            $input['confirmation_code'] = $confirmation_code;
+            
+            $content = [
+        		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
+                'title' => 'Verify your email address',
+        		'button' => 'Click Here'
+      		];
+    
+        	Mail::to($input['email'])->send(new EmailVerify($content));
+        }
         
         if($result = $user->update($input))
         {
