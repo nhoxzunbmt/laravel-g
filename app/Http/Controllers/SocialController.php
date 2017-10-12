@@ -33,9 +33,11 @@ class SocialController extends Controller
         
         if(!$token = JWTAuth::fromUser($user))
         {
-            return response()->json([
+            $token = str_random(256);
+            JWTAuth::setToken($token);
+            /*return response()->json([
                 'error' => 'Could not create token',
-            ], 500);
+            ], 500);*/
         }
    
         $payload = JWTAuth::getPayload($token);

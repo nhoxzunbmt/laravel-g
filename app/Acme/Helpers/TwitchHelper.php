@@ -91,7 +91,7 @@ class TwitchHelper{
         return $streams;
     }
     
-    public function getVideosByUsername($channel)
+    public static function getVideosByUsername($channel)
     {
         $twitchClient = new \TwitchApi\TwitchApi([
             'client_id' => env('TWITCH_API_CLIENT_ID')
