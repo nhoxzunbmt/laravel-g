@@ -14,6 +14,7 @@ use File;
 use Cache;
 use ApiHandler;
 use App\Acme\Helpers\ApiHelper;
+use DB;
 
 class GameController extends Controller
 {
@@ -253,5 +254,65 @@ class GameController extends Controller
             break;
             
         } while ($count<$total);
+    }
+    
+    public static function filterList()
+    {
+        $list = array(
+            "Dota 2", 
+            "Counter-Strike: Global Offensive",
+            "League of Legends",
+            "Call of Duty: Infinite Warfare",
+            "Call of Duty: Black Ops III",
+            "Overwatch",
+            "StarCraft II",
+            "Hearthstone: Heroes of WarCraft",
+            "Heroes of the Storm",
+            "Halo 5: Guardians",
+            "FIFA 17",
+            "Smite",
+            "Quake Champions",
+            "Madden NFL 2017",
+            "H1Z1: King of the Kill",
+            "Rocket League",
+            "Gears of War 4",
+            "Rainbow Six Siege",
+            "Street Fighter V",
+            "Pro Evolution Soccer 2017",
+            "World of Tanks",
+            "Super Smash Bros. Melee",
+            "Super Smash Bros. for Wii U",
+            "FIFA Online 3",
+            "World of WarCraft",
+            "PLAYERUNKNOWN'S BATTLEGROUNDS",
+            "Paladins",
+            "Injustice 2",
+            "Vainglory",
+            "WarCraft III",
+            "StarCraft: Brood War"
+        );
+        
+        $games = Game::all();
+        
+        $titles = [];
+        foreach($games as $game)
+        {
+            if(!in_arrayi($game->title, $list) && !in_arrayi($game->alias, $list))
+            {
+                //$game->fights()->delete();
+                /*echo $game->title."<br />";
+                
+                $game->delete();
+                */
+                DB::delete('DELETE FROM games WHERE id = '.$game->id);
+                
+            }else{
+                $titles[] = $game->title;
+            }
+        }
+        
+        dd($titles);
+        
+        //return response()->json($games);
     }
 }

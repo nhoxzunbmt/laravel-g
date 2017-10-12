@@ -153,6 +153,7 @@ Route::resource('genres', 'GenreController', ['only' => [
 
 /*************************************************************************************************************************/
 
+Route::get('/games/filter', 'GameController@filterList');//->middleware('jwt.auth');
 /**
  * Games
  */

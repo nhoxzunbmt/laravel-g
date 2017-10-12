@@ -14,6 +14,10 @@ function diffSchedules($v1, $v2)
     return -1;
 }
 
+function in_arrayi($needle, $haystack) {
+    return in_array(strtolower($needle), array_map('strtolower', $haystack));
+}
+
 function calculateScheduleThreeWeek()
 {
     

@@ -8,18 +8,20 @@
                     
     		    	<div class="col-md-12 text-center mb-50">
                         <!--<h4 class="mb-20">We are presenting platform for</h4>-->
-                        <h2 class="mt-40">Lead your team into eSports Pro League</h2>
-                        <h4 class="mt-20 mb-40">Earn your money from gaming</h4>
-                                            
-                        <!--<h3 class="mb-30">Token Symbol: <strong>SPT</strong></h3>-->
-                        <a href="/spartacoin_whitepaper.pdf" target="_blank" class="btn btn-warning inline-block ml-20 mt-15">White Paper</a>
-                        <a href="//www.youtube.com/watch?v=XSGBVzeBUbk" data-lity="" class="btn btn-danger inline-block ml-20 mt-15"><i class="fa fa-youtube-play" aria-hidden="true"></i> Whatch our video</a>
+                        <h2 class="mt-40 mb-40">Lead your team into eSports Pro League</h2>
+                                         
+                        <router-link :to="{ name: 'auth.register', query: { type: 'player' } }" class="btn btn-warning inline-block ml-0">
+                            <span class="btn-text">Start as a Player</span>
+                        </router-link>
+                        <router-link :to="{ name: 'auth.register', query: { type: 'investor' } }" class="btn btn-danger inline-block ml-20">
+                            <span class="btn-text">Start as an Investor</span>
+                        </router-link>
                         
+                        <h2 class="mt-40 mb-40">Earn your money from gaming</h2>
                     </div>
     		    </div>
     		</div>
     	</div>
-        
     
         <div class="row  mb-30 mt-30">
 			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
