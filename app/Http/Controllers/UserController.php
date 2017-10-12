@@ -114,6 +114,8 @@ class UserController extends Controller
         if(!empty($input['schedule']) && $input['schedule']!=null)
         {
             $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
+            
+            //return response()->json($input['schedule']);
         }
         
         if(!$user->confirmed && $user->email!=$input['email'])

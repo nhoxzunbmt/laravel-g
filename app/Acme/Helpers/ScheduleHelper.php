@@ -16,8 +16,19 @@ class ScheduleHelper{
         //$startWeek = Carbon::now()->startOfWeek()->timestamp;
         //$endWeek = Carbon::now()->endOfWeek()->timestamp;
         
-        $startWeek = Carbon::parse('this sunday');
-        $endWeek = Carbon::parse('this sunday')->addDays(7);
+        //$startWeek = Carbon::parse('this sunday');
+        //$endWeek = Carbon::parse('this sunday')->addDays(7);
+        
+        $startWeek = Carbon::now()->startOfWeek()->addDays(-1);
+        $endWeek = Carbon::now()->startOfWeek()->addDays(6);
+        
+        if(Carbon::today()->dayOfWeek==0)
+        {
+            $startWeek = Carbon::today();
+            $endWeek = Carbon::today()->addDays(7);
+        }
+        
+        //dd([Carbon::now()->startOfWeek()->addDays(-1), $endWeek]);
         
         $scheduleOnTwoWeeks = [];
         foreach($schedule as $event)
@@ -33,6 +44,8 @@ class ScheduleHelper{
         }
         
         usort($scheduleOnTwoWeeks, 'sortSchedule');
+        
+        //dd($scheduleOnTwoWeeks);
         
         return $scheduleOnTwoWeeks;
     }
@@ -72,9 +85,18 @@ class ScheduleHelper{
         //Get 7 days range
         //$startDatetime = Carbon::now()->timestamp;
         //$endDatetime = Carbon::now()->addWeek()->timestamp;
-        $startDatetime = Carbon::parse('this sunday');
-        $endDatetime = Carbon::parse('this sunday')->addDays(7);
-
+        //$startDatetime = Carbon::parse('this sunday');
+        //$endDatetime = Carbon::parse('this sunday')->addDays(7);
+        
+        $startDatetime = Carbon::now()->startOfWeek()->addDays(-1);
+        $endDatetime = Carbon::now()->startOfWeek()->addDays(6);
+        
+        if(Carbon::today()->dayOfWeek==0)
+        {
+            $startDatetime = Carbon::today();
+            $endDatetime = Carbon::today()->addDays(7);
+        }
+        
         //Calculate blocks schedules
         $blockHours = 3;
         $countInBlock = 0;

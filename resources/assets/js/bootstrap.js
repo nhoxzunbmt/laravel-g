@@ -92,8 +92,6 @@ Vue.mixin({
                 if(!image.includes("http:") && !image.includes("https:"))
                 {
                     image = '/storage/'+image;
-                }else{
-                    image = '/storage/default/avatar_team.jpg';
                 }
             }else{
                 
