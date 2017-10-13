@@ -21,6 +21,7 @@
     "tether": "^1.4.0",
     "vform": "^0.7.4",
     "vue": "^2.2.1",
+    "vue-clipboards": "^1.1.0",
     "vue-core-image-upload": "^2.2.4",
     "vue-full-calendar": "^2.1.0",
     "vue-fullcalendar": "^1.0.9",

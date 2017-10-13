@@ -65,6 +65,7 @@ class UserController extends Controller
 	 */
 	public function update($id = false, UserUpdateRequest $request)
 	{
+	    $message = "Profile data is updated.";
         $data = [];
         $input = $request->except(['avatar', 'overlay']);        
         $user = $request->user();
@@ -88,7 +89,7 @@ class UserController extends Controller
             $user->password = bcrypt($request->password);
         
         //If confirmed -> active 
-        if($user->confirmed)
+        if($user->confirmed && $user->type)
         {
             $user->active = 1;
         }
@@ -114,13 +115,11 @@ class UserController extends Controller
         if(!empty($input['schedule']) && $input['schedule']!=null)
         {
             $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
-            
-            //return response()->json($input['schedule']);
         }
         
         if(!$user->confirmed && $user->email!=$input['email'])
         {
-            $confirmation_code = str_random(100);
+            $confirmation_code = str_random(50);
             $input['confirmation_code'] = $confirmation_code;
             
             $content = [
@@ -130,6 +129,8 @@ class UserController extends Controller
       		];
     
         	Mail::to($input['email'])->send(new EmailVerify($content));
+            
+            $message.= "We sent you an activation code. Check your email.";
         }
         
         if($result = $user->update($input))
@@ -137,7 +138,10 @@ class UserController extends Controller
             if(intval($user->team_id)>0)
                 TeamController::updateSchedule($user->team_id);
             
-            return response()->json($user);
+            return response()->json([
+                'data' => $user,
+                'message' => $message
+            ]);
         }
         
         return response()->json([

@@ -108,8 +108,8 @@ export default [
     { path: '/auth/login', name: 'auth.login', component: require('./pages/auth/login.vue') },
     { path: '/auth/register', name: 'auth.register', component: require('./pages/auth/register.vue') },
     { path: '/password/reset', name: 'password.request', component: require('./pages/auth/password/email.vue') },
-    { path: '/password/reset/:token', name: 'password.reset', component: require('./pages/auth/password/reset.vue') },
-    { path: '/email/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') }
+    { path: '/password/reset/:token', name: 'password.reset', component: require('./pages/auth/password/reset.vue') }//,
+    //{ path: '/email/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') }
   ]),
     
   {
@@ -135,6 +135,8 @@ export default [
         name: 'fight',
         component: require('./pages/fights/detail.vue')
   },
+  
+  { path: '/email/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') },
   
   { path: '*', component: require('./pages/errors/404.vue') }
 ]

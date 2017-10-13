@@ -22,7 +22,7 @@
     		    </div>
     		</div>
     	</div>
-    
+        
         <div class="row  mb-30 mt-30">
 			<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
 				<div class="panel panel-default card-view pa-0">

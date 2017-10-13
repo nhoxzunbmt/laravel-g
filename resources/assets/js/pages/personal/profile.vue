@@ -105,6 +105,8 @@
                                                 <label class="control-label mb-10">Email address*</label>
     											<input type="email" class="form-control" v-model="user.email">
                                                 <span class="help-block" v-if="error && response.email">{{ response.email[0] }}</span>
+                                                
+                                                <!--<button type="button" v-if="!user.confirmed" @click="sendEmailLinkConfirm" class="btn btn-primary btn-xs form-control">Send code to verify email</button>-->
                                             </div>
                                         </div>
     									<div class="col-md-6" :class="{ 'has-error': error && response.phone }">
@@ -168,7 +170,7 @@
     							</form>
                                 <div class="alert alert-success alert-dismissable mt-20" v-if="success">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                                    <p>Profile data is updated.</p>
+                                    <p>{{message}}</p>
                                 </div>
     						</div>
     					</div>
@@ -207,6 +209,7 @@ export default {
             error: false,
             response: null,
             countries: null,
+            message: null,
             games: [],
             streams: [],
             type: null
@@ -272,7 +275,7 @@ export default {
                 this.error = false;
                 this.success = true;
                 
-                if(response.data.streams==null && this.user.type=='player')
+                if(response.data.data.streams==null && this.user.type=='player')
                 {
                     swal(
                         'About streams!',
@@ -280,6 +283,8 @@ export default {
                         'warning'
                     );
                 }
+                
+                this.$set(this, 'message', response.data.message);
                 
             }).catch(error => {
                 this.response = error.response.data
@@ -329,6 +334,10 @@ export default {
                 this.streams  = [];
             }
             this.streams.push({ value: '' });
+        },
+        sendEmailLinkConfirm: function()
+        {
+            
         }
     },
 }

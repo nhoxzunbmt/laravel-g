@@ -97,7 +97,7 @@ export default {
             axios.get('/api/users/'+this.$route.params.id+"?"+query).then((response) => {
                 this.$set(this, 'player', response.data);
                 
-                this.title = this.player.name+" "+this.player.last_name || this.player.nickname;
+                this.title = this.player.nickname;
                 this.$meta().refresh();
                 
                 Event.fire('playerDetailLoad', {

@@ -4,6 +4,7 @@ import Tether from 'tether'
 import Meta from 'vue-meta'
 import Router from 'vue-router'
 import VModal from 'vue-js-modal'
+import VueClipboards from 'vue-clipboards'
 
 import './components'
 import './util/interceptors'
@@ -13,6 +14,7 @@ Vue.config.productionTip = false
 Vue.use(Meta)
 Vue.use(Router)
 Vue.use(VModal)
+Vue.use(VueClipboards)
 
 window.jQuery = $
 window.Tether = Tether
