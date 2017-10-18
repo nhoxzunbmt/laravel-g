@@ -74,12 +74,10 @@ class TeamController extends Controller
         }
         
         $input['capt_id'] = $request->user()->id;
-        $result = Team::create($input);
-        
         //Check schedule
-        $arSchedules = $request->user()->schedule();
+        $arSchedules = $request->user()->schedule;
         usort($arSchedules, 'sortSchedule');
-        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
+        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $arGame['cross_block']);
         $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         if(count($blockSchedules)==0)
         {
@@ -89,6 +87,8 @@ class TeamController extends Controller
         }        
         
         $input['schedule'] = $blockSchedules;
+        
+        $result = Team::create($input);
         
         /**
          * Add player to team
@@ -365,7 +365,8 @@ class TeamController extends Controller
                 if(count($blockSchedules)==0)
                 {
                     return response()->json([
-                        "error" => "You don't have 3-hours blocks crossing with team schedule. Edit you schedule before connect to the team."
+                        "error" => "You don't have 3-hours blocks crossing with team schedule. Edit you schedule before connect to the team.",
+                        "schedule" => $blockSchedules
                     ], 422);
                 }
                 
@@ -384,7 +385,7 @@ class TeamController extends Controller
                 "status" => TeamUser::PENDING
             ]);
             
-            if($request->user()->id==$team->capt_id)
+            if($request->user()->id==$team->capt_id && $user->email)
             {
                 $content = [
             		'url' => url(config('app.url')."/teams/".$team->slug),
@@ -395,15 +396,18 @@ class TeamController extends Controller
             	Mail::to($user->email)->send(new InvitationToTeam($content));
             }else{
                 
-                $captain = $team->captain()->get();
-                
-                $content = [
-            		'url' => url(config('app.url')."/players/".$user->id),
-                    'title' => $user->name.' wants to be a part of team '.$team->title,
-            		'button' => 'Watch the player'
-          		];
-        
-            	Mail::to($captain->email)->send(new InvitationToTeam($content));
+                $captain = $team->captain()->first();
+
+                if($captain->email)
+                {
+                    $content = [
+                		'url' => url(config('app.url')."/players/".$user->id),
+                        'title' => $user->name.' wants to be a part of team '.$team->title,
+                		'button' => 'Watch the player'
+              		];
+            
+                	Mail::to($captain->email)->send(new InvitationToTeam($content));
+                }
             }
         }
         
@@ -506,21 +510,40 @@ class TeamController extends Controller
         $team = Team::findOrFail($teamId);
         $users = $team->users();
         $player = User::findOrFail($userId);
+        $game = $team->game()->first();
         
         $arSchedules = ScheduleHelper::getCrossingSchedule($users->get(), $player);
-        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
+        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $game->cross_block);
         $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         
         return $blockSchedules;
+    }
+    
+    /**
+     * Update all teams schedule on two closest weeeks
+     */
+    public static function updateTeamsSchedule()
+    {
+        foreach(Team::where("status", 1)->select(['id', 'schedule'])->get() as $team)
+        {
+            //$game = $team->game()->first();
+            //$blockSchedules = ScheduleHelper::getCrossingBlocks($team->schedule, $game->cross_block);
+            $blockSchedules = ScheduleHelper::modifyForTwoWeeks($team->schedule);
+            
+            $team->update([
+                'schedule' => $blockSchedules
+            ]);
+        }
     }
     
     public static function updateSchedule($id)
     {
         $team = Team::findOrFail($id);
         $users = $team->users();
-
+        $game = $team->game()->first();
+        
         $arSchedules = ScheduleHelper::getCrossingSchedule($users->get());
-        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules);
+        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $game->cross_block);
         $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
         
         //send notify captain none crossing schedule
@@ -570,8 +593,47 @@ class TeamController extends Controller
         
         $teams = Team::whereIn('category', $cats)
             ->where('balance', '>=', $from)->where('balance', '<=', $to)
-            ->where("game_id", $game_id)->get();
+            ->where("game_id", $game_id);//->get();
+        
+        //Get dates ranged by week from now
+        $dates = ScheduleHelper::convertObjectToArray($schedule);
+        $dateNow = Carbon::now();
+        $dateNowAddedWeek = Carbon::now()->addDays(7);
+        if(count($dates)>0)
+        {
+            foreach($dates as &$date)
+            {
+                if(strtotime($date)>strtotime($dateNow) && strtotime($date)<strtotime($dateNowAddedWeek))
+                {
+                    unset($date);
+                }
+            }
+        }
+           
+        if(count($dates)>0)
+        {
+            $teams = $teams->where(function ($query) use ($dates) 
+            {
+                $firstDate = array_shift($dates);
+        
+                $query->whereRaw(
+                    'JSON_CONTAINS(schedule, \'["' . $firstDate . '"]\')'
+                );
+        
+                foreach ($dates as $data) {
+                    $query->orWhereRaw(
+                        'JSON_CONTAINS(schedule, \'["' . $data . '"]\')'
+                    );
+                }
+        
+                return $query;
+            })->get();
             
+        }else{
+            return response()->json(null, 200);
+        }
+        
+        
         //TODO: search by json field. Update mysql to 5.7+
     }
 }

@@ -10,6 +10,8 @@
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
                                 
+                                    <calendar-shedule :schedule="events" ></calendar-shedule>
+                                
                                     <full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>
                                     
                                     <div class="form-actions mt-10">
@@ -105,7 +107,7 @@ export default {
                 this.events  = [];
             }
             
-            console.log(event.start.format());
+            //console.log(event.start.format());
             
             this.events.push({
                 start: event.start.format(),

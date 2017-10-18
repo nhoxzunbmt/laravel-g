@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Acme\Helpers\ScheduleHelper;
 
 class Team extends Model
 {
@@ -20,6 +21,32 @@ class Team extends Model
     
     const PENDING = 0;
     const ACCEPTED = 1;
+    
+    /**
+     * Schedule mutators SET
+     */
+    public function setScheduleAttribute($array)
+    {
+        $dates = ScheduleHelper::convertObjectToArray($array);
+        
+        if(count($dates)>0)
+        {
+            $dates = json_encode($dates);
+        }else{
+            $dates = null;
+        }
+        
+        $this->attributes['schedule'] = $dates;
+    }
+    
+    /**
+     * Schedule mutators GET
+     */
+    public function getScheduleAttribute($json)
+    {
+        $object = json_decode($json, true);
+        return ScheduleHelper::convertArrayToObject($object, null);
+    }
     
     /**
      * Пользователи, которые принадлежат данной команде.

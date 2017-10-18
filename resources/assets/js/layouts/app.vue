@@ -196,7 +196,7 @@ export default {
         });
         
         //First on site
-        let confirm_cookie = localStorage.getItem('confirm_cookie')
+        /*let confirm_cookie = localStorage.getItem('confirm_cookie')
         if (confirm_cookie === null) 
         {
             swal({
@@ -210,7 +210,7 @@ export default {
             }).then(function () {
                 localStorage.setItem('confirm_cookie', true)
             })
-        }
+        }*/
         
         /*Event.listen('changeAvatar', (avatar) => {
             console.log('App (avatar changed listener) - '+avatar);

@@ -9,6 +9,46 @@ use Carbon\Carbon;
 
 class ScheduleHelper{
     
+    /**
+     * ['start1', 'start2'] => [['start1', 'end1'], ['start2', 'end2']]
+     */
+    public static function convertArrayToObject($array, $null = null)
+    {
+        if(count($array)>0)
+        {
+            $events = [];
+            foreach($array as $start)
+            {
+                $end = str_replace(" ", "T", Carbon::parse($start)->addHour());
+                $events[] = [
+                    'start' => $start,
+                    'end' => $end
+                ];
+            }
+        }else{
+            $events = $null;
+        }
+        
+        return $events;
+    }
+    
+    /**
+     * [['start1', 'end1'], ['start2', 'end2']] => ['start1', 'start2'] 
+     */
+    public static function convertObjectToArray($schedule)
+    {
+        $dates = [];
+        if(count($schedule)>0)
+        {
+            foreach($schedule as $event)
+            {
+                $dates[] = $event['start'];
+            }
+        }
+        
+        return $dates;
+    }
+    
     public static function modifyForTwoWeeks($schedule)
     {
         usort($schedule, 'sortSchedule');
@@ -44,9 +84,7 @@ class ScheduleHelper{
         }
         
         usort($scheduleOnTwoWeeks, 'sortSchedule');
-        
-        //dd($scheduleOnTwoWeeks);
-        
+
         return $scheduleOnTwoWeeks;
     }
     
@@ -63,14 +101,17 @@ class ScheduleHelper{
             {
                 $arCrossingSchedules = $object->schedule;
             }else{
-                $arCrossingSchedules = array_uintersect($arCrossingSchedules, $object->schedule, "diffSchedules");
+                $arCrossingSchedules = getCrossingSchedule($arCrossingSchedules, $object->schedule);
+                //$arCrossingSchedules = array_uintersect($arCrossingSchedules, $object->schedule, "diffSchedules");
             }
         }
         
         if($obj)
         {
-            $arCrossingSchedules = array_uintersect($arCrossingSchedules, $obj->schedule, "diffSchedules");
+            $arCrossingSchedules = getCrossingSchedule($arCrossingSchedules, $obj->schedule);
         }
+        
+        //print_r($arCrossingSchedules); die();
         
         usort($arCrossingSchedules, 'sortSchedule');
         
@@ -78,9 +119,9 @@ class ScheduleHelper{
     }
     
     /**
-     * Get 3 hours crossing blocks of schedules during 7 days
+     * Get $blockHours crossing blocks of schedules during 7 days
      */
-    public static function getCrossingBlocks($arSchedules)
+    public static function getCrossingBlocks($arSchedules, $blockHours = 3)
     {
         //Get 7 days range
         //$startDatetime = Carbon::now()->timestamp;
@@ -98,7 +139,6 @@ class ScheduleHelper{
         }
         
         //Calculate blocks schedules
-        $blockHours = 3;
         $countInBlock = 0;
         $arBlock = [];
         $blockSchedules = [];
