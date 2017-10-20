@@ -40,9 +40,9 @@
 					</thead>
 					<tbody>
                         <tr v-for="(day, dayNumber) in daysOfWeek">
-                            <th>{{day}}</th>
-                            <td v-for="i in hours" :data-date="dayNumber+','+i+':00:00'" class="text-center" :title="day+' '+i+':00:00'" @click="selectSchedule(dayNumber+','+i)"  v-bind:class="{ 'active-event': checkIn(blockHours, dayNumber+','+i)}">
-                                <i v-if="checkIn(schedule, dayNumber+','+i)" class="fa fa-check text-success"></i>
+                            <th draggable="false" class="noselect">{{day}}</th>
+                            <td v-for="i in hours" :data-date="dayNumber+','+i+':00:00'" class="text-center" :title="day+' '+i+':00:00'" @click="selectSchedule(dayNumber+','+i)" @mousedown="mouseDown(dayNumber+','+i)" @mouseover="mouseOver(dayNumber+','+i)" @mouseup="mouseUp(dayNumber+','+i)"  v-bind:class="{ 'active-event': checkIn(blockHours, dayNumber+','+i), 'lighted-event': checkIn(lighted, dayNumber+','+i)}" draggable="false">
+                                <i v-if="checkIn(schedule, dayNumber+','+i)" class="fa fa-check text-success" draggable="false"></i>
                             </td>
                         </tr>
 					</tbody>
@@ -196,7 +196,12 @@
                     4: 'Thu',
                     5: 'Fri',
                     6: 'Sat'
-                }/*
+                },
+                isMouseDown: false,
+                startMouseDownValue:false,
+                selected:[],
+                lighted:[]
+                /*
                 schedule: ['0,03', '2,08'],
                 blockSize: 3*/
             }
@@ -204,6 +209,8 @@
         methods:{
             selectSchedule(value)
             {
+                return false;
+                
                 if(this.editable=='false')
                     return false;
                 
@@ -221,6 +228,222 @@
             checkIn: function (values, value) 
             {
                 return values.indexOf(value) > -1 ? true : false;
+            },
+            mouseDown(value)
+            {
+                if(this.editable=='false')
+                    return false;
+                    
+                this.startMouseDownValue = value;
+                this.isMouseDown = true;
+                this.lightTo(value);
+            },
+            mouseOver(value)
+            {
+                if(this.editable=='false')
+                    return false;
+                    
+                if (!this.isMouseDown) return;
+                this.lightTo(value);
+            },
+            mouseUp(value)
+            {
+                if(this.editable=='false')
+                    return false;
+                    
+                this.isMouseDown = false;
+                this.selectTo(value);
+            },
+            lightTo(value)
+            {
+                var startEvent = this.startMouseDownValue.split(',');
+                var lastEvent = value.split(',');
+                var selected = [];
+
+                startEvent = {
+                    'd' : parseInt(startEvent[0]),
+                    'h' : parseInt(startEvent[1])
+                };
+                
+                lastEvent = {
+                    'd' : parseInt(lastEvent[0]),
+                    'h' : parseInt(lastEvent[1])
+                };
+                
+                if(startEvent['d']<lastEvent['d'] || startEvent['d']==lastEvent['d'] && startEvent['h']<lastEvent['h'])
+                {
+                    var started = false;
+                    var finished = false;
+                    for(var days = startEvent['d']; days<=lastEvent['d']; days++)
+                    {    
+                        for(var h=0; h<=23; h++)
+                        {
+                            if(startEvent['d']==days && startEvent['h']==h && !started)
+                            {
+                                started = true;
+                                selected.push(startEvent);
+                            }
+                            
+                            if(started)
+                            {
+                                selected.push({
+                                    'd' : days,
+                                    'h' : h
+                                });
+                                
+                                if(lastEvent['d']==days && lastEvent['h']==h)
+                                {
+                                    finished = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                }else{
+                    var started = false;
+                    var finished = false;
+                    for(var days = lastEvent['d']; days<=startEvent['d']; days++)
+                    {    
+                        for(var h=0; h<=23; h++)
+                        {
+                            if(lastEvent['d']==days && lastEvent['h']==h && !started)
+                            {
+                                started = true;
+                                selected.push(lastEvent);
+                            }
+                            
+                            if(started)
+                            {
+                                selected.push({
+                                    'd' : days,
+                                    'h' : h
+                                });
+                                
+                                if(startEvent['d']==days && startEvent['h']==h)
+                                {
+                                    finished = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                selected = selected.map(function(event) 
+                {
+                    var hour = event.h;
+                    if(parseInt(hour)<10)
+                        hour = '0'+hour;
+                    
+                    return event.d+","+hour;
+                });
+                
+                this.lighted = selected;
+            },
+            selectTo(value)
+            {
+                var startEvent = this.startMouseDownValue.split(',');
+                var lastEvent = value.split(',');
+                var selected = [];
+                
+                startEvent = {
+                    'd' : parseInt(startEvent[0]),
+                    'h' : parseInt(startEvent[1])
+                };
+                
+                lastEvent = {
+                    'd' : parseInt(lastEvent[0]),
+                    'h' : parseInt(lastEvent[1])
+                };
+                
+                if(startEvent['d']<lastEvent['d'] || startEvent['d']==lastEvent['d'] && startEvent['h']<lastEvent['h'])
+                {
+                    var started = false;
+                    var finished = false;
+                    for(var days = startEvent['d']; days<=lastEvent['d']; days++)
+                    {    
+                        for(var h=0; h<=23; h++)
+                        {
+                            if(startEvent['d']==days && startEvent['h']==h && !started)
+                            {
+                                started = true;
+                                selected.push(startEvent);
+                            }
+                            
+                            if(started)
+                            {
+                                selected.push({
+                                    'd' : days,
+                                    'h' : h
+                                });
+                                
+                                if(lastEvent['d']==days && lastEvent['h']==h)
+                                {
+                                    finished = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    
+                }else{
+                    var started = false;
+                    var finished = false;
+                    for(var days = lastEvent['d']; days<=startEvent['d']; days++)
+                    {    
+                        for(var h=0; h<=23; h++)
+                        {
+                            if(lastEvent['d']==days && lastEvent['h']==h && !started)
+                            {
+                                started = true;
+                                selected.push(lastEvent);
+                            }
+                            
+                            if(started)
+                            {
+                                selected.push({
+                                    'd' : days,
+                                    'h' : h
+                                });
+                                
+                                if(startEvent['d']==days && startEvent['h']==h)
+                                {
+                                    finished = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                selected = selected.map(function(event) 
+                {
+                    var hour = event.h;
+                    if(parseInt(hour)<10)
+                        hour = '0'+hour;
+                    
+                    return event.d+","+hour;
+                });
+                
+                selected = Array.from(new Set(selected));
+                  
+                
+                var schedule = this.schedule;
+                selected.forEach(function(value)
+                {
+                    var ind = schedule.indexOf(value);
+                
+                    if(ind>-1)
+                    {
+                        schedule.splice(ind, 1);
+                    }else{
+                        schedule.push(value);
+                    }
+                })
+                  
+                this.schedule = schedule;
+                this.lighted = [];
             }
         }
     }
@@ -245,5 +468,17 @@
     }
     .schedule-list tbody tr td.active-event i{
         color: #fff !important;
+    }
+    .schedule-list tbody tr td.lighted-event{
+        background-color: rgba(230, 154, 42, 0.5) !important;
+    }
+    .noselect {
+      -webkit-touch-callout: none; /* iOS Safari */
+        -webkit-user-select: none; /* Safari */
+         -khtml-user-select: none; /* Konqueror HTML */
+           -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+                user-select: none; /* Non-prefixed version, currently
+                                      supported by Chrome and Opera */
     }
 </style>

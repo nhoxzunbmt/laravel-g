@@ -17,6 +17,10 @@
                                     <div class="form-actions mt-10">
                                         <button type="submit" class="btn btn-primary mr-10" @click="save">
                                             <span>Save</span>
+                                        </button>
+                                        
+                                        <button type="submit" class="btn btn-primary mr-10" @click="clear">
+                                            <span>Clear all</span>
                                         </button>			
     								</div>
                                     
@@ -89,7 +93,12 @@ export default {
                 this.error = true
                 this.success = false;                
             });
-        }/*,
+        },
+        clear(event){
+            event.preventDefault();
+            this.events = [];
+        }
+        /*,
         eventSelected(event, jsEvent, view)
         {
             var event = event;
