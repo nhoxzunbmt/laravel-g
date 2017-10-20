@@ -140,7 +140,7 @@ export default {
     },
     ready() {
         Event.listen('playerDetailLoad', event => {
-            this.player = event.team;
+            this.player = event.player;
         });
     },
     data() {

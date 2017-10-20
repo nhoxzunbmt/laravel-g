@@ -9,44 +9,47 @@ use Carbon\Carbon;
 
 class ScheduleHelper{
     
+    
     /**
-     * ['start1', 'start2'] => [['start1', 'end1'], ['start2', 'end2']]
+     * [ ['1,03'], ['2, 12'], ..] -> [ ['d'=>1, 'h'=>3], ['d'=>2, 'h'=>12], ..]
      */
-    public static function convertArrayToObject($array, $null = null)
+    public static function transformDateStringsToArrays($arSchedules, $sort = true)
     {
-        if(count($array)>0)
+        $arDates = [];
+        foreach($arSchedules as $value)
         {
-            $events = [];
-            foreach($array as $start)
-            {
-                $end = str_replace(" ", "T", Carbon::parse($start)->addHour());
-                $events[] = [
-                    'start' => $start,
-                    'end' => $end
-                ];
-            }
-        }else{
-            $events = $null;
+            $arr = explode(",", $value);
+            $arDates[] = [
+                'd' => intval($arr[0]),
+                'h' => intval($arr[1])
+            ];
         }
         
-        return $events;
+        if($sort)
+            usort($arDates, 'sortPseudoArrayDates');
+        
+        return $arDates;
     }
     
     /**
-     * [['start1', 'end1'], ['start2', 'end2']] => ['start1', 'start2'] 
+     * [ ['d'=>1, 'h'=>3], ['d'=>2, 'h'=>12], ..] -> [ ['1,03'], ['2, 12'], ..]
      */
-    public static function convertObjectToArray($schedule)
+    public static function transformDateArraysToStrings($blockSchedules, $sort = true)
     {
-        $dates = [];
-        if(count($schedule)>0)
+        $result = [];
+        
+        if($sort)
+            usort($blockSchedules, 'sortPseudoArrayDates');
+        
+        foreach($blockSchedules as $blockSchedule)
         {
-            foreach($schedule as $event)
-            {
-                $dates[] = $event['start'];
-            }
+            if(intval($blockSchedule['h'])<10)
+                $blockSchedule['h'] = '0'.$blockSchedule['h'];
+            
+            $result[] = $blockSchedule['d'].",".$blockSchedule['h'];      
         }
         
-        return $dates;
+        return $result;
     }
     
     public static function modifyForTwoWeeks($schedule)
@@ -101,93 +104,87 @@ class ScheduleHelper{
             {
                 $arCrossingSchedules = $object->schedule;
             }else{
-                $arCrossingSchedules = getCrossingSchedule($arCrossingSchedules, $object->schedule);
-                //$arCrossingSchedules = array_uintersect($arCrossingSchedules, $object->schedule, "diffSchedules");
+                if($object->schedule)
+                    $arCrossingSchedules = array_intersect($arCrossingSchedules, $object->schedule);
+                else
+                    return [];
             }
         }
         
         if($obj)
         {
-            $arCrossingSchedules = getCrossingSchedule($arCrossingSchedules, $obj->schedule);
+            $arCrossingSchedules = array_intersect($arCrossingSchedules, $obj->schedule);
         }
-        
-        //print_r($arCrossingSchedules); die();
-        
-        usort($arCrossingSchedules, 'sortSchedule');
         
         return $arCrossingSchedules;
     }
     
     /**
-     * Get $blockHours crossing blocks of schedules during 7 days
+     * Get $blockSize crossing blocks of schedules during 7 days
      */
-    public static function getCrossingBlocks($arSchedules, $blockHours = 3)
+    public static function getCrossingBlocks($arSchedules, $blockSize = 3)
     {
-        //Get 7 days range
-        //$startDatetime = Carbon::now()->timestamp;
-        //$endDatetime = Carbon::now()->addWeek()->timestamp;
-        //$startDatetime = Carbon::parse('this sunday');
-        //$endDatetime = Carbon::parse('this sunday')->addDays(7);
+        $arDates = self::transformDateStringsToArrays($arSchedules);
         
-        $startDatetime = Carbon::now()->startOfWeek()->addDays(-1);
-        $endDatetime = Carbon::now()->startOfWeek()->addDays(6);
-        
-        if(Carbon::today()->dayOfWeek==0)
+        $startHours = range(0, $blockSize-1);
+        foreach($arDates as $event)
         {
-            $startDatetime = Carbon::today();
-            $endDatetime = Carbon::today()->addDays(7);
+            if($event['d']==0 && in_array($event['h'], $startHours))
+            {
+                $arDates[] = $event;
+            }
         }
-        
-        //Calculate blocks schedules
+
         $countInBlock = 0;
         $arBlock = [];
         $blockSchedules = [];
         $lastSchedule = false;
-        foreach($arSchedules as $arSchedule)
-        {
-            if(strtotime($arSchedule['start'])>=strtotime($startDatetime) && strtotime($arSchedule['end'])<=strtotime($endDatetime))
+        
+        foreach($arDates as $arSchedule)
+        {            
+            if(!$lastSchedule)
             {
-                if(!$lastSchedule)
+                $lastSchedule = $arSchedule;
+                $arBlock[] = $lastSchedule; 
+                $countInBlock++;
+            }else{
+                
+                if( (($arSchedule['d']-$lastSchedule['d']==1 || $arSchedule['d']==0 && $lastSchedule['d']==6) && $lastSchedule['h']==23 && $arSchedule['h']==0)
+                 || ($arSchedule['d']==$lastSchedule['d'] && ($arSchedule['h']-$lastSchedule['h']==1)) )
                 {
+                    
                     $lastSchedule = $arSchedule;
-                    $arBlock[] = $lastSchedule; 
+                    $arBlock[] = $lastSchedule;
                     $countInBlock++;
                 }else{
                     
-                    if($lastSchedule['end']==$arSchedule['start'])
+                    $countCrosses = $countInBlock-$blockSize+1;
+                    if($countCrosses>0)
                     {
-                        $lastSchedule = $arSchedule;
-                        $arBlock[] = $lastSchedule;
-                        $countInBlock++;
-                    }else{
-                        
-                        $countCrosses = $countInBlock-$blockHours+1; //or count($arBlock)-$blockHours;
-                        if($countCrosses>0)
-                        {
-                            //Get from crossing block first hours
-                            $hourCrossingBlocks = array_slice($arBlock, 0, $countCrosses);
-                            $blockSchedules = array_merge($blockSchedules, $hourCrossingBlocks);
-                        }
-                        
-                        $countInBlock = 1;
-                        $lastSchedule = $arSchedule;
-                        $arBlock = [];
-                        $arBlock[] = $lastSchedule;
+                        $hourCrossingBlocks = array_slice($arBlock, 0, $countCrosses);
+                        $blockSchedules = array_merge($blockSchedules, $hourCrossingBlocks);
                     }
+                    
+                    $countInBlock = 1;
+                    $lastSchedule = $arSchedule;
+                    $arBlock = [];
+                    $arBlock[] = $lastSchedule;
                 }
             }
         }
         
-        $countCrosses = $countInBlock-$blockHours+1; //or count($arBlock)-$blockHours;
+        $countCrosses = $countInBlock-$blockSize+1;
         if($countCrosses>0)
         {
-            //Get from crossing block first hours
             $hourCrossingBlocks = array_slice($arBlock, 0, $countCrosses);
             $blockSchedules = array_merge($blockSchedules, $hourCrossingBlocks);
         }
         
-        //dd($blockSchedules);
+        $result = self::transformDateArraysToStrings($blockSchedules);
+        $result = array_unique($result);
         
-        return $blockSchedules;
+        //print_r($result); die();
+        
+        return $result;
     }
 }

@@ -43,7 +43,8 @@ export default [
         { path: '',  name: 'player', redirect: { name: 'player.detail' }},
         { path: 'info', name: 'player.detail', component: require('./pages/players/detail/_info.vue') },
         { path: 'teams', name: 'player.detail.teams', component: require('./pages/players/detail/_teams.vue') },
-        { path: 'fights', name: 'player.detail.fights', component: require('./pages/players/detail/_fights.vue') }
+        { path: 'fights', name: 'player.detail.fights', component: require('./pages/players/detail/_fights.vue') },
+        { path: 'schedule', name: 'player.detail.schedule', component: require('./pages/players/detail/_schedule.vue') }        
     ]},
 
     {

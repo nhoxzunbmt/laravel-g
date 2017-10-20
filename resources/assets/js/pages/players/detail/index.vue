@@ -81,6 +81,10 @@ export default {
                     name: 'Fights',
                     route: 'player.detail.fights'
                 },
+                {
+                    name: 'Schedule',
+                    route: 'player.detail.schedule'
+                },
             ]
         }
     },
@@ -91,7 +95,8 @@ export default {
         getItem()
         {
             var query = this.ArrayToUrl({
-                "type" : 'player'
+                "type" : 'player',
+                "_with" : 'game'
             });
             
             axios.get('/api/users/'+this.$route.params.id+"?"+query).then((response) => {

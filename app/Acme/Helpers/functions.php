@@ -21,11 +21,29 @@ function sortSchedule($a, $b)
     return strtotime($a['start'])-strtotime($b['start']);
 }
 
+function sortPseudoArrayDates($a, $b)
+{
+    if ($a['d'] < $b['d'])
+    {
+        return -1;
+    }else if ($a['d'] > $b['d']){
+        return 1;
+    }else{
+        if($a['h'] < $b['h'])
+        {
+            return -1;
+        }else{
+            return 1;
+        }
+    }
+        
+    return 0;
+}
+
 function diffSchedules($v1, $v2)
 {
     if ($v1['start']==$v2['start'] && $v1['end']==$v2['end'])
     {
-        echo $v1['start'];
         return 1;
     }
 

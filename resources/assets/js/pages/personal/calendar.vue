@@ -10,9 +10,9 @@
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
                                 
-                                    <calendar-shedule :schedule="events" ></calendar-shedule>
+                                    <calendar-shedule :schedule="events" blockSize="3" editable="true"></calendar-shedule>
                                 
-                                    <full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>
+                                    <!--<full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>-->
                                     
                                     <div class="form-actions mt-10">
                                         <button type="submit" class="btn btn-primary mr-10" @click="save">
@@ -53,7 +53,7 @@ export default {
             success: false,
             error: false,
             response: null,
-            events:[],
+            events:[]/*,
             calConfig:{
                 slotDuration:'00:60:00',
                 slotLabelInterval:'00:60:00',
@@ -66,7 +66,7 @@ export default {
                 left:   '',
                 center: '',// 'title',
                 right:  ''//'today prev,next'
-            }
+            }*/
         }
     },
     mounted() 
@@ -76,6 +76,8 @@ export default {
     methods: {
         save(event) {
             event.preventDefault()
+            //console.log(this.events);
+            
             this.user.schedule = this.events;
             
             axios.post('/api/users', this.user).then(response => {
@@ -87,7 +89,7 @@ export default {
                 this.error = true
                 this.success = false;                
             });
-        },
+        }/*,
         eventSelected(event, jsEvent, view)
         {
             var event = event;
@@ -113,11 +115,11 @@ export default {
                 start: event.start.format(),
                 end: event.end.format()
             });
-        }
+        }*/
     },
 }
 </script>
-
+<!--
 <style>
     @import '~fullcalendar/dist/fullcalendar.css';
     .fc-time-grid .fc-slats td{
@@ -152,4 +154,4 @@ export default {
     .fc-toolbar.fc-header-toolbar{
         display: none;
     }
-</style>
+</style>-->

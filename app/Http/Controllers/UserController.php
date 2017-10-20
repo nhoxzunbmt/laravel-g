@@ -112,9 +112,11 @@ class UserController extends Controller
             $input['streams'] = $streams;
         }
         
+        //need for sort schedule
         if(!empty($input['schedule']) && $input['schedule']!=null)
         {
-            $input['schedule'] = ScheduleHelper::modifyForTwoWeeks($input['schedule']);
+            $input['schedule'] = ScheduleHelper::transformDateStringsToArrays($input['schedule']);
+            $input['schedule'] = ScheduleHelper::transformDateArraysToStrings($input['schedule']);
         }
         
         if(!$user->confirmed && $user->email!=$input['email'])

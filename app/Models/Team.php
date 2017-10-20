@@ -25,7 +25,7 @@ class Team extends Model
     /**
      * Schedule mutators SET
      */
-    public function setScheduleAttribute($array)
+    /*public function setScheduleAttribute($array)
     {
         $dates = ScheduleHelper::convertObjectToArray($array);
         
@@ -37,16 +37,16 @@ class Team extends Model
         }
         
         $this->attributes['schedule'] = $dates;
-    }
+    }*/
     
     /**
      * Schedule mutators GET
      */
-    public function getScheduleAttribute($json)
+    /*public function getScheduleAttribute($json)
     {
         $object = json_decode($json, true);
         return ScheduleHelper::convertArrayToObject($object, null);
-    }
+    }*/
     
     /**
      * Пользователи, которые принадлежат данной команде.

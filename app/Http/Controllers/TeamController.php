@@ -514,8 +514,6 @@ class TeamController extends Controller
         
         $arSchedules = ScheduleHelper::getCrossingSchedule($users->get(), $player);
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $game->cross_block);
-        $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
-        
         return $blockSchedules;
     }
     
@@ -544,8 +542,7 @@ class TeamController extends Controller
         
         $arSchedules = ScheduleHelper::getCrossingSchedule($users->get());
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $game->cross_block);
-        $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
-        
+
         //send notify captain none crossing schedule
         if(count($blockSchedules)==0)
         {
@@ -593,10 +590,33 @@ class TeamController extends Controller
         
         $teams = Team::whereIn('category', $cats)
             ->where('balance', '>=', $from)->where('balance', '<=', $to)
-            ->where("game_id", $game_id);//->get();
+            ->where("game_id", $game_id);
+        
+        if(count($schedule)>0)
+        {
+            $teams = $teams->where(function ($query) use ($schedule) 
+            {
+                $firstDate = array_shift($schedule);
+        
+                $query->whereRaw(
+                    'JSON_CONTAINS(schedule, \'["' . $firstDate . '"]\')'
+                );
+        
+                foreach ($schedule as $date) {
+                    $query->orWhereRaw(
+                        'JSON_CONTAINS(schedule, \'["' . $date . '"]\')'
+                    );
+                }
+        
+                return $query;
+            })->get();
+            
+        }else{
+            return response()->json(null, 200);
+        }
         
         //Get dates ranged by week from now
-        $dates = ScheduleHelper::convertObjectToArray($schedule);
+        /*$dates = ScheduleHelper::convertObjectToArray($schedule);
         $dateNow = Carbon::now();
         $dateNowAddedWeek = Carbon::now()->addDays(7);
         if(count($dates)>0)
@@ -631,7 +651,7 @@ class TeamController extends Controller
             
         }else{
             return response()->json(null, 200);
-        }
+        }*/
         
         
         //TODO: search by json field. Update mysql to 5.7+
