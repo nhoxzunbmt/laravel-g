@@ -7,81 +7,24 @@
         	</div>
         </div>
         
-        <div class="row" v-if="fights!==null">
+        <div class="row" v-if="user!==null">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     			<div class="panel panel-default card-view">
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
-        
-                            <div class="table-wrap">
-                                <div class="table-responsive">
-                                    <table class="table table-hover table-bordered mb-0">
-                                        <thead>
-                                            <tr>
-                                                <th>Start at</th>
-                                                <th>Title</th>
-                                                <th>Game</th>
-                                                <th>Quantity</th>
-                                                <th>Winner</th>
-                                                <th>Canceled</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-    								    <tbody>
-                                            <tr v-for="fight in fights">
-                                                <td>
-                                                    {{fight.start_at}}
-                                                </td>
-                                                <td>
-                                                    <router-link  :to="{ name: 'fight', params: { id: fight.id }}">
-                                                        {{ fight.title}}
-                                                    </router-link>
-                                                </td>
-                                                <td class="text-center" v-if="fight.game!==null">{{ fight.game.title}}</td>
-                                                <td class="text-center" v-else></td>
-                                                <td class="text-center">{{fight.teams.length}}/{{fight.count_parts}}</td>
-                                                <td class="text-center">{{fight.winner}}</td>
-                                                <td class="text-center" v-if="fight.canceled==1">{{fight.cancel_text | truncate(40, '...') }}</td>
-                                                <td class="text-center" v-else></td>
-                                                <td class="text-center">
-                                                    <span v-if="fight.active==0">not active</span>
-                                                    <span v-if="fight.active==1">active</span>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <h4 class="mb-10">Calendar</h4>
+                            <div class="row">
+                            	
+            					<div class="col-md-12 col-sm-12 col-xs-12">
+                                
+                                    <calendar-fights :schedule="events"></calendar-fights>
+ 
                                 </div>
                             </div>
-
                         </div>
     				</div>	
     			</div>	
     		</div>
-        </div>
-        
-        <div class="row">
-            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                <nav>
-        	        <ul class="pagination">
-        	            <li v-if="pagination.current_page > 1">
-                            <router-link :to="getLink(pagination.current_page - 1)" aria-label="Previous">
-                                <span aria-hidden="true">«</span>
-                            </router-link>                            
-        	            </li>
-        	            <li v-for="page in pagesNumber" v-if="pagination.last_page > 1"
-        	                v-bind:class="[ page == isActived ? 'active' : '']">
-                            <router-link :to="getLink(page)">
-                                {{ page }}
-                            </router-link>
-        	            </li>
-        	            <li v-if="pagination.current_page < pagination.last_page">
-                            <router-link :to="getLink(pagination.current_page + 1)" aria-label="Next">
-                                <span aria-hidden="true">»</span>
-                            </router-link>
-        	            </li>
-        	        </ul>
-        	    </nav>
-            </div>
         </div>
     </div>    
 </template>
@@ -99,75 +42,25 @@
             ...mapGetters({
                 user: 'authUser',
                 authenticated: 'authCheck',
-            }),
-            isActived: function () {
-                return this.pagination.current_page;
-            },
-            pagesNumber: function () {
-                if (!this.pagination.to) {
-                    return [];
-                }
-                var from = this.pagination.current_page - this.offset;
-                if (from < 1) {
-                    from = 1;
-                }
-                var to = from + (this.offset * 2);
-                if (to >= this.pagination.last_page) {
-                    to = this.pagination.last_page;
-                }
-                var pagesArray = [];
-                while (from <= to) {
-                    pagesArray.push(from);
-                    from++;
-                }
-                return pagesArray;
-            }
+            })
         },
         mounted() {
-            this.getVueItems();
+            if(this.user.team_id!=null)
+            {
+                this.getCalendarFights(this.user.team_id);
+            }
         },
         data : function() {
             return {
-                fights: [],
-                queryString: '',
-                pagination: {
-                    total: 0, 
-                    per_page: 2,
-                    from: 1, 
-                    to: 0,
-                    current_page: 1,
-                    next_page_url: null,
-                    prev_page_url: null
-                },
-                offset: 12
+                events: []
             }
         },
         methods : {
-            getVueItems: function()
+            getCalendarFights: function(team_id)
             {
-                var query = this.UrlParamsMerge({
-                    'page' : 1,
-                    '_limit' : 12,
-                    "_sort" : '-start_at',
-                    '_with' : 'game,teams'
+                axios.get('/api/teams/'+team_id + '/fights/calendar').then((response) => {
+                    this.$set(this, 'events', response.data);
                 });
-                
-                axios.get('/api/fights?'+query).then((response) => {
-                    this.$set(this, 'fights', response.data.data);
-                    
-                    delete response.data.data;
-                    this.pagination = response.data;
-                });
-            },
-            getLink(page){
-                let link = location.search;
-                link = this.$route.path + this.updateUrlParameter(link, "page", page);
-                return link;
-            }
-        },
-        watch: {
-            '$route.query'(newPage, oldPage) {
-                this.getVueItems();
             }
         }
     }

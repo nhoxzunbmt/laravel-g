@@ -76,9 +76,13 @@ class TeamController extends Controller
         $input['capt_id'] = $request->user()->id;
         //Check schedule
         $arSchedules = $request->user()->schedule;
-        usort($arSchedules, 'sortSchedule');
+        /*usort($arSchedules, 'sortSchedule');
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $arGame['cross_block']);
         $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
+        
+        $arSchedules = ScheduleHelper::getCrossingSchedule($users->get());*/
+        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $arGame['cross_block']);
+
         if(count($blockSchedules)==0)
         {
             return response()->json([
@@ -560,14 +564,15 @@ class TeamController extends Controller
      * @param  int  $userId
      * @return \Illuminate\Http\Response
      */
-    public static function findTeamsAgainst()
+    public static function findTeamsAgainst($id)
     {
+        $data = [];
         $team = Team::findOrFail($id);
         
         $cats = [];
         $category = $team->category;
         $balance = ceil($team->balance);
-        $game_id = intval($tem->game_id);
+        $game_id = intval($team->game_id);
         $schedule = $team->schedule;
         
         $percent_range = 30;
@@ -589,12 +594,14 @@ class TeamController extends Controller
         }
         
         $teams = Team::whereIn('category', $cats)
+            ->where('id', '!=', $id)
+            //->where('status', 1)
             ->where('balance', '>=', $from)->where('balance', '<=', $to)
             ->where("game_id", $game_id);
         
         if(count($schedule)>0)
         {
-            $teams = $teams->where(function ($query) use ($schedule) 
+            /*$teams = $teams->where(function ($query) use ($schedule) 
             {
                 $firstDate = array_shift($schedule);
         
@@ -609,8 +616,27 @@ class TeamController extends Controller
                 }
         
                 return $query;
-            })->get();
+            })->get();*/
             
+            if($teams->count()>0)
+            {
+                /*$data = [];
+                foreach($teams->get() as $team)
+                {
+                    $arCrossingSchedules = array_intersect($schedule, $team->schedule);
+                    if(count($arCrossingSchedules)>0)
+                    {
+                        $data = ScheduleHelper::getCalendarFights($arCrossingSchedules, $data);
+                    }
+                }*/
+                $data = ScheduleHelper::getCalendarFights($teams->get(), $team);
+            }
+            
+            /*[
+                'datetime' => 'quantity'
+            ]*/
+            
+            return response()->json($data, 200);
         }else{
             return response()->json(null, 200);
         }

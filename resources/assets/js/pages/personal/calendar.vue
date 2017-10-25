@@ -10,7 +10,7 @@
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
                                 
-                                    <calendar-shedule :schedule="events" blockSize="3" editable="true"></calendar-shedule>
+                                    <calendar-shedule :schedule="events" :blockSize="blockSize" editable="true"></calendar-shedule>
                                 
                                     <!--<full-calendar ref="calendar" :events="events" :header="calHeader" :config="calConfig" :editable="false" @event-selected="eventSelected" @event-created="eventCreate"></full-calendar>-->
                                     
@@ -57,31 +57,23 @@ export default {
             success: false,
             error: false,
             response: null,
-            events:[]/*,
-            calConfig:{
-                slotDuration:'00:60:00',
-                slotLabelInterval:'00:60:00',
-                slotEventOverlap:false,
-                allDaySlot: false,
-                height: 600,
-                columnFormat: 'ddd'
-            },
-            calHeader:{
-                left:   '',
-                center: '',// 'title',
-                right:  ''//'today prev,next'
-            }*/
+            blockSize: 2,
+            game:null,
+            events:[]
         }
     },
     mounted() 
     {
-        this.events = this.user.schedule!==null ? this.user.schedule : [];       
+        this.events = this.user.schedule!==null ? this.user.schedule : [];
+        
+        if(this.user.game_id!=null)
+        {
+            this.getGame(this.user.game_id);
+        }       
     },
     methods: {
         save(event) {
             event.preventDefault()
-            //console.log(this.events);
-            
             this.user.schedule = this.events;
             
             axios.post('/api/users', this.user).then(response => {
@@ -97,70 +89,14 @@ export default {
         clear(event){
             event.preventDefault();
             this.events = [];
-        }
-        /*,
-        eventSelected(event, jsEvent, view)
-        {
-            var event = event;
-            var events = this.events;
-            this.events = events.filter(function(el) { 
-                return el.start != event.start.format() && el.end!=event.end.format(); 
-            });
-            
-            this.success = false;
         },
-        eventCreate(event)
+        getGame: function(id)
         {
-            this.success = false;
-            
-            if(this.events==null)
-            {
-                this.events  = [];
-            }
-            
-            //console.log(event.start.format());
-            
-            this.events.push({
-                start: event.start.format(),
-                end: event.end.format()
+            axios.get('/api/games/' + id).then((response) => {
+                var game = response.data;
+                this.blockSize = game.cross_block;
             });
-        }*/
+        }
     },
 }
 </script>
-<!--
-<style>
-    @import '~fullcalendar/dist/fullcalendar.css';
-    .fc-time-grid .fc-slats td{
-        height: 40px;
-    }
-    .fc th.fc-day-header{
-        height: 40px;
-        vertical-align: middle;
-    }
-    .fc-unthemed td.fc-today {
-        background: transparent;
-        border-left: 2px solid #469408;
-        border-right: 2px solid #469408; 
-    }
-    .fc button{
-        padding: 5px 10px;
-    }
-    .fc-event .fc-bg{
-        background: #177ec1;
-        opacity: 1;
-    }
-    .fc-time-grid-event .fc-time{
-        text-align: center;
-        vertical-align: middle;
-        line-height: 40px;
-        cursor: pointer;
-    }
-    .fc-toolbar h2{
-        font-size: 22px;
-        line-height: 34px;
-    }
-    .fc-toolbar.fc-header-toolbar{
-        display: none;
-    }
-</style>-->

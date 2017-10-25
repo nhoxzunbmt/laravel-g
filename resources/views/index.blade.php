@@ -8,10 +8,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     
-	<meta name="description" content="Doodle is a Dashboard & Admin Site Responsive Template by hencework." />
-	<meta name="keywords" content="admin, admin dashboard, admin template, cms, crm, Doodle Admin, Doodleadmin, premium admin templates, responsive admin, sass, panel, software, ui, visualization, web app, application" />
-	<meta name="author" content="hencework"/>
-	
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
 	<link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
@@ -19,7 +15,7 @@
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css" rel="stylesheet" >
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css" rel="stylesheet">
     
     <!-- Scripts -->
     <script>

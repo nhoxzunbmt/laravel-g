@@ -14,13 +14,15 @@ class ChangeScheduleTypeTable extends Migration
     public function up()
     {
         Schema::table('teams', function (Blueprint $table) {
-            //$table->dropColumn('schedule');
-            $table->json('schedule')->nullable();
+            $table->dropColumn('schedule');
+            $table->text('schedule')->nullable();
+            //$table->json('schedule')->nullable();
         });
         
         Schema::table('users', function (Blueprint $table) {
-            //$table->dropColumn('schedule');
-            $table->json('schedule')->nullable();
+            $table->dropColumn('schedule');
+            $table->text('schedule')->nullable();
+            //$table->json('schedule')->nullable();
         });
     }
 

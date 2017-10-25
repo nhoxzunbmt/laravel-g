@@ -46,7 +46,6 @@ class UserController extends Controller
      */
     public function me(Request $request)
     {
-        //$data = User::getApiUserData($request->user());
         $user = $request->user();
         if($user->avatar)
             $user->avatar = asset('storage/'.$user->avatar);

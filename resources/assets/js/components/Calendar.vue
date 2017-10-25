@@ -26,7 +26,7 @@
 				</div>
                 <div class="alert alert-success alert-dismissable" v-else>
 					<i class="zmdi zmdi-check pr-15 pull-left"></i>
-                    <p class="pull-left" v-if="editable!='false'">Great! You have {{blockHours.length}} blocks!</p>
+                    <p class="pull-left" v-if="editable!='false'">Great! You have {{blockHours.length}} '{{blockSize}}-hours' blocks!</p>
                     <p class="pull-left" v-else>Player has {{blockHours.length}} blocks!</p>
 					<div class="clearfix"></div>
 				</div>
@@ -34,8 +34,8 @@
                 <table class="table table-bordered mb-0 schedule-list" v-bind:class="{ 'table-event-editable': editable!='false'}">
 					<thead>
                         <tr>
-                            <th>D/H:00</th>
-                            <th v-for="i in hours">{{i}}</th>
+                            <th>D/H</th>
+                            <th v-for="i in engHours" v-html="i" class="text-center"></th>
                         </tr>
 					</thead>
 					<tbody>
@@ -92,6 +92,33 @@
                 });
                 
                 return ahours;
+            },
+            engHours: function()
+            {
+                var hours = this.hours;
+                
+                hours = hours.map(function(hour) 
+                {
+                    if(parseInt(hour)<12)
+                    {
+                        if(hour==0)
+                        {
+                            hour = 12;
+                        }
+                        hour = parseInt(hour)+"<br />am";
+                    }else{
+                        if(parseInt(hour)>12)
+                        {
+                            hour = parseInt(hour)-12;
+                        }
+                        
+                        hour = hour+"<br />pm";
+                    }
+                    
+                    return hour;
+                });
+                
+                return hours;
             },
             blockHours: function()
             {
@@ -454,10 +481,16 @@
         cursor: pointer;
         border: 2px solid #469408 !important;
     }
-
+    
+    .schedule-list thead tr th, .schedule-list tbody tr td, .schedule-list tbody tr th
+    {
+        padding: 10px;
+    }
+    
     .schedule-list thead tr th
     {
         border-bottom: 1px solid #fff !important;
+        text-transform: none;
     }
     .schedule-list tbody tr th, .schedule-list thead tr th:first-child{
         color: #fff;

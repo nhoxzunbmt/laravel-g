@@ -7,7 +7,7 @@ import axios from 'axios'
  */
 async function fetchUser () {
     try {
-        const { data } = await axios.get('/api/users/me')
+        const { data } = await axios.get('/api/users/me?_with=game')
         return data
     } catch (e) {}
 }

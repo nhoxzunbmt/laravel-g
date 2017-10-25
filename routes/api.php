@@ -243,6 +243,8 @@ Route::get('/teams', 'TeamController@index');//apiHandler
  */
 Route::get('/teams/{id}/invitations', 'TeamController@invitations');
 
+Route::get('/teams/{id}/fights/calendar', 'TeamController@findTeamsAgainst');
+
 
 /**
  * TeamUsers (Invitations)

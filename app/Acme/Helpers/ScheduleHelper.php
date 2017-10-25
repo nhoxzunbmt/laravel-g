@@ -52,6 +52,79 @@ class ScheduleHelper{
         return $result;
     }
     
+    public static function getCalendarFights($teams, $currentTeam)
+    {
+        $start = Carbon::today();
+        
+        $daysOfWeekDates = []; 
+        for($i = 1; $i<=7; $i++)
+        {
+            $dayOfWeek = $start->dayOfWeek;
+            $daysOfWeekDates[$dayOfWeek] = $start->toDateString();
+            $start = $start->addDays(1);
+        }
+        
+        $data = [];
+        $dates = [];
+        
+        foreach($teams as $team)
+        {
+            $arCrossingSchedules = array_intersect($currentTeam->schedule, $team->schedule);
+            if(count($arCrossingSchedules)>0)
+            {
+                foreach($arCrossingSchedules as $value)
+                {
+                    $arr = explode(",", $value);
+                    $dayOfWeek = intval($arr[0]);
+                    $hour = $arr[1];
+                    $date = $daysOfWeekDates[$dayOfWeek]." ".$hour.":00:00";
+                    
+                    $data[$date][] = $team;
+                    $dates[] = $date;
+                }
+            }
+        }
+        
+        usort($dates, "date_sort");
+        
+        $dataSorted = [];
+        foreach($dates as $date)
+        {
+            $dataSorted[$date] = &$data[$date];
+        }
+        
+        return $dataSorted;
+    }
+    
+    /*
+    public static function transformToRealDates($arSchedules)
+    {
+        $start = Carbon::today();
+        
+        $daysOfWeekDates = []; 
+        foreach($i = 1; $i<=7: $i++)
+        {
+            $dayOfWeek = $start->dayOfWeek;
+            $daysOfWeekDates[$dayOfWeek] = $start->toDateString();
+            $start = $start->addDays(1);
+        }
+        
+        $dates = [];
+        foreach($arSchedules as $value)
+        {
+            $arr = explode(",", $value);
+            $dayOfWeek = intval($arr[0]);
+            $hour = $arr[1];
+            $date = $daysOfWeekDates[$dayOfWeek]." ".$hour.":00:00";
+            
+            $dates[] = $date;
+        }
+        
+        usort($dates, "date_sort");
+        
+        return $dates;
+    }*/
+    
     public static function modifyForTwoWeeks($schedule)
     {
         usort($schedule, 'sortSchedule');

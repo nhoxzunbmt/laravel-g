@@ -1,4 +1,9 @@
 <?php
+
+function date_sort($a, $b) {
+    return strtotime($a) - strtotime($b);
+}
+
 function getCrossingSchedule($array1, $array2)
 {
     $result = [];
