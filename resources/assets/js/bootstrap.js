@@ -196,6 +196,71 @@ Vue.mixin({
             
             return query;
         },
+        eventsConvertUTC(events, k)
+        {
+            var d = new Date();
+            var n = d.getTimezoneOffset();
+            //console.log("timezoneOffset="+n);
+            var timezone = n/60;
+            var schedule = [];
+            
+            events = events.forEach(function(e)
+            {
+                var event = e.split(',');
+                var hour = parseInt(event[1]);
+                var newHour = hour+k*timezone;
+                var newDay = parseInt(event[0]);
+                
+                if(newHour>23)
+                {
+                    newHour-=24; 
+                    newDay++;
+                }
+                
+                if(newHour<0)
+                {
+                    newHour=24+newHour; 
+                    newDay--;
+                }
+                
+                if(newDay>6)
+                {
+                   newDay=0; 
+                }
+                
+                if(newDay<0)
+                {
+                   newDay=6; 
+                }
+                
+                if(parseInt(newHour)<10)
+                    newHour = '0'+newHour;
+                    
+                schedule.push(newDay+","+newHour);
+            });
+            
+            return schedule;
+        },
+        datesConvertUTC(arDates, k)
+        {
+            var arNewDates = [];
+            var d = new Date();
+            var n = d.getTimezoneOffset();
+            var milliseconds;
+            var newDate;
+            
+            for (var edate in arDates) 
+            {
+                if(k<0){ k = -2; }else{ k = 0; }
+                
+                milliseconds = new Date(edate).getTime() + (k * n * 60 * 1000);
+                newDate = new Date(milliseconds).toISOString();
+                newDate = newDate.substr(0,10)+" "+newDate.substr(11,8);
+                arNewDates[newDate] = arDates[edate];
+            }
+            
+            return arNewDates;
+        },
         slugTitle: function(title) {
             var slug = "";
             if(title!==null)

@@ -17,7 +17,7 @@
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
                                 
-                                    <calendar-fights :schedule="events"></calendar-fights>
+                                    <calendar-fights :schedule="events" :team="team"></calendar-fights>
  
                                 </div>
                             </div>
@@ -48,18 +48,29 @@
             if(this.user.team_id!=null)
             {
                 this.getCalendarFights(this.user.team_id);
+                this.getTeam(this.user.team_id);
             }
         },
         data : function() {
             return {
-                events: []
+                events: [],
+                team: []
             }
         },
         methods : {
-            getCalendarFights: function(team_id)
+            getCalendarFights(team_id)
             {
                 axios.get('/api/teams/'+team_id + '/fights/calendar').then((response) => {
-                    this.$set(this, 'events', response.data);
+                    var events = response.data;
+                    //Convert from UTC to local time
+                    events = this.datesConvertUTC(events, -1);
+                    this.$set(this, 'events', events);
+                });
+            },
+            getTeam(team_id)
+            {
+                axios.get('/api/teams/'+team_id).then((response) => {
+                    this.$set(this, 'team', response.data);
                 });
             }
         }

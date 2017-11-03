@@ -26,14 +26,14 @@
          </div>
     </div>
     
-    <potential-battles-modal :date="date" :potentialBattles="potentialBattles"></potential-battles-modal>
+    <potential-battles-modal :date="date" :potentialBattles="potentialBattles" :userTeam="team"></potential-battles-modal>
 </div>
 </template>
 
 <script>
     export default {
         name: 'calendar-fights',
-        props: ['schedule'],
+        props: ['schedule', 'team'],
         computed:{
             fdates: function()
             {

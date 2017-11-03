@@ -9,7 +9,7 @@
                             <div class="row">
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
-                                    <calendar-shedule :schedule="team.schedule" blockSize="1" editable="false"></calendar-shedule>
+                                    <calendar-shedule :schedule="events" blockSize="1" editable="false"></calendar-shedule>
                                 </div>
                             </div>
                         </div>
@@ -41,9 +41,12 @@ export default {
     {
         Event.listen('teamEditLoad', event => {
             this.team = event.team;
+            this.events = this.eventsConvertUTC(this.team.schedule, -1);
         });
         this.team = this.$parent.team;
-        //this.events = this.team.schedule!==null ? this.team.schedule : [];      
+  
+        if(this.team!=null)
+            this.events = this.eventsConvertUTC(this.team.schedule, -1);   
     }
 }
 </script>

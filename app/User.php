@@ -13,10 +13,13 @@ use Cache;
 use Sofa\Eloquence\Eloquence;
 use File;
 use Image;
+use JWTAuth;
+use GeoIP;
+use App\Acme\Helpers\ScheduleHelper;
   
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract 
 {
-	use Notifiable, Authenticatable, CanResetPassword, Messagable, Friendable, Eloquence, UsersOnlineTrait;
+	use Notifiable, Authenticatable, CanResetPassword, Messagable, Friendable, Eloquence;//, UsersOnlineTrait;
 
     /**
 	 * The database table used by the model.
@@ -33,7 +36,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = [
         'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
         'overlay', 'description', 'type', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule',
-        'confirmed', 'active'
+        'confirmed', 'active', 'timezone', 'ip', 'city', 'geo'
     ];
 
     /**
@@ -42,7 +45,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'api_token', 'confirmation_code'
+        'password', 'remember_token', 'api_token', 'confirmation_code', 'ip', 'geo'
     ];
     
     
@@ -54,6 +57,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $casts = [
         'streams' => 'array',
         'schedule' => 'array',
+        'geo' => 'array'
     ];
     
     protected $searchableColumns = [
@@ -62,6 +66,29 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'name' => 10,
         'last_name' => 5
     ];
+    
+    /*public function getScheduleAttribute($json)
+    {
+        $object = json_decode($json, true);
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        $timezone = null;
+        
+        if($user!=null)
+        {
+            $timezone = $user->timezone;
+        }else{
+            $geo = geoip()->getLocation()->toArray();
+            $timezone = $geo['timezone'];
+        }
+        
+        if($timezone!=null)
+        {
+            ScheduleHelper::transformDateStringsToArrays()
+        }
+        
+        return $object;
+    }*/
     
     /**
      * Boot the model.

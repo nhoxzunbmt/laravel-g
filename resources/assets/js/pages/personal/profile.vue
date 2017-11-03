@@ -44,7 +44,6 @@
                                                 
                                             </div>
     									</div>
-                                        
                                     </div>     
                                                                           
                                     <div class="row" v-if="user.type=='player'">
@@ -128,6 +127,23 @@
                                                 </select>
                                             </div>
     									</div>
+                                        <div class="col-md-6">
+    										<div class="form-group">
+                                                <label class="control-label mb-10">Timezone</label>
+    											<select v-model="user.timezone" class='form-control' data-style="form-control btn-default btn-outline" id="timezone_list">
+                                                    <option v-for="(index, timezone) in timezones" v-bind:value="index" v-html="timezone">
+                                                    </option>
+                                                </select>
+                                            </div>
+    									</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+    										<div class="form-group">
+                                                <label class="control-label mb-10">City</label>
+    											<input type="text" class="form-control" v-model="user.city">
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
     									<div class="col-md-12">
@@ -212,6 +228,7 @@ export default {
             message: null,
             games: [],
             streams: [],
+            timezones: [],
             type: null
         }
     },
@@ -219,11 +236,21 @@ export default {
         this.getUserTeam();
         this.getGames();
         this.getCountries();
+        this.getTimezones();
         
         this.type = this.user.type;
         
         var self = this;
         Vue.nextTick(function(){ 
+            
+            $("#timezone_list").select2({
+                placeholder: "Select timezone",
+                allowClear: true
+            }).on("select2:select", function(e) { 
+                self.user.game_id = $(e.currentTarget).find("option:selected").val();
+            }).on("select2:unselecting", function (e) {
+                self.user.game_id = 0;
+            });
             
             $("#game_list").select2({
                 placeholder: "Select game",
@@ -275,7 +302,7 @@ export default {
                 this.error = false;
                 this.success = true;
                 
-                if(response.data.data.streams==null && this.user.type=='player')
+                if(response.data.data.streams==null && this.user.type=='player' && this.free_player==1)
                 {
                     swal(
                         'About streams!',
@@ -326,6 +353,12 @@ export default {
             }else{
                 this.games = this.$parent.games;
             }  
+        },
+        getTimezones: function()
+        {
+            axios.get('/api/timezones').then((response) => {
+                this.$set(this, 'timezones', response.data);
+            });
         },
         addAnother: function() 
         {

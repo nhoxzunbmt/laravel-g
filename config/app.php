@@ -157,6 +157,8 @@ return [
         HighIdeas\UsersOnline\UsersOnlineServiceProvider::class,
         HighIdeas\UsersOnline\Providers\UsersOnlineEventServiceProvider::class,
         Marcelgwerder\ApiHandler\ApiHandlerServiceProvider::class,
+        Torann\GeoIP\GeoIPServiceProvider::class,
+        Camroncade\Timezone\TimezoneServiceProvider::class,
         
         /*
          * Application Service Providers...
@@ -222,5 +224,6 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Countries' => Webpatser\Countries\CountriesFacade::class,
         'ApiHandler' => Marcelgwerder\ApiHandler\Facades\ApiHandler::class,
+        'GeoIP' => Torann\GeoIP\Facades\GeoIP::class
     ],
 ];

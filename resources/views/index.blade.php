@@ -9,8 +9,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="{{ asset('favicon.ico') }}">
-	<link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+	<link rel="shortcut icon" href="{{ asset('/images/logo-2.png') }}">
+	<link rel="icon" href="{{ asset('/images/logo-2.png') }}" type="image/x-icon">
 	
     <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css"/>
     <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css"/>

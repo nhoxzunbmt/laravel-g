@@ -64,8 +64,9 @@ export default {
     },
     mounted() 
     {
-        this.events = this.user.schedule!==null ? this.user.schedule : [];
-        
+        //Convert from UTC
+        this.events = this.user.schedule!==null ? this.eventsConvertUTC(this.user.schedule, -1) : [];
+
         if(this.user.game_id!=null)
         {
             this.getGame(this.user.game_id);
@@ -75,6 +76,9 @@ export default {
         save(event) {
             event.preventDefault()
             this.user.schedule = this.events;
+            
+            //Convert Back to UTC
+            this.user.schedule = this.eventsConvertUTC(this.user.schedule, 1);
             
             axios.post('/api/users', this.user).then(response => {
                 this.error = false;

@@ -21,6 +21,8 @@ use App\Acme\Helpers\ScheduleHelper;
 use Carbon\Carbon;
 use App\Mail\EmailVerify;
 use Mail;
+use GeoIP;
+use \Webpatser\Countries\Countries;
 
 class UserController extends Controller
 {
@@ -47,6 +49,23 @@ class UserController extends Controller
     public function me(Request $request)
     {
         $user = $request->user();
+        
+        if(empty($user->timezone))
+        {      
+            $geo = geoip()->getLocation()->toArray();
+            //$user->geo = $geo;
+            
+            $arCountries = Countries::all()->pluck('id', 'iso_3166_2');
+            
+            $user->update([
+                'country_id' => (int)$arCountries[$geo['iso_code']],
+                'timezone' => $geo['timezone'],
+                'ip' => $geo['ip'],
+                'city' => $geo['city'],
+                'geo' => $geo
+            ]);
+        }
+        
         if($user->avatar)
             $user->avatar = asset('storage/'.$user->avatar);
         if($user->overlay)

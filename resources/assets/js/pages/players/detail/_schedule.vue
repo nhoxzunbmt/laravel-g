@@ -9,7 +9,7 @@
                             <div class="row">
                             	
             					<div class="col-md-12 col-sm-12 col-xs-12">
-                                    <calendar-shedule :schedule="player.schedule" :blockSize="blockSize" editable="false"></calendar-shedule>
+                                    <calendar-shedule :schedule="events" :blockSize="blockSize" editable="false"></calendar-shedule>
                                 </div>
                             </div>
                         </div>
@@ -36,17 +36,17 @@ export default {
         }
     },
     mounted() {
+        Event.listen('playerDetailLoad', event => {
+            this.player = event.player;
+            this.blockSize = parseInt(this.player.game.cross_block);
+            this.events = this.eventsConvertUTC(this.player.schedule, -1);
+        });
         
-        if(this.player===null)
+        this.player = this.$parent.player;
+        if(this.player!=null)
         {
-            Event.listen('playerDetailLoad', event => {
-                this.player = event.player;
-                this.blockSize = parseInt(this.player.game.cross_block);
-            });
-            
-            this.player = this.$parent.player;
-            if(this.player!=null && this.player.game!=null)
-                this.blockSize = parseInt(this.player.game.cross_block);
+            this.blockSize = parseInt(this.player.game.cross_block);
+            this.events = this.eventsConvertUTC(this.player.schedule, -1);
         }
     }
 }

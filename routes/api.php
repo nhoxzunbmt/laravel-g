@@ -208,6 +208,16 @@ Route::resource('games', 'GameController', ['only' => [
 
 /*************************************************************************************************************************/
 
+/**
+ * @api {get} /timezones Get list all
+ * @apiName index
+ * @apiGroup Timezone
+ * @apiPermission none
+ * @apiDescription Get list of timezones.
+ */
+Route::get('/timezones', 'TimezoneController@index');
+
+/*************************************************************************************************************************/
 
 /**
  * Teams

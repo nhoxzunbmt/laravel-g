@@ -54,7 +54,7 @@ class ScheduleHelper{
     
     public static function getCalendarFights($teams, $currentTeam)
     {
-        $start = Carbon::today();
+        $start = Carbon::today('UTC');
         
         $daysOfWeekDates = []; 
         for($i = 1; $i<=7; $i++)

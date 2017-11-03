@@ -25,8 +25,7 @@
                                                 <th>Count wins</th>
                                                 <th>Victory rate</th>
                                                 <th>Earned</th>
-                                                <th>Amount paid to investors</th>
-                                                <th>&nbsp;</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
     								    <tbody>
@@ -46,10 +45,8 @@
                                                 <td class="text-center" v-if="team.count_fights>0">{{ Number((team.count_wins/team.count_fights).toFixed(2))}}</td>
                                                 <td class="text-center" v-else>0</td>
                                                 <td class="text-center">{{team.total_sum}}</td>
-                                                <td class="text-center">{{team.payed_dividents}}</td>
-    
                                                 <td class="text-center">
-                                                    <button v-if="authenticated && user.id==team.capt_id" @click="joinTeam(team.id)" class="btn btn-primary btn-icon left-icon btn-xs ml-10">Invite to battle</button>
+                                                    <button v-if="authenticated && user.id==userTeam.capt_id" class="btn btn-primary btn-icon left-icon btn-xs ml-10">Invite to battle</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -71,7 +68,7 @@ import axios from 'axios'
 
 export default {
     name: 'potential-battles-modal',
-    props: ['date', 'potentialBattles'],
+    props: ['date', 'potentialBattles', 'userTeam'],
     computed: {
         ...mapGetters({
             user: 'authUser',
