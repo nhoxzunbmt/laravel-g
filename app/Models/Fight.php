@@ -8,15 +8,16 @@ use Carbon\Carbon;
 class Fight extends Model
 {
     protected $dates = ['start_at'];
-    protected $fillable = ['start_at', 'title', 'game_id', 'created_id', 'count_team_users', 'count_parts', 'active'];
+    protected $fillable = ['start_at', 'title', 'game_id', 'created_id', 'count_parts', 'status', 'bet', 'created_team_id'];
     
     /**
-     * Команды, которые принадлежат данному бою.
+     * Invitations
      * @Relation
      */
-    public function teams()
+    public function invitations()
     {
-        return $this->belongsToMany('App\Models\Team');
+        return $this->hasMany('App\Models\FightTeam', 'fight_id');
+        //return $this->hasManyThrough("App\Models\Team", "App\Models\FightTeam", 'fight_id', 'id');
     }
     
     /**
@@ -35,6 +36,15 @@ class Fight extends Model
     public function createdBy()
     {
         return $this->belongsTo('App\User', 'created_id');
+    }
+    
+    /**
+     * Team, создавший бой
+     * @Relation
+     */
+    public function createdByTeam()
+    {
+        return $this->belongsTo('App\Models\Team', 'created_team_id');
     }
     
     /**
@@ -74,7 +84,7 @@ class Fight extends Model
     
     public function scopePublished($query)
     {
-        $query->where('start_at', '>=', Carbon::now())->where('active', true)->where('canceled', false);
+        $query->where('start_at', '>=', Carbon::now())->where('status', 1);
     }
     
     public function setStartAtAttribute($date)

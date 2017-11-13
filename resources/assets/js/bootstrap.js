@@ -241,25 +241,41 @@ Vue.mixin({
             
             return schedule;
         },
-        datesConvertUTC(arDates, k)
+        dateConvertUTC(edate, k)
         {
-            var arNewDates = [];
             var d = new Date();
             var n = d.getTimezoneOffset();
             var milliseconds;
             var newDate;
+ 
+            if(k<0){ k = -2; }else{ k = 0; }
+            
+            //for working in all browsers!!!!!!
+            edate = edate.replace(" ", "T");
+            milliseconds = new Date(edate).getTime() + (k * n * 60 * 1000);
+            
+            newDate = new Date(milliseconds).toISOString();
+            newDate = newDate.substr(0,10)+" "+newDate.substr(11,8);
+               
+            return newDate;
+        },
+        datesConvertUTC(arDates, k)
+        {
+            var arNewDates = [];
+            var newDate;
             
             for (var edate in arDates) 
             {
-                if(k<0){ k = -2; }else{ k = 0; }
-                
-                milliseconds = new Date(edate).getTime() + (k * n * 60 * 1000);
-                newDate = new Date(milliseconds).toISOString();
-                newDate = newDate.substr(0,10)+" "+newDate.substr(11,8);
+                newDate = this.dateConvertUTC(edate, k);
                 arNewDates[newDate] = arDates[edate];
             }
             
             return arNewDates;
+        },
+        calculateBet(balance1, balance2)
+        {
+            var min = balance1>balance2 ? balance2 : balance1;
+            return parseFloat(min*0.2);
         },
         slugTitle: function(title) {
             var slug = "";

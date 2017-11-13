@@ -98,6 +98,15 @@ export default [
         { path: 'info', name: 'teams.edit', component: require('./pages/teams/edit/_info.vue') },
         { path: 'players', name: 'teams.edit.players', component: require('./pages/teams/edit/_players.vue') }
     ]},
+    
+    { path: '/fights', component: require('./pages/fights/index.vue'), children: [
+        { path: '', name: 'fights', redirect: { name: 'fights.calendar' } },
+        { path: 'calendar', name: 'fights.calendar', component: require('./pages/fights/_calendar.vue') },
+        { path: 'confirmed', name: 'fights.confirmed', component: require('./pages/fights/_confirmed.vue') },
+        { path: 'invitations_received', name: 'fights.invitations.received', component: require('./pages/fights/_invitations_received.vue') },
+        { path: 'invitations_sent', name: 'fights.invitations.sent', component: require('./pages/fights/_invitations_sent.vue') },
+    ]},
+        
   ]),
 
   ...guestGuard([
@@ -126,11 +135,11 @@ export default [
         { path: 'schedule', name: 'team.detail.schedule', component: require('./pages/teams/detail/_schedule.vue') }
   ]},
   
-  {
+  /*{
         path: '/fights',
         name: 'fights',
         component: require('./pages/fights/index.vue')
-  },
+  },*/
   {
         path: '/fights/:id',
         name: 'fight',

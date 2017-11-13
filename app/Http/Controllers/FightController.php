@@ -34,36 +34,68 @@ class FightController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $request['start_at'] = substr($request->get('start_at_date'), 0, 10)." ".$request->get('start_at_time');
+    {        
         $rules = [
             'title' => 'required|max:255',
-            'start_at' => 'required|date_format:Y-m-d H:i:s',//|after:now',
+            'start_at' => 'required|date_format:Y-m-d H:i:s',
+            'bet'   => 'required|integer'
         ];
-        $input = $request->all();
+        $input = $request->all();  
+        $start = $input["start_at"];
+        $team_against_id = $input['team_id'];
+        $input['title'] = $request['title'] = "Team #".$request->user()->team_id." vs Team #".$team_against_id;
+              
+        $count = FightTeam::where('team_id', '=', $request->user()->team_id)->
+            whereHas('fight', function($fightQuery) use ($start){
+                $fightQuery->where('start_at', $start);
+                $fightQuery->where('status', '<>', 2);
+            })->count();
+                  
+        if($count>0)
+        {
+            return response()->json([
+                'error' => 'Team has fight on this time!'
+            ], 422);
+        }
+        
         $validator = Validator::make($request->all(), $rules);
         
         if ($validator->fails()) 
         {
             return response()->json($validator->messages(), 422);
         }else{
+
+            unset($input["team_id"]);
+            $userTeam = $request->user()->team()->first();
+            $arGame = $request->user()->game()->first();
             
-            unset($input["start_at_date"]);
-            unset($input["start_at_time"]);
+            if($userTeam->capt_id!=$request->user()->id)
+            {
+                return response()->json([
+                    'created_id' => ['Only captain can create the battle.']
+                ], 422);
+            }
             
             $input['created_id'] = $request->user()->id;
-            $input['game_id'] = $request->user()->game()->id;
-            $input['active'] = 0;
-            
-            $arGame = Game::findOrFail($input["game_id"]);
-            $input['count_team_users'] = intval($arGame["min_players"]);
+            $input['created_team_id'] = $request->user()->team_id;
+            $input['game_id'] = $arGame->id;
+            $input['count_parts'] = 2;  //In future we can change it!
             
             $result = Fight::create($input);
             
             FightTeam::create([
-                'team_id' => $request->user()->team()->id,
-                'fight_id' => $result->id
+                'team_id' => $request->user()->team_id,
+                'fight_id' => $result->id,
+                'status' => 1
             ]);
+            
+            FightTeam::create([
+                'team_id' => $team_against_id,
+                'fight_id' => $result->id,
+                'status' => 0
+            ]);
+            
+            //TODO: Add email to captain of team against
             
             return response()->json($result, 200); 
         }

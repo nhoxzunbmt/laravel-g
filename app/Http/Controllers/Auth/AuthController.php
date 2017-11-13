@@ -167,7 +167,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->pullCache();  //clear UserOnline cache
+        //$request->user()->pullCache();  //clear UserOnline cache
         $token = JWTAuth::getToken();
         JWTAuth::setToken($token)->invalidate();
         return response()->json([

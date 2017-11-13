@@ -43,6 +43,8 @@
                     dates.push(key.substr(0,10));
                 }
                 
+                dates = Array.from(new Set(dates));
+                
                 return dates;
             },
             hours: function () 
@@ -94,6 +96,8 @@
                     var date = key.substr(0,10);
                     dates.push(key.substr(0,10));
                 }
+                
+                dates = Array.from(new Set(dates));
                 
                 return dates;
             }

@@ -479,4 +479,21 @@ var setHeightWidth = function () {
 .rel{
     position: relative;
 }
+
+
+.swal2-container{
+    z-index: 106000 !important;    
+}
+.vm-title, .vm-title .img-responsive, .vm-title span{
+    display: inline-block;
+    vertical-align: middle;
+}
+.vm-title span{
+    margin-left: 20px;
+}
+.w-45p-inline
+{
+    width: 45%;
+    display: inline-block;
+}
 </style>

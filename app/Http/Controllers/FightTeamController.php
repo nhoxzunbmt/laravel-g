@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\FightTeam;
+use App\Acme\Helpers\ApiHelper;
 
 class FightTeamController extends Controller
 {
@@ -11,9 +13,10 @@ class FightTeamController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $fight_teams = new FightTeam();      
+        return ApiHelper::parseMultiple($fight_teams, [''], $request->all());
     }
 
     /**
@@ -68,7 +71,50 @@ class FightTeamController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $FightTeam = FightTeam::findOrFail($id);
+        $team = $FightTeam->team()->first();
+        $fight = $FightTeam->fight()->first();
+        $user = $request->user();
+        
+        if($user->id!=$team->capt_id)
+        {
+            return response()->json([
+                "error" => "Only captain can change status of invitation to the battle"
+            ], 422);
+        }
+        
+        $message = "Status has not changed";
+        
+        if($FightTeam->status!=$request->get('status'))
+        {
+            $FightTeam->update([
+                'status' => (int) $request->get('status')
+            ]);
+            
+            if($request->get('status')==1)
+            {
+                //email to captain another team
+                $fight->update([
+                    "status" => 1
+                ]);
+                $message = "Invitation to the battle confirmed successfully!";
+            }
+            if($request->get('status')==2)
+            {
+                //decline the battle
+                $fight->update([
+                    "status" => 2,
+                    "cancel_text" => "Invitation to the battle was rejected.",
+                    "cancel_user_id" => $user->id
+                ]);
+                
+                $message = "Invitation to the battle rejected successfully!";
+            }
+        }
+        
+        return response()->json([
+            "message" => $message
+        ], 200); 
     }
 
     /**

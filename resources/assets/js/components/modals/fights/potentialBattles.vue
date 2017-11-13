@@ -19,25 +19,21 @@
                                     <table class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr>
-                                                <th>Logo</th>
-                                                <th>Name</th>
+                                                <th>Team</th>
                                                 <th>Total fights</th>
                                                 <th>Count wins</th>
                                                 <th>Victory rate</th>
                                                 <th>Earned</th>
+                                                <th>Bet</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
     								    <tbody>
                                             <tr v-for="team in potentialBattles">
                                                 <td>
-                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
+                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}" class="vm-title">
                                                         <img :src="getImageLink(team.image, 'avatar_team')" class="img-responsive team-image" :alt="team.title" />
-                                                    </router-link>
-                                                </td>
-                                                <td>
-                                                    <router-link  :to="{ name: 'team.detail', params: { slug: team.slug }}">
-                                                        {{ team.title}}
+                                                        <span>{{ team.title}}</span>
                                                     </router-link>
                                                 </td>                                              
                                                 <td class="text-center">{{team.count_fights}}</td>
@@ -45,8 +41,9 @@
                                                 <td class="text-center" v-if="team.count_fights>0">{{ Number((team.count_wins/team.count_fights).toFixed(2))}}</td>
                                                 <td class="text-center" v-else>0</td>
                                                 <td class="text-center">{{team.total_sum}}</td>
+                                                <td class="text-center">{{calculateBet(userTeam.balance, team.balance)}}</td>
                                                 <td class="text-center">
-                                                    <button v-if="authenticated && user.id==userTeam.capt_id" class="btn btn-primary btn-icon left-icon btn-xs ml-10">Invite to battle</button>
+                                                    <button v-if="authenticated && user.id==userTeam.capt_id" @click="inviteTeamToBattle(team)" class="btn btn-primary btn-icon left-icon btn-xs ml-10">Invite to battle</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -65,6 +62,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
     name: 'potential-battles-modal',
@@ -86,9 +84,36 @@ export default {
         }
     },
     methods: {
+        inviteTeamToBattle(team)
+        {
+            var date = this.dateConvertUTC(this.date, 1);
+            var bet = this.calculateBet(this.userTeam.balance, team.balance);
+            axios.post('/api/fights', {
+                start_at : date,
+                team_id: team.id,
+                bet: bet
+            }).then(response => {
+
+                swal({
+                    type: 'success',
+                    title: 'Success!',
+                    html: 'The battle is created!'
+                });
+                
+                this.$modal.hide('potential-battles'); 
+                
+            }).catch(error => {
+                
+                swal({
+                    type: 'warning',
+                    title: 'Error!',
+                    html: error.response.data.error
+                });
+                              
+            });
+        },
         close()
         {
-            console.log(this.potentialBattles);
             this.$modal.hide('potential-battles');   
         }
     },

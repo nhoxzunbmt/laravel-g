@@ -52,9 +52,7 @@ class UserController extends Controller
         
         if(empty($user->timezone))
         {      
-            $geo = geoip()->getLocation()->toArray();
-            //$user->geo = $geo;
-            
+            $geo = geoip()->getLocation($request->ip())->toArray();
             $arCountries = Countries::all()->pluck('id', 'iso_3166_2');
             
             $user->update([

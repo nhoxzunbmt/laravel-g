@@ -177,7 +177,7 @@
                     this.$set(this, 'commentsData', response.data.data);
                     this.$set(this, 'totalPages', response.data.last_page);
                     this.comments = 1;
-                    console.log(this.commentsData);
+                    //console.log(this.commentsData);
                 });
             },
             showComments(index) {
@@ -262,7 +262,7 @@
         },
 
         mounted() {
-            console.log("comments mounted");
+            //console.log("comments mounted");
             this.fetchComments(this.curPage);
         }
     }

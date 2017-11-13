@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\TeamUpdateRequest;
 use App\Models\Team;
+use App\Models\FightTeam;
 use App\Models\TeamUser;
 use App\Models\Game;
+use App\Models\Fight;
 use App\User;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -191,6 +193,31 @@ class TeamController extends Controller
     {
         $team_users = TeamUser::where("team_id", $id);      
         return ApiHelper::parseMultiple($team_users, [''], $request->all());
+    }
+    
+    public static function fights($id, Request  $request)
+    {
+        $fights = FightTeam::where('team_id', '=', $id)->
+            /*whereHas('fight', function($fightQuery){
+                $fightQuery->where('status', 1);
+            })->*/
+            select(['fight_id'])->get();
+        
+        $fights = Fight::whereIn('id', $fights);    
+        return ApiHelper::parseMultiple($fights, [''], $request->all());
+    }
+    
+    /**
+     * Get invitations of team to the fights
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function fightInvitations($id, Request  $request)
+    {
+        $fight_teams = FightTeam::where("team_id", $id);      
+        return ApiHelper::parseMultiple($fight_teams, [''], $request->all());
     }
     
     /**
@@ -584,7 +611,6 @@ class TeamController extends Controller
             case "0":
                 $cats = [0];
             break;
-            
             case "1":
                 $cats = [0, 1];
             break;
@@ -595,7 +621,7 @@ class TeamController extends Controller
         
         $teams = Team::whereIn('category', $cats)
             ->where('id', '!=', $id)
-            //->where('status', 1)
+            //->where('status', 1)              //
             ->where('balance', '>=', $from)->where('balance', '<=', $to)
             ->where("game_id", $game_id);
         

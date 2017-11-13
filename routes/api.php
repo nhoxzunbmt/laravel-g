@@ -252,10 +252,11 @@ Route::get('/teams', 'TeamController@index');//apiHandler
  * @apiParam {Number} param Team unique id.
  */
 Route::get('/teams/{id}/invitations', 'TeamController@invitations');
-
+Route::get('/teams/{id}/fights', 'TeamController@fights');
 Route::get('/teams/{id}/fights/calendar', 'TeamController@findTeamsAgainst');
-
-
+//Route::get('/teams/{id}/fights/invitations', 'TeamController@fightInvitations');
+Route::get('/fight_team', 'FightTeamController@index');//apiHandler
+Route::put('/fight_team/{id}', 'FightTeamController@update')->middleware('jwt.auth');
 /**
  * TeamUsers (Invitations)
  */
