@@ -16,10 +16,10 @@ class TwitchHelper{
      */
     static public function searchStreamsByGame($game_id)
     {
-        $cache_key = 'searchStreamsByGames'.$game_id;
+        $cacheTags = Cache::tags('twitch', 'searchStreamsByGames');
         
-        if (Cache::has($cache_key)){
-            return Cache::get($cache_key);
+        if ($cacheTags->get($game_id)){
+            return $cacheTags->get($game_id);
         } else {
         
             $game = Game::findOrFail($game_id);
@@ -34,18 +34,18 @@ class TwitchHelper{
             $total = intval($responseTwitch['_total']);
             $streams = $responseTwitch["streams"];
             
-            Cache::put($cache_key, $streams, 60);
-            
+            $cacheTags->put($game_id, $streams, 60);
             return $streams;
         }
     }
     
     public function channelShow($channel)
     {
-        $cache_key = 'twitchChannelShow'.Str::slug($channel);
+        $cache_key = Str::slug($channel);
+        $cacheTags = Cache::tags('twitch', 'twitchChannelShow');
         
-        if (Cache::has($cache_key)){
-            $channel = Cache::get($cache_key);
+        if ($cacheTags->get($cache_key)){
+            $channel = $cacheTags->get($cache_key);
         } else {
 
             $twitchClient = new \TwitchApi\TwitchApi([
@@ -54,7 +54,7 @@ class TwitchHelper{
             $twitchClient->setApiVersion(4);
             $channel = $twitchClient->getChannel($channel);
             
-            Cache::put($cache_key, $channel, 60);
+            $cacheTags->put($cache_key, $channel, 60);
         }
         
         return $channel;
@@ -62,10 +62,12 @@ class TwitchHelper{
     
     public function getFeaturedStreams(Request $request)
     {
-        $cache_key = 'twitchgetFeaturedStreams';
+        $cache_key = 'getFeaturedStreams';
         
-        if (Cache::has($cache_key)){
-            $streams = Cache::get($cache_key);
+        $cacheTags = Cache::tags('twitch');
+        
+        if ($cacheTags->get($cache_key)){
+            $streams = $cacheTags->get($cache_key);
         } else {
             $twitchClient = new \TwitchApi\TwitchApi([
                 'client_id' => env('TWITCH_API_CLIENT_ID')
@@ -85,7 +87,7 @@ class TwitchHelper{
             $responseTwitch = $twitchClient->getFeaturedStreams($limit, $offset);
             $streams = $responseTwitch["featured"];
             
-            Cache::put($cache_key, $streams, 10);
+            $cacheTags->put($cache_key, $streams, 10);
         }
 
         return $streams;

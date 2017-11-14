@@ -21,7 +21,6 @@ class SteamHelper{
         $response = $steamUser->GetPlayerSummariesV2(implode(',', $steam_ids));
         
         return $response;
-        dd($response);
     }
     
     /**
