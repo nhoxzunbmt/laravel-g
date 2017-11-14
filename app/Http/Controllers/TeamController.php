@@ -208,15 +208,36 @@ class TeamController extends Controller
     }
     
     /**
-     * Get invitations of team to the fights
+     * Get invitations IN of team to the fights
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function fightInvitations($id, Request  $request)
+    public static function fightInvitationsIn($id, Request  $request)
     {
-        $fight_teams = FightTeam::where("team_id", $id);      
+        $fight_teams = FightTeam::where('team_id', '=', $id)->
+            whereHas('fight', function($fightQuery) use ($id){
+                $fightQuery->where('created_team_id', '<>', $id);
+            });
+             
+        return ApiHelper::parseMultiple($fight_teams, [''], $request->all());
+    }
+    
+    /**
+     * Get invitations OUT of team to the fights
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function fightInvitationsOut($id, Request  $request)
+    {
+        $fight_teams = FightTeam::where('team_id', '<>', $id)->
+            whereHas('fight', function($fightQuery) use ($id){
+                $fightQuery->where('created_team_id', $id);
+            });
+             
         return ApiHelper::parseMultiple($fight_teams, [''], $request->all());
     }
     
@@ -624,6 +645,8 @@ class TeamController extends Controller
             //->where('status', 1)              //
             ->where('balance', '>=', $from)->where('balance', '<=', $to)
             ->where("game_id", $game_id);
+        
+        
         
         if(count($schedule)>0)
         {

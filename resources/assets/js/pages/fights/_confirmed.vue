@@ -40,7 +40,15 @@
                             <td class="text-center">{{fight.start_at}}</td>
                             <td class="text-center">{{fight.bet}}</td>
                             <td class="text-center">
-                                {{fight.status}}
+                                <span v-if="fight.status==0">
+                                    waiting for invitations answers
+                                </span>
+                                <span v-if="fight.status==2">
+                                    canceled, {{fight.cancel_text}}
+                                </span>
+                                <span v-if="fight.status==1">
+                                    active
+                                </span>
                             </td>
                         </tr>
                     </tbody>

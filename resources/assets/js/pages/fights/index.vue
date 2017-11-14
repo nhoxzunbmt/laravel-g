@@ -34,59 +34,7 @@
         			</div>
         		</div>
         	</div>
-        </div>
-        
-        
-        
-        <!--<div class="row" v-if="user!==null && invitations.length>0">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    			<div class="panel panel-default card-view">
-    				<div class="panel-wrapper collapse in">
-    					<div class="panel-body">
-                            <h4 class="mb-10">Invitations to battles</h4>
-                            <div class="row">
-            					<div class="col-md-12 col-sm-12 col-xs-12">
-                                    
-                                    <div class="table-wrap">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-bordered mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Team</th>
-                                                        <th>Datetime</th>
-                                                        <th>Bet</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-            								    <tbody>
-                                                    <tr v-for="invitation in invitations">
-                                                        
-                                                        <td>
-                                                            <router-link  :to="{ name: 'team.detail', params: { slug: invitation.fight.created_by_team.slug }}" class="vm-title">
-                                                                <img :src="getImageLink(invitation.fight.created_by_team.image, 'avatar_team')" class="img-responsive team-image" /> 
-                                                                <span>{{ invitation.fight.created_by_team.title}}</span>
-                                                            </router-link>
-                                                        </td>
-                                                        <td class="text-center">{{invitation.fight.start_at}}</td>
-                                                        <td class="text-center">{{ invitation.fight.bet}}</td>
-                                                        <td class="text-center">
-                                                            <a href="javascript:void(0)" @click="answerToInviteFight(invitation.id, 1)" title="confirm" v-if="user.id==invitation.team.capt_id"><i class="fa fa-check text-success"></i></a>&nbsp;
-                                                            <a href="javascript:void(0)" @click="answerToInviteFight(invitation.id, 2)" title="reject" v-if="user.id==invitation.team.capt_id"><i class="fa fa-times text-danger"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                        </div>
-    				</div>	
-    			</div>	
-    		</div>
-        </div>-->
-        
+        </div>        
     </div>    
 </template>
 
@@ -107,12 +55,6 @@
             })
         },
         mounted() {
-            if(this.user.team_id!=null)
-            {
-                //this.getCalendarFights(this.user.team_id);
-                //this.getTeam(this.user.team_id);
-                this.getInvitationFights(this.user.team_id);
-            }
         },
         data : function() {
             return {
@@ -140,7 +82,7 @@
             }
         },
         methods : {
-            getInvitationFights(team_id)
+            /*getInvitationFights(team_id)
             {
                 var query = this.ArrayToUrl({
                     'team_id' : team_id,
@@ -159,20 +101,7 @@
                     
                     this.$set(this, 'invitations', invitations);
                 }); 
-            },
-            answerToInviteFight(fight_team_id, status)
-            {
-                axios.put('/api/fight_team/'+fight_team_id, {
-                    status: status
-                }).then((response) => {
-    
-                    swal({
-                        type: 'success',
-                        html: response.data.message
-                    });
-                    
-                });
-            }
+            }*/
         }
     }
 </script>

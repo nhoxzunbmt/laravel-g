@@ -204,40 +204,43 @@ Vue.mixin({
             var timezone = n/60;
             var schedule = [];
             
-            events = events.forEach(function(e)
+            if(events!=null)
             {
-                var event = e.split(',');
-                var hour = parseInt(event[1]);
-                var newHour = hour+k*timezone;
-                var newDay = parseInt(event[0]);
-                
-                if(newHour>23)
+                events = events.forEach(function(e)
                 {
-                    newHour-=24; 
-                    newDay++;
-                }
-                
-                if(newHour<0)
-                {
-                    newHour=24+newHour; 
-                    newDay--;
-                }
-                
-                if(newDay>6)
-                {
-                   newDay=0; 
-                }
-                
-                if(newDay<0)
-                {
-                   newDay=6; 
-                }
-                
-                if(parseInt(newHour)<10)
-                    newHour = '0'+newHour;
+                    var event = e.split(',');
+                    var hour = parseInt(event[1]);
+                    var newHour = hour+k*timezone;
+                    var newDay = parseInt(event[0]);
                     
-                schedule.push(newDay+","+newHour);
-            });
+                    if(newHour>23)
+                    {
+                        newHour-=24; 
+                        newDay++;
+                    }
+                    
+                    if(newHour<0)
+                    {
+                        newHour=24+newHour; 
+                        newDay--;
+                    }
+                    
+                    if(newDay>6)
+                    {
+                       newDay=0; 
+                    }
+                    
+                    if(newDay<0)
+                    {
+                       newDay=6; 
+                    }
+                    
+                    if(parseInt(newHour)<10)
+                        newHour = '0'+newHour;
+                        
+                    schedule.push(newDay+","+newHour);
+                });
+            }
             
             return schedule;
         },

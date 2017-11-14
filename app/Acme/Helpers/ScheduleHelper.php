@@ -69,7 +69,10 @@ class ScheduleHelper{
         
         foreach($teams as $team)
         {
-            $arCrossingSchedules = array_intersect($currentTeam->schedule, $team->schedule);
+            $schedule = $team->schedule!=null ? $team->schedule : [];
+            $scheduleTeam = $currentTeam->schedule!=null ? $currentTeam->schedule : [];
+            
+            $arCrossingSchedules = array_intersect($scheduleTeam, $schedule);
             if(count($arCrossingSchedules)>0)
             {
                 foreach($arCrossingSchedules as $value)
@@ -255,6 +258,9 @@ class ScheduleHelper{
         
         $result = self::transformDateArraysToStrings($blockSchedules);
         $result = array_unique($result);
+        
+        $result = array_merge($result, []);
+        //array_values($result);
         
         //print_r($result); die();
         
