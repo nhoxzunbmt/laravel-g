@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Fight extends Model
 {
     protected $dates = ['start_at'];
-    protected $fillable = ['start_at', 'title', 'game_id', 'created_id', 'count_parts', 'status', 'bet', 'created_team_id'];
+    protected $fillable = ['start_at', 'title', 'game_id', 'created_id', 'count_parts', 'status', 'bet', 'created_team_id', 'cancel_text', 'cancel_user_id'];
     
     /**
      * Invitations

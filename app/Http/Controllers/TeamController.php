@@ -21,6 +21,7 @@ use App\Mail\EmailVerify;
 use App\Mail\InvitationToTeam;
 use App\Http\Requests\TeamStoreRequest;
 use App\Acme\Helpers\ScheduleHelper;
+use Carbon\Carbon;
 
 class TeamController extends Controller
 {    
@@ -78,11 +79,6 @@ class TeamController extends Controller
         $input['capt_id'] = $request->user()->id;
         //Check schedule
         $arSchedules = $request->user()->schedule;
-        /*usort($arSchedules, 'sortSchedule');
-        $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $arGame['cross_block']);
-        $blockSchedules = ScheduleHelper::modifyForTwoWeeks($blockSchedules);
-        
-        $arSchedules = ScheduleHelper::getCrossingSchedule($users->get());*/
         $blockSchedules = ScheduleHelper::getCrossingBlocks($arSchedules, $arGame['cross_block']);
 
         if(count($blockSchedules)==0)
@@ -195,14 +191,16 @@ class TeamController extends Controller
         return ApiHelper::parseMultiple($team_users, [''], $request->all());
     }
     
+    /**
+     * Get fights of team
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public static function fights($id, Request  $request)
     {
-        $fights = FightTeam::where('team_id', '=', $id)->
-            /*whereHas('fight', function($fightQuery){
-                $fightQuery->where('status', 1);
-            })->*/
-            select(['fight_id'])->get();
-        
+        $fights = FightTeam::where('team_id', '=', $id)->select(['fight_id'])->get();
         $fights = Fight::whereIn('id', $fights);    
         return ApiHelper::parseMultiple($fights, [''], $request->all());
     }
@@ -570,22 +568,8 @@ class TeamController extends Controller
     }
     
     /**
-     * Update all teams schedule on two closest weeeks
+     * Update schedule of team when user update his schedule
      */
-    public static function updateTeamsSchedule()
-    {
-        foreach(Team::where("status", 1)->select(['id', 'schedule'])->get() as $team)
-        {
-            //$game = $team->game()->first();
-            //$blockSchedules = ScheduleHelper::getCrossingBlocks($team->schedule, $game->cross_block);
-            $blockSchedules = ScheduleHelper::modifyForTwoWeeks($team->schedule);
-            
-            $team->update([
-                'schedule' => $blockSchedules
-            ]);
-        }
-    }
-    
     public static function updateSchedule($id)
     {
         $team = Team::findOrFail($id);
@@ -642,93 +626,34 @@ class TeamController extends Controller
         
         $teams = Team::whereIn('category', $cats)
             ->where('id', '!=', $id)
-            //->where('status', 1)              //
-            ->where('balance', '>=', $from)->where('balance', '<=', $to)
+            ->where('status', 1)
+            ->where('balance', '>=', $from)
+            ->where('balance', '<=', $to)
             ->where("game_id", $game_id);
         
-        
+        $start = Carbon::now('UTC')->toDateTimeString();
         
         if(count($schedule)>0)
         {
-            /*$teams = $teams->where(function ($query) use ($schedule) 
-            {
-                $firstDate = array_shift($schedule);
-        
-                $query->whereRaw(
-                    'JSON_CONTAINS(schedule, \'["' . $firstDate . '"]\')'
-                );
-        
-                foreach ($schedule as $date) {
-                    $query->orWhereRaw(
-                        'JSON_CONTAINS(schedule, \'["' . $date . '"]\')'
-                    );
-                }
-        
-                return $query;
-            })->get();*/
-            
             if($teams->count()>0)
             {
-                /*$data = [];
-                foreach($teams->get() as $team)
-                {
-                    $arCrossingSchedules = array_intersect($schedule, $team->schedule);
-                    if(count($arCrossingSchedules)>0)
-                    {
-                        $data = ScheduleHelper::getCalendarFights($arCrossingSchedules, $data);
-                    }
-                }*/
-                $data = ScheduleHelper::getCalendarFights($teams->get(), $team);
+                //Find all battles with against teams
+                $fight_ids = FightTeam::where('team_id', '=', $team->id)->
+                    whereHas('fight', function($fightQuery) use ($start){
+                        $fightQuery->where('start_at', '>', $start);
+                    })->select(['fight_id'])->get();
+                
+                $teamFights = FightTeam::whereIn('fight_id', $fight_ids)
+                    ->where('team_id', '<>', $team->id)
+                    ->get();
+                    
+
+                $data = ScheduleHelper::getCalendarFights($teams->get(), $team, $teamFights);
             }
-            
-            /*[
-                'datetime' => 'quantity'
-            ]*/
             
             return response()->json($data, 200);
         }else{
             return response()->json(null, 200);
         }
-        
-        //Get dates ranged by week from now
-        /*$dates = ScheduleHelper::convertObjectToArray($schedule);
-        $dateNow = Carbon::now();
-        $dateNowAddedWeek = Carbon::now()->addDays(7);
-        if(count($dates)>0)
-        {
-            foreach($dates as &$date)
-            {
-                if(strtotime($date)>strtotime($dateNow) && strtotime($date)<strtotime($dateNowAddedWeek))
-                {
-                    unset($date);
-                }
-            }
-        }
-           
-        if(count($dates)>0)
-        {
-            $teams = $teams->where(function ($query) use ($dates) 
-            {
-                $firstDate = array_shift($dates);
-        
-                $query->whereRaw(
-                    'JSON_CONTAINS(schedule, \'["' . $firstDate . '"]\')'
-                );
-        
-                foreach ($dates as $data) {
-                    $query->orWhereRaw(
-                        'JSON_CONTAINS(schedule, \'["' . $data . '"]\')'
-                    );
-                }
-        
-                return $query;
-            })->get();
-            
-        }else{
-            return response()->json(null, 200);
-        }*/
-        
-        
-        //TODO: search by json field. Update mysql to 5.7+
     }
 }

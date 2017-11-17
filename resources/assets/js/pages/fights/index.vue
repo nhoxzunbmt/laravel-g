@@ -3,7 +3,7 @@
     
         <div class="row heading-bg">
         	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h5 class="txt-dark">Fights</h5>
+                <h5 class="txt-dark">Battles</h5>
         	</div>
         </div>
         
@@ -45,7 +45,7 @@
     
     export default {
         metaInfo: {
-            title: 'Fights',
+            title: 'Battles',
             titleTemplate: null
         },
         computed: {
@@ -71,11 +71,11 @@
                         route: 'fights.confirmed'
                     },
                     {
-                        name: 'Received invitations',
+                        name: 'Invites received',
                         route: 'fights.invitations.received'
                     },
                     {
-                        name: 'Sent invitations',
+                        name: 'Invites sent',
                         route: 'fights.invitations.sent'
                     }
                 ],

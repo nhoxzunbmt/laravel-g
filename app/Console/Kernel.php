@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Carbon\Carbon;
+use App\Models\FightTeam;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,6 +26,33 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->call(function () 
+        {
+            $time = Carbon::now('UTC')->subMinutes(15)->toDateTimeString();
+            
+            $fight_teams = FightTeam::where('status', 0)->
+                whereHas('fight', function($fightQuery) use ($time){
+                    $fightQuery->where('created_at', '>=', $time);
+                    $fightQuery->where('status', 0);
+                })->with(['fight']);
+                
+            if($fight_teams->count()>0)
+            {
+                foreach($fight_teams->get() as $fightTeam)
+                {
+                    $fightTeam->update([
+                        'status' => 2
+                    ]);
+                    
+                    $fightTeam->fight->first()->update([
+                        'status' => 2,
+                        "cancel_text" => "Not all invitation are confirmed 15 minutes before the start of the battle.",
+                        "cancel_user_id" => 0
+                    ]);
+                }
+            }
+        })->everyFiveMinutes();
+        
         // $schedule->command('inspire')
         //          ->hourly();
     }

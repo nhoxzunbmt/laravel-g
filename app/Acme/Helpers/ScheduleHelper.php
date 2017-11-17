@@ -52,9 +52,10 @@ class ScheduleHelper{
         return $result;
     }
     
-    public static function getCalendarFights($teams, $currentTeam)
+    public static function getCalendarFights($teams, $currentTeam, $teamFights = [])
     {
         $start = Carbon::today('UTC');
+        $afterTime = Carbon::now('UTC')->subMinutes(15)->toDateTimeString();
         
         $daysOfWeekDates = []; 
         for($i = 1; $i<=7; $i++)
@@ -62,6 +63,16 @@ class ScheduleHelper{
             $dayOfWeek = $start->dayOfWeek;
             $daysOfWeekDates[$dayOfWeek] = $start->toDateString();
             $start = $start->addDays(1);
+        }
+        
+        $exclude = [];
+        if(count($teamFights)>0)
+        {
+            foreach($teamFights as $teamFight)
+            {
+                $date = $teamFight->fight()->first()->start_at->format('Y-m-d H:i:s');
+                $exclude[$date][] = $teamFight->team()->first()->id;
+            }
         }
         
         $data = [];
@@ -82,6 +93,13 @@ class ScheduleHelper{
                     $hour = $arr[1];
                     $date = $daysOfWeekDates[$dayOfWeek]." ".$hour.":00:00";
                     
+                    if(strtotime($afterTime)>strtotime($date))
+                        continue;
+                    
+                    //exclude current battles with teams
+                    if(isset($exclude[$date]) && in_array($team->id, $exclude[$date]))
+                        continue;
+                         
                     $data[$date][] = $team;
                     $dates[] = $date;
                 }
@@ -98,35 +116,6 @@ class ScheduleHelper{
         
         return $dataSorted;
     }
-    
-    /*
-    public static function transformToRealDates($arSchedules)
-    {
-        $start = Carbon::today();
-        
-        $daysOfWeekDates = []; 
-        foreach($i = 1; $i<=7: $i++)
-        {
-            $dayOfWeek = $start->dayOfWeek;
-            $daysOfWeekDates[$dayOfWeek] = $start->toDateString();
-            $start = $start->addDays(1);
-        }
-        
-        $dates = [];
-        foreach($arSchedules as $value)
-        {
-            $arr = explode(",", $value);
-            $dayOfWeek = intval($arr[0]);
-            $hour = $arr[1];
-            $date = $daysOfWeekDates[$dayOfWeek]." ".$hour.":00:00";
-            
-            $dates[] = $date;
-        }
-        
-        usort($dates, "date_sort");
-        
-        return $dates;
-    }*/
     
     public static function modifyForTwoWeeks($schedule)
     {
@@ -146,8 +135,6 @@ class ScheduleHelper{
             $startWeek = Carbon::today();
             $endWeek = Carbon::today()->addDays(7);
         }
-        
-        //dd([Carbon::now()->startOfWeek()->addDays(-1), $endWeek]);
         
         $scheduleOnTwoWeeks = [];
         foreach($schedule as $event)

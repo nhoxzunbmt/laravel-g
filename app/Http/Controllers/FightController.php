@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Cache;
 use Validator;
 use App\Acme\Helpers\ApiHelper;
+use Carbon\Carbon;
 
 class FightController extends Controller
 {
@@ -45,17 +46,23 @@ class FightController extends Controller
         $team_against_id = $input['team_id'];
         $input['title'] = $request['title'] = "Team #".$request->user()->team_id." vs Team #".$team_against_id;
               
-        $count = FightTeam::where('team_id', '=', $request->user()->team_id)->
+        $currentFights = FightTeam::where('team_id', '=', $request->user()->team_id)->
             whereHas('fight', function($fightQuery) use ($start){
                 $fightQuery->where('start_at', $start);
                 $fightQuery->where('status', '<>', 2);
-            })->count();
+            });
                   
-        if($count>0)
+        $diff = 0;
+        if($currentFights->count()>0)
         {
-            return response()->json([
-                'error' => 'Team has fight on this time!'
-            ], 422);
+            $diff = strtotime(Carbon::now('UTC')->toDateTimeString()) - strtotime($currentFights->first()->created_at);
+            
+            if($diff<30*60)
+            {
+                return response()->json([
+                    'error' => 'Team has fight on this time!'
+                ], 422);
+            }
         }
         
         $validator = Validator::make($request->all(), $rules);
@@ -64,6 +71,16 @@ class FightController extends Controller
         {
             return response()->json($validator->messages(), 422);
         }else{
+            
+            //Delete last battle on this time
+            if($currentFights->count()>0 && $diff>30*60)
+            {
+                $currentFights->first()->update([
+                    "status" => 2,
+                    "cancel_text" => "Battle is rejected. New battle created on this time!",
+                    "cancel_user_id" => $request->user()->id
+                ]);
+            }
 
             unset($input["team_id"]);
             $userTeam = $request->user()->team()->first();
@@ -133,7 +150,42 @@ class FightController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $fight = Fight::findOrFail($id);
+        $user = $request->user();
+        $team = $user->team()->first();
+        
+        $team_ids = Fight::find($id)
+            ->teams()
+            ->select(['team_id'])
+            ->pluck('team_id')
+            ->all();
+            
+        if($team->capt_id!=$user->id)
+        {
+            return response()->json([
+                'error' => 'You are not a captain of the team!'
+            ], 422);
+        }
+            
+        if(!in_array($user->team_id, $team_ids))
+        {
+            return response()->json([
+                'error' => 'The team is not connected to the battle'
+            ], 422);
+        }
+        
+        $message = "Data has not changed";
+        
+        if($fight->status==1 && $request->get('status')==2)
+        {
+            $fight->update([
+                "status" => 2,
+                "cancel_text" => "The battle was rejected.",
+                "cancel_user_id" => $user->id
+            ]);
+            
+            $message = "The battle canceled successfully!";
+        }
     }
 
     /**
@@ -152,7 +204,8 @@ class FightController extends Controller
      */
     public function teams($id, Request $request)
     {
-        $team_ids = Fight::find($id)->teams()
+        $team_ids = Fight::find($id)
+            ->teams()
             ->select(['team_id'])
             ->pluck('team_id')
             ->all();
@@ -168,7 +221,8 @@ class FightController extends Controller
      */
     public function users($id, Request $request)
     {
-        $team_ids = Fight::find($id)->teams()
+        $team_ids = Fight::find($id)
+            ->teams()
             ->select(['team_id'])
             ->pluck('team_id')
             ->all();

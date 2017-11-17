@@ -1,6 +1,6 @@
 <template>
     <div  v-if="user!==null && invitations.length>0">
-        <h4 class="mb-10">Invitations to battles (received)</h4>
+        <h5 class="mb-10">Invites to battles (received)</h5>
                        
         <div class="table-wrap">
             <div class="table-responsive">
@@ -27,7 +27,7 @@
                             <td class="text-center">{{invitation.fight.bet}}</td>
                             <td class="text-center">
                                 <span v-if="invitation.fight.status==0">
-                                    waiting for invitations answers
+                                    waiting for invites answers
                                 </span>
                                 <span v-if="invitation.fight.status==2">
                                     canceled, {{invitation.fight.cancel_text}}
@@ -39,10 +39,10 @@
                             <td class="text-center">
                                 <a href="javascript:void(0)" @click="answerToInviteFight(invitation.id, 1)" title="confirm" v-if="user.id==invitation.team.capt_id && invitation.status==0"><i class="fa fa-check text-success"></i></a>&nbsp;
                                 <a href="javascript:void(0)" @click="answerToInviteFight(invitation.id, 2)" title="reject" v-if="user.id==invitation.team.capt_id && invitation.status==0"><i class="fa fa-times text-danger"></i></a>
-                                <span v-if="invitation.status==2">
+                                <span v-if="invitation.status==2"  class="text-danger">
                                     canceled
                                 </span>
-                                <span v-if="invitation.status==1">
+                                <span v-if="invitation.status==1"  class="text-success">
                                     confirmed
                                 </span> 
                             </td>

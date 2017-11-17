@@ -346,7 +346,7 @@
                         }).catch(error => {
                         
                             swal({
-                                type: 'warning',
+                                type: 'error',
                                 title: 'Error!',
                                 html: error.response.data.error
                             });              
@@ -359,7 +359,7 @@
                     }).catch(error => {
                     
                         swal({
-                            type: 'warning',
+                            type: 'error',
                             title: 'Error!',
                             html: error.response.data.error
                         });              

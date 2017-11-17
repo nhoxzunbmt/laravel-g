@@ -1,6 +1,6 @@
 <template>
     <div  v-if="user!==null && invitations.length>0">
-        <h4 class="mb-10">Invitations to battles (sent)</h4>
+        <h5 class="mb-10">Invites to battles (sent)</h5>
                        
         <div class="table-wrap">
             <div class="table-responsive">
@@ -12,6 +12,7 @@
                             <th>Bet</th>
                             <th>Battle status</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 				    <tbody>
@@ -26,26 +27,29 @@
                             <td class="text-center">{{invitation.fight.start_at}}</td>
                             <td class="text-center">{{invitation.fight.bet}}</td>
                             <td class="text-center">
-                                <span v-if="invitation.fight.status==0">
-                                    waiting for invitations answers
+                                <span v-if="invitation.fight.status==0" class="text-muted">
+                                    waiting for invites answers
                                 </span>
-                                <span v-if="invitation.fight.status==2">
+                                <span v-if="invitation.fight.status==2" class="text-danger">
                                     canceled, {{invitation.fight.cancel_text}}
                                 </span>
-                                <span v-if="invitation.fight.status==1">
+                                <span v-if="invitation.fight.status==1" class="text-success">
                                     active
                                 </span>                     
                             </td>
                             <td class="text-center">
-                                <span v-if="invitation.status==0">
+                                <span v-if="invitation.status==0" class="text-muted">
                                     waiting for answers
                                 </span>
-                                <span v-if="invitation.status==2">
+                                <span v-if="invitation.status==2" class="text-danger">
                                     canceled
                                 </span>
-                                <span v-if="invitation.status==1">
+                                <span v-if="invitation.status==1" class="text-success">
                                     confirmed
                                 </span> 
+                            </td>
+                            <td class="text-center">
+                                <a href="javascript:void(0)" @click="cancelInvitation(invitation.id)" title="reject" v-if="user.id==invitation.fight.created_id && invitation.status==0"><i class="fa fa-times text-danger"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -84,6 +88,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
     data() {
@@ -166,6 +171,40 @@ export default {
             let link = location.search;
             link = this.$route.path + this.updateUrlParameter(link, "page", page);
             return link;
+        },
+        cancelInvitation(id)
+        {
+            swal({
+                title: 'Are you sure you want to cancel the invitation?',
+                text: "You also cancel the battle!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(function () {
+                
+                axios.put('/api/fight_team/'+id, {
+                    status: 2
+                }).then((response) => {
+    
+                    swal({
+                        type: 'success',
+                        html: response.data.message
+                    });
+                    
+                }).catch(error => {
+                
+                    swal({
+                        type: 'error',
+                        title: 'Error!',
+                        html: error.response.data.error
+                    });              
+                });
+                
+            });
+            
         }
     },
     watch: {

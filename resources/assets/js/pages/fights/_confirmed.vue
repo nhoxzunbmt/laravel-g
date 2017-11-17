@@ -7,17 +7,22 @@
                 <table class="table table-hover table-bordered mb-0">
                     <thead>
                         <tr>
-                            <th>Title</th>
+                            <!--<th>Title</th>-->
+                            <th>ID</th>
                             <th>Teams</th>
                             <th>Datetime</th>
                             <th>Bet</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 				    <tbody>
                         <tr v-for="fight in fights">
-                            <td>
+                            <!--<td>
                                 {{fight.title}}
+                            </td>-->
+                            <td>
+                                {{fight.id}}
                             </td>
                             <td class="text-center">
                                 
@@ -40,15 +45,18 @@
                             <td class="text-center">{{fight.start_at}}</td>
                             <td class="text-center">{{fight.bet}}</td>
                             <td class="text-center">
-                                <span v-if="fight.status==0">
-                                    waiting for invitations answers
+                                <span v-if="fight.status==0" class="text-muted">
+                                    waiting for <br />invites answers
                                 </span>
-                                <span v-if="fight.status==2">
-                                    canceled, {{fight.cancel_text}}
+                                <span v-if="fight.status==2" class="text-danger">
+                                    canceled, <br />{{fight.cancel_text}}
                                 </span>
-                                <span v-if="fight.status==1">
+                                <span v-if="fight.status==1" class="text-success">
                                     active
                                 </span>
+                            </td>
+                            <td class="text-center">
+                                <a href="javascript:void(0)" @click="cancelFight(fight.id)" title="reject" v-if="user.id==fight.created_id && fight.status==1"><i class="fa fa-times text-danger"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -87,6 +95,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
     data() {
@@ -136,8 +145,6 @@ export default {
         if(this.user.team_id!=null)
         {
             this.getFights(this.user.team_id);
-            //this.getCalendarFights(this.user.team_id);
-            //this.getTeam(this.user.team_id);
         }
     },
     methods: 
@@ -165,10 +172,6 @@ export default {
                 
                 delete response.data.data;
                 this.pagination = response.data;
-                
-                //Convert from UTC to local time
-                //events = this.datesConvertUTC(events, -1);
-                //this.$set(this, 'events', events);
             });
         },
         getLink(page){
@@ -176,6 +179,30 @@ export default {
             link = this.$route.path + this.updateUrlParameter(link, "page", page);
             return link;
         },
+        cancelFight(id)
+        {
+            swal({
+                title: 'Are you sure you want to cancel the battle?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(function () {
+              
+                axios.put('/api/fight/'+id, {
+                    status: 2
+                }).then((response) => {
+    
+                    swal({
+                        type: 'success',
+                        html: response.data.message
+                    });
+                    
+                });
+            });            
+        }
     },
     watch: {
         '$route.query'(newPage, oldPage) {

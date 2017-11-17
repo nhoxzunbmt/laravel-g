@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FightTeam;
 use App\Acme\Helpers\ApiHelper;
+use Carbon\Carbon;
 
 class FightTeamController extends Controller
 {
@@ -76,10 +77,21 @@ class FightTeamController extends Controller
         $fight = $FightTeam->fight()->first();
         $user = $request->user();
         
-        if($user->id!=$team->capt_id)
+        if($user->id==$fight->created_id)
+        {
+            $diff = strtotime(Carbon::now('UTC')->toDateTimeString()) - strtotime($fight->created_at);
+            
+            if($diff<30*60)
+            {
+                return response()->json([
+                    "error" => "Only after 30 minutes you can make some changes!"
+                ], 422);
+            }
+        }
+        else if($user->id!=$team->capt_id)
         {
             return response()->json([
-                "error" => "Only captain can change status of invitation to the battle"
+                "error" => "Only captain can change status of invite to the battle"
             ], 422);
         }
         
@@ -97,18 +109,18 @@ class FightTeamController extends Controller
                 $fight->update([
                     "status" => 1
                 ]);
-                $message = "Invitation to the battle confirmed successfully!";
+                $message = "Invite to the battle confirmed successfully!";
             }
             if($request->get('status')==2)
             {
                 //decline the battle
                 $fight->update([
                     "status" => 2,
-                    "cancel_text" => "Invitation to the battle was rejected.",
+                    "cancel_text" => "Invite to the battle was canceled.",
                     "cancel_user_id" => $user->id
                 ]);
                 
-                $message = "Invitation to the battle rejected successfully!";
+                $message = "Invite to the battle canceled successfully!";
             }
         }
         
