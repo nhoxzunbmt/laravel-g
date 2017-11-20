@@ -147,6 +147,6 @@ export default [
   },
   
   { path: '/email/verify/:token', name: 'auth.verify', component: require('./pages/auth/verify.vue') },
-  
+  { path: '/player', name: 'player', component: require('./pages/player.vue') },
   { path: '*', component: require('./pages/errors/404.vue') }
 ]

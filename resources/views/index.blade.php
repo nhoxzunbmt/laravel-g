@@ -12,7 +12,7 @@
 	<link rel="shortcut icon" href="{{ asset('/images/logo-2.png') }}">
 	<link rel="icon" href="{{ asset('/images/logo-2.png') }}" type="image/x-icon">
 	
-    <link href="{{ asset('/css/app.css') }}" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
     <link href="{{ asset('/css/custom.css') }}" rel="stylesheet" type="text/css"/>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 <body>
     <div id="app"></div>
     <script src="{{ asset('/js/vendor.js') }}"></script>
-    <script src="{{ asset('/js/app.js') }}"></script>
+    <script src="{{ mix('/js/app.js') }}"></script>
 </body>
 
 </html>
