@@ -6,7 +6,7 @@
                 <div class="panel-heading">
                     <div class="pull-left">
                     <h3 class="panel-title txt-dark">
-                        Team fights
+                        Team battles
                     </h3></div> 
                     <div class="clearfix"></div>
                 </div>

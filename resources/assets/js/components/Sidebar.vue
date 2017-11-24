@@ -2,21 +2,8 @@
 <!-- Left Sidebar Menu -->
 <div class="fixed-sidebar-left">
 	<ul class="nav navbar-nav side-nav nicescroll-bar">
-		<li class="navigation-header">
-			<span>Popular games</span> 
-			<i class="zmdi zmdi-more"></i>
-		</li>
-        <li v-for="popularGame in this.$parent.popularGames" >
-            <router-link :to="'/games/' + popularGame.id" class="">
-                <div class="pull-left">
-                    <img :src="storagePath + '' + popularGame.logo" width="17" class="zmdi mr-20" :title="popularGame.title"/>
-                    <span class="right-nav-text">{{ popularGame.title | truncate(20, '...') }}</span></div><div class="clearfix">
-                </div>
-            </router-link>
-        </li>
         
-		<li><hr class="light-grey-hr mb-10"/></li>
-		<li class="navigation-header">
+        <li class="navigation-header">
 			<span>left menu</span> 
 			<i class="zmdi zmdi-more"></i>
 		</li>
@@ -33,10 +20,32 @@
             <router-link :to="{ name: 'investors' }"><div class="pull-left"><i class="fa fa-user-secret mr-20" aria-hidden="true"></i><span class="right-nav-text">Investors</span></div><div class="clearfix"></div></router-link>
         </li>
         <li>
-            <router-link :to="{ name: 'fights' }"><div class="pull-left"><i class="ti-shield mr-20"></i><span class="right-nav-text">Fights</span></div><div class="clearfix"></div></router-link>
+            <router-link :to="{ name: 'fights' }"><div class="pull-left"><i class="ti-shield mr-20"></i><span class="right-nav-text">Battles</span></div><div class="clearfix"></div></router-link>
+        </li>
+        <!--<li>
+            <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-info-outline mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
+        </li>-->
+        
+		<li><hr class="light-grey-hr mb-10"/></li>
+    
+		<li class="navigation-header">
+			<span>Popular games</span> 
+			<i class="zmdi zmdi-more"></i>
+		</li>
+        <li v-for="popularGame in this.$parent.popularGames" >
+            <router-link :to="'/games/' + popularGame.id" class="">
+                <div class="pull-left">
+                    <img :src="storagePath + '' + popularGame.logo" width="17" class="zmdi mr-20" :title="popularGame.title"/>
+                    <span class="right-nav-text">{{ popularGame.title | truncate(20, '...') }}</span></div><div class="clearfix">
+                </div>
+            </router-link>
         </li>
         <li>
-            <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-info-outline mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
+            <router-link :to="{name: 'games'}" class="">
+                <div class="pull-left">
+                    <span class="right-nav-text"><u>Show all games</u></span></div><div class="clearfix">
+                </div>
+            </router-link>
         </li>
 	</ul>
     

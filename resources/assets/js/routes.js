@@ -73,7 +73,7 @@ export default [
             { path: 'calendar', name: 'personal.calendar', component: require('./pages/personal/calendar.vue') },
             
             { path: 'friends', component: require('./pages/personal/friends/index.vue'), children: [
-                { path: '', redirect: { name: 'friends.all' }},
+                { path: '', redirect: { name: 'friends.search' }},
                 { path: 'all', name: 'friends.all', component: require('./pages/personal/friends/_all.vue') },
                 { path: 'online', name: 'friends.online', component: require('./pages/personal/friends/_online.vue') },
                 { path: 'requests-in', name: 'friends.request.in', component: require('./pages/personal/friends/_request_in.vue') },
@@ -88,11 +88,11 @@ export default [
         name: 'teams.create',
         component: require('./pages/teams/create.vue')
     },
-    {
+    /*{
         path: '/fights/create',
         name: 'fights.create',
         component: require('./pages/fights/create.vue')
-    },
+    },*/
     { path: '/teams/:id/edit', component: require('./pages/teams/edit/index.vue'), children: [
         { path: '', redirect: { name: 'teams.edit' }},
         { path: 'info', name: 'teams.edit', component: require('./pages/teams/edit/_info.vue') },

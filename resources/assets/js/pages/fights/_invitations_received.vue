@@ -83,6 +83,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
     data() {

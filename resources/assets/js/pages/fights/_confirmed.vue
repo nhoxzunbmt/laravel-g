@@ -22,7 +22,9 @@
                                 {{fight.title}}
                             </td>-->
                             <td>
-                                {{fight.id}}
+                                <router-link  :to="{ name: 'fight', params: { id: fight.id }}">        
+                                    {{fight.id}}
+                                </router-link>
                             </td>
                             <td class="text-center">
                                 

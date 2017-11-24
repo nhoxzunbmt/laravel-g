@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" v-bind:class="{'navbar-authenticated':authenticated}">
     	<div class="mobile-only-brand pull-left">
     		<div class="nav-header pull-left">
     			<div class="logo-wrap">
@@ -21,23 +21,23 @@
             
             <router-link :to="{ name: 'investors-info' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">For Investors</router-link>
             
-            <form id="search_form" role="search" class="top-nav-search collapse pull-left">
+            <!--<form id="search_form" role="search" class="top-nav-search collapse pull-left">
     			<div class="input-group">
     				<input type="text" name="example-input1-group2" class="form-control" placeholder="Search">
     				<span class="input-group-btn">
     				<button type="button" class="btn  btn-default"  data-target="#search_form" data-toggle="collapse" aria-label="Close" aria-expanded="true"><i class="zmdi zmdi-search"></i></button>
     				</span>
     			</div>
-    		</form>
+    		</form>-->
     	</div>
     	<div id="mobile_only_nav" class="mobile-only-nav pull-right">
     		<ul class="nav navbar-right top-nav pull-right">
             
                 <li v-if="!authenticated">
-                    <router-link :to="{ name: 'auth.login' }">Login</router-link>
+                    <router-link :to="{ name: 'auth.login' }" class="btn btn-primary inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Login</router-link>
                 </li>
                 <li v-if="!authenticated">
-                    <router-link :to="{ name: 'auth.register' }">Register</router-link>
+                    <router-link :to="{ name: 'auth.register' }" class="btn btn-danger inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Register</router-link>
                 </li>
 				<li class="dropdown alert-drp" v-if="authenticated">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" @click="showDropdown"><i class="zmdi zmdi-notifications top-nav-icon"></i><span class="top-nav-icon-badge">0</span></a>
@@ -81,9 +81,10 @@
 					<a href="#" class="dropdown-toggle pr-0" data-toggle="dropdown" @click="showDropdown">
                         <img :src="getImageLink(user.avatar)" alt="user_auth" class="user-auth-img img-circle"/>
                         <span class="user-online-status"></span>
-                        <span class="user-title">{{user.name}}</span>
+                        <span class="user-title">{{user.nickname}}<br />
                         <span class="user-balance text-info">
-                            <span class="weight-500" style="font-size: 20px;" >{{user.balance}}</span><i class="fa fa-btc" style="font-size: 22px" aria-hidden="true"></i>
+                            <span class="weight-500" style="font-size: 18px;" >{{formatPrice(user.balance)}}</span> SPA</i>
+                        </span>
                         </span>
                     </a>
 					<ul class="dropdown-menu user-auth-dropdown" data-dropdown-in="flipInX" data-dropdown-out="flipOutX">
@@ -132,6 +133,10 @@ export default {
             {
                 $(event.currentTarget).closest("li").addClass("open");
             }
+        },
+        formatPrice(value) {
+            let val = (value/1).toFixed(2).replace('.', ',')
+            return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
         }
     }
 };

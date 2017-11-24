@@ -3244,7 +3244,7 @@ a#toggle_mobile_nav {
 .navbar.navbar-inverse.navbar-fixed-top .nav > li.full-width-drp {
   position: static;
 }
-.navbar.navbar-inverse.navbar-fixed-top .nav > li > a {
+.navbar.navbar-inverse.navbar-fixed-top.navbar-authenticated .nav > li > a {
   color: #878787;
   background: transparent !important;
   -webkit-transition: 0.3s ease;

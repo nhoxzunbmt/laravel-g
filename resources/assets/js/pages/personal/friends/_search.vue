@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="input-group mb-15">
-                	<input type="text" v-model="q" name="q" @keyup.enter="search()" class="form-control" placeholder="Search by friend's name">
+                	<input type="text" v-model="q" name="q" @keyup.enter="search()" @input="search()" class="form-control" placeholder="Search by friend's name">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-primary" v-if="!loading" @click="search()"><i class="fa fa-search"></i></button>
                         <button class="btn btn-default" type="button" disabled="disabled" v-if="loading">Searching...</button>
@@ -133,7 +133,7 @@
         methods : {       
             getVueItems: function(){
                 
-                if(this.q.length<2)
+                if(this.q.length<2 && this.$route.query.q!=undefined && this.q.length>0)
                     return false;
                 
                 this.error = false;

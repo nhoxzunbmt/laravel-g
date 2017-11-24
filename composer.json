@@ -25,6 +25,7 @@
         "socialiteproviders/steam": "^1.0",
         "socialiteproviders/twitch": "dev-master",
         "socialiteproviders/vkontakte": "^3.0",
+        "socialiteproviders/youtube": "dev-master",
         "sofa/eloquence": "~5.4",
         "symfony/event-dispatcher": "^3.2",
         "tcg/voyager": "^0.11.9",

@@ -35,6 +35,11 @@ export default {
                     socialId : 'twitch',
                     bclass: 'facebook',
                     fa: 'twitch'
+                },
+                {
+                    socialId : 'youtube',
+                    bclass: 'google',
+                    fa: 'youtube'
                 }
             ]
         }

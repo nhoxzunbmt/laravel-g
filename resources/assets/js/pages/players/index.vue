@@ -55,6 +55,7 @@
                                                 <td class="text-center" v-else>0</td>
                                                 <td class="text-center">
                                                     <span v-if="player.free_player">Free</span>
+                                                    <span v-else-if="player.id==player.team.capt_id">Captain</span>
                                                     <span v-else>In team</span>
                                                 </td>
                                             </tr>

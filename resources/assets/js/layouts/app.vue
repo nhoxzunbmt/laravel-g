@@ -372,16 +372,16 @@ var setHeightWidth = function () {
 .navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-title{
     margin-left: 10px;
     display: inline-block;
-    vertical-align: top;
-    line-height: 55px;
+    vertical-align: middle;
+    line-height: 20px;
     margin-right: 10px;
 }
-.navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-balance{
+/*.navbar.navbar-inverse.navbar-fixed-top .nav > li > a .user-balance{
     position: absolute;
     top: 13px;
     left: 65px;
     font-size: 16px;
-}
+}*/
 
 @media (min-width: 1025px){
     .navbar.navbar-inverse.navbar-fixed-top .top-nav-search {

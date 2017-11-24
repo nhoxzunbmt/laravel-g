@@ -67,8 +67,11 @@ class TwitchHelper{
         $cacheTags = Cache::tags('twitch');
         
         if ($cacheTags->get($cache_key)){
-            $streams = $cacheTags->get($cache_key);
+            $streamsFiltered = $cacheTags->get($cache_key);
         } else {
+            
+            $games = Game::select(['title'])->pluck('title')->toArray();
+            
             $twitchClient = new \TwitchApi\TwitchApi([
                 'client_id' => env('TWITCH_API_CLIENT_ID')
             ]); 
@@ -87,10 +90,20 @@ class TwitchHelper{
             $responseTwitch = $twitchClient->getFeaturedStreams($limit, $offset);
             $streams = $responseTwitch["featured"];
             
-            $cacheTags->put($cache_key, $streams, 10);
+            $streamsFiltered = [];
+            foreach($streams as $stream)
+            {
+                if(in_array($stream['stream']['game'], $games))
+                {
+                    $streamsFiltered[] = $stream;
+                }
+            }
+            unset($streams);
+            
+            $cacheTags->put($cache_key, $streamsFiltered, 10);
         }
 
-        return $streams;
+        return $streamsFiltered;
     }
     
     public static function getVideosByUsername($channel)

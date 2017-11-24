@@ -101,7 +101,7 @@ export default {
         return {
             tabs: [
                 {
-                    name: 'Info',
+                    name: 'Profile',
                     route: 'profile'
                 },
                 {

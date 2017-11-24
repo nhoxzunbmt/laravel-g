@@ -25,22 +25,6 @@ class GameController extends Controller
      */
     public function index(Request $request)
     {
-        /*$id = Str::slug(implode($request->all()));
-        //$items = Cache::remember('games'.$id, 60, function() use ($request){
-        //    return Game::search($request->all())->active()->orderBy('id', 'asc')->paginate(6);
-        //});
-
-        $items = Game::search($request->all())->active();
-
-        if($request->has('show_all')) 
-        {
-            $items = $items->select(['id', 'title'])->orderBy('title', 'asc')->get();
-        }else{
-            $items = $items->orderBy('id', 'asc')->paginate(12)->appends('page');
-        }
-            
-        return response()->json($items);
-        */
         $games = Game::active();      
         return ApiHelper::parseMultiple($games, ['title', 'genre_id'], $request->all());
     }
@@ -74,22 +58,6 @@ class GameController extends Controller
      */
     public function show($id, Request $request)
     {
-        /*try
-        {
-            $game = Cache::remember('game' . $id, 60, function() use ($id){
-                $game = Game::with(['genre' => function($query){
-                    $query->select('id', 'title');
-                }])->findOrFail($id);
-                $game->images = json_decode($game->images, true);
-                return $game;
-            });
-        }
-        catch(ModelNotFoundException $e)
-        {
-            abort(404);
-        }
-        
-        return response()->json($game);*/
         $game = new Game();
         return ApiHelper::parseSingle($game, $id, $request->all());
     }
@@ -266,7 +234,6 @@ class GameController extends Controller
             "Call of Duty: Black Ops III",
             "Overwatch",
             "StarCraft II",
-            "Hearthstone: Heroes of WarCraft",
             "Heroes of the Storm",
             "Halo 5: Guardians",
             "FIFA 17",
@@ -299,11 +266,6 @@ class GameController extends Controller
         {
             if(!in_arrayi($game->title, $list) && !in_arrayi($game->alias, $list))
             {
-                //$game->fights()->delete();
-                /*echo $game->title."<br />";
-                
-                $game->delete();
-                */
                 DB::delete('DELETE FROM games WHERE id = '.$game->id);
                 
             }else{
@@ -311,8 +273,6 @@ class GameController extends Controller
             }
         }
         
-        dd($titles);
-        
-        //return response()->json($games);
+        return response()->json($games);
     }
 }

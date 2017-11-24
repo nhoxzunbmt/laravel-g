@@ -15,7 +15,7 @@
 								</div>
                                 
     							<form autocomplete="off" @submit="save">
-                                    <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Info</h6>
+                                    <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Profile</h6>
                                     <hr class="light-grey-hr">
                                     <div class="row">
     									<div class="col-md-6" v-if="type==null">

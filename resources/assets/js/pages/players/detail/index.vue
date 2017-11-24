@@ -70,7 +70,7 @@ export default {
             response: null,
             tabs: [
                 {
-                    name: 'Info',
+                    name: 'Profile',
                     route: 'player.detail'
                 },
                 {
@@ -78,7 +78,7 @@ export default {
                     route: 'player.detail.teams'
                 },
                 {
-                    name: 'Fights',
+                    name: 'Battles',
                     route: 'player.detail.fights'
                 },
                 {

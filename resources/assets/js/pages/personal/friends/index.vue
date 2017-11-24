@@ -37,8 +37,8 @@ export default {
     data: () => ({
         tabs: [
             {
-                name: 'All friends',
-                route: 'friends.all'
+                name: 'Find friends',
+                route: 'friends.search'
             },
             /*{
                 name: 'Friends online',
@@ -53,9 +53,9 @@ export default {
                 route: 'friends.request.out'
             },
             {
-                name: 'Search',
-                route: 'friends.search'
-            },
+                name: 'All friends',
+                route: 'friends.all'
+            }
         ]
     })
 }

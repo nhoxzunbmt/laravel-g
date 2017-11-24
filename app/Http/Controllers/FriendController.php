@@ -115,20 +115,24 @@ class FriendController extends Controller
         $recipients  = $friendships->pluck('recipient_id')->all();
         $senders     = $friendships->pluck('sender_id')->all();
         
-        if($request->has('q')) 
+        if($request->has('q') && !empty($request->has('q') )) 
         {
-            $items = User::search($request->get('q'))->where('id', '!=', $user->getKey())
-                ->whereNotIn('id', array_merge($recipients, $senders))
-                ->where('type', $user->type)->active()
-                ->select(['id', 'name', 'last_name', 'avatar', 'nickname', 'type'])->paginate(12);
-            
-            if($items->count()==0)
-                return response()->json($error);
-
-            return response()->json($items);
+            $items = User::search($request->get('q'))
+                        ->where('id', '!=', $user->getKey());
+        }else{
+            $items = User::where('id', '!=', $user->getKey());
         }
         
-        return response()->json($error);
+        $items = $items->whereNotIn('id', array_merge($recipients, $senders))
+                ->where('type', $user->type)
+                ->active()
+                ->select(['id', 'name', 'last_name', 'avatar', 'nickname', 'type'])
+                ->paginate(12);
+            
+        if($items->count()==0)
+            return response()->json($error);
+
+        return response()->json($items);
     }
     
     /**
