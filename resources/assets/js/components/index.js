@@ -12,6 +12,7 @@ import CalendarFights from './CalendarFights.vue'
 import PotentialBattles from './modals/fights/potentialBattles.vue'
 import Comments from './Comments.vue'
 import AnimatedNumber from './AnimatedNumber.vue'
+import NewsCarousel from './NewsCarousel.vue'
 import { HasError4, AlertError, AlertSuccess } from 'vform'
 
 Vue.component(Icon.name, Icon)
@@ -27,6 +28,7 @@ Vue.component(Teamcreate.name, Teamcreate)
 Vue.component(Fightcreate.name, Fightcreate)
 Vue.component(Usercalendar.name, Usercalendar)
 Vue.component(Comments.name, Comments)
+Vue.component(NewsCarousel.name, NewsCarousel)
 Vue.component(AnimatedNumber.name, AnimatedNumber)
 
 Vue.component(Sidebar.name, Sidebar)

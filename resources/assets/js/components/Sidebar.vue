@@ -22,6 +22,9 @@
         <li>
             <router-link :to="{ name: 'fights' }"><div class="pull-left"><i class="ti-shield mr-20"></i><span class="right-nav-text">Battles</span></div><div class="clearfix"></div></router-link>
         </li>
+        <li>
+            <router-link :to="{ name: 'news' }"><div class="pull-left"><i class="fa fa-newspaper-o mr-20"></i><span class="right-nav-text">News</span></div><div class="clearfix"></div></router-link>
+        </li>
         <!--<li>
             <router-link to="/faq" class=""><div class="pull-left"><i class="zmdi zmdi-info-outline mr-20"></i><span class="right-nav-text">FAQ</span></div><div class="clearfix"></div></router-link>
         </li>-->

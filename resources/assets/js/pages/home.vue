@@ -132,7 +132,8 @@
             </div>
         </div>-->
             
-        <comments :comment-url="pageId"></comments>
+        <!--<comments :comment-url="pageId"></comments>-->
+        <news-carousel></news-carousel>
     </div>
 </template>
 

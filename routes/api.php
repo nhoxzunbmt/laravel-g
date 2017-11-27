@@ -220,6 +220,30 @@ Route::get('/timezones', 'TimezoneController@index');
 /*************************************************************************************************************************/
 
 /**
+ * News
+ */
+/**
+ * @api {get} /news Get list all
+ * @apiName index
+ * @apiGroup News
+ * @apiPermission guest:api
+ * @apiDescription Get  list of all news.
+ */
+/**
+ * @api {get} /news/:param Get detail
+ * @apiName show
+ * @apiGroup News
+ * @apiPermission guest:api
+ * @apiDescription Get data of news.
+ * 
+ * @apiParam {Number} param News unique slug.
+ */
+Route::resource('news', 'NewsController', ['only' => [
+    'index', 'show'
+]]);//apiHandler
+
+
+/**
  * Teams
  */
 /**

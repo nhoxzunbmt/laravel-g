@@ -12,7 +12,16 @@ export default [
         name: 'game',
         component: require('./pages/games/detail/index.vue')
     },*/
-    
+    {
+        path: '/news',
+        name: 'news',
+        component: require('./pages/news/index.vue')
+    },
+    {
+        path: '/news/:slug',
+        name: 'news.detail',
+        component: require('./pages/news/detail.vue')
+    },
     { path: '/games/:gameId', component: require('./pages/games/detail/index.vue'), children: [
         { path: '', redirect: { name: 'game' }},
         { path: 'broadcasts', name: 'game', component: require('./pages/games/detail/_broadcasts.vue') },
