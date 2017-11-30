@@ -105,6 +105,19 @@ class AuthController extends Controller
             if(! $token = JWTAuth::attempt($credentials, [
                 'exp' => $expiration,
             ])){
+                
+                if(filter_var($request->get('nickname'), FILTER_VALIDATE_EMAIL))
+                {
+                    $q = User::where("email", $request->get('nickname'));
+                    if($q->count()>0)
+                    {
+                        return response()->json([
+                            'error' => 'Choose your nickname from the list:',
+                            'data' => $q->select(['nickname'])->get()
+                        ], 401);
+                    }
+                }
+                
                 return response()->json([
                     'error' => 'Invalid credentials.'
                 ], 401);

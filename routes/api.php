@@ -250,6 +250,7 @@ Route::resource('news', 'NewsController', ['only' => [
  * @api {get} /teams/:param Team's data
  * @apiName show
  * @apiGroup Team
+ * 
  * @apiPermission none
  * @apiDescription Get data of team by slug or id.
  * 
@@ -576,3 +577,5 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/friends/searchPotential', 'FriendController@searchPotentialFriends');
     
 });
+
+//Route::get('/steam/user/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');

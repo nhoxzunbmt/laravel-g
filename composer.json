@@ -22,6 +22,7 @@
         "nicklaw5/twitch-api-php": "^0.1.5",
         "predis/predis": "^2.0@dev",
         "pusher/pusher-php-server": "^2.6",
+        "sjaakmoes/dotapi2": "~1.0",
         "socialiteproviders/steam": "^1.0",
         "socialiteproviders/twitch": "dev-master",
         "socialiteproviders/vkontakte": "^3.0",

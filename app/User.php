@@ -245,9 +245,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $email = $providerUser->getEmail();
         if(empty($email))
         {
-            $email = self::generateEmail($providerUser);
-            $confirmed = 0;
-            $active = 0;
+            if(filter_var($providerUser->getNickname(), FILTER_VALIDATE_EMAIL))
+            {
+                $email = $providerUser->getNickname();
+                $confirmed = 1;
+                $active = 1;
+            }else{
+                $email = self::generateEmail($providerUser);
+                $confirmed = 0;
+                $active = 0;
+            }
+            
         }else{
             $confirmed = 1;
             $active = 1;

@@ -18,9 +18,12 @@
                                     <div class="alert alert-danger" v-if="error">
                                         <p>{{ response.error }}</p>
                                     </div>
+                                    <div v-if="error" class="mb-20">
+                                        <button class="btn btn-primary btn-sm mr-20" v-for="nick in nicknames" @click="setNickname(nick.nickname)">{{nick.nickname}}</button>
+                                    </div>
                                     <form autocomplete="off" v-on:submit="login">
                                         <div class="form-group" v-bind:class="{ 'has-error': error && response.nickname }">
-                                            <label for="nickname">Nickname</label>
+                                            <label for="nickname">Nickname / Email</label>
                                             <input type="nickname" id="nickname" class="form-control" v-model="nickname" required>
                                             <span class="help-block" v-if="error && response.nickname">{{ response.nickname[0] }}</span>
                                         </div>
@@ -65,7 +68,8 @@ export default {
             password: null,
             success: false,
             error: false,
-            response: null
+            response: null,
+            nicknames: []
         }
     },
     methods: {
@@ -102,10 +106,22 @@ export default {
                 });
             }).catch(error => {
                 
-                this.response = error.response.data
+                this.response = error.response.data;
+                
+                if(this.response.data!=undefined)
+                {
+                    this.nicknames = this.response.data;
+                }
+                
                 this.error = true
                 
             });
+        },
+        setNickname(nickname)
+        {
+            this.nickname = nickname;
+            this.nicknames = [];
+            this.error = false;
         }
     }
 }
