@@ -23,6 +23,9 @@ class EventServiceProvider extends ServiceProvider
             'SocialiteProviders\Twitch\TwitchExtendSocialite@handle',
             'SocialiteProviders\YouTube\YouTubeExtendSocialite@handle',
         ],
+        'jdavidbakr\MailTracker\Events\ViewEmailEvent' => [
+            'App\Listeners\EmailViewed',
+        ]
     ];
 
     /**

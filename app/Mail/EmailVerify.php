@@ -31,6 +31,6 @@ class EmailVerify extends Mailable
     public function build()
     {
         return $this->markdown('emails.email_verify')
-                        ->with('content', $this->content);
+            ->with('content', $this->content);
     }
 }

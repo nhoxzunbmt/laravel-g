@@ -159,6 +159,7 @@ return [
         Marcelgwerder\ApiHandler\ApiHandlerServiceProvider::class,
         Torann\GeoIP\GeoIPServiceProvider::class,
         Camroncade\Timezone\TimezoneServiceProvider::class,
+        jdavidbakr\MailTracker\MailTrackerServiceProvider::class,
         
         /*
          * Application Service Providers...
