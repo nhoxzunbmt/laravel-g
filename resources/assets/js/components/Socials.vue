@@ -16,11 +16,7 @@ export default {
                     bclass: 'vk',
                     fa: 'vk'
                 },
-                {
-                    socialId : 'google',
-                    bclass: 'google',
-                    fa: 'google-plus'
-                },
+                
                 {
                     socialId : 'facebook',
                     bclass: 'facebook',
@@ -40,6 +36,11 @@ export default {
                     socialId : 'youtube',
                     bclass: 'google',
                     fa: 'youtube'
+                },
+                {
+                    socialId : 'google',
+                    bclass: 'google',
+                    fa: 'google-plus'
                 }
             ]
         }
@@ -48,9 +49,7 @@ export default {
 </script>
 <style>
 .button-list .btn{
-    margin-top: 10px; 
-}
-.button-list .btn:first-child{
-    margin-left: 0;  
+    margin: 10px 0;
+    width: 100%; 
 }
 </style>

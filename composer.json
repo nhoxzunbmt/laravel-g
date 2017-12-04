@@ -11,6 +11,7 @@
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "filp/whoops": "^2.1",
         "giantbomb/giantbomb-php-api": "dev-master",
+        "google/apiclient": "2.2",
         "highideas/laravel-users-online": "^2.2",
         "hootlex/laravel-friendships": "^1.0",
         "intervention/image": "^2.3",
