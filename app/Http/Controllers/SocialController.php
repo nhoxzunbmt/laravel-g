@@ -44,7 +44,7 @@ class SocialController extends Controller
             ];
         
             $client = new Google_Client();
-            $client->setApplicationName("games-dev-187013");
+            $client->setApplicationName(env("GOOGLE_APP_NAME"));
             $client->setDeveloperKey(env('GOOGLE_SERVER_KEY'));
             $client->setAccessToken(json_encode($google_client_token));
             // Запросим контакты пользователя
