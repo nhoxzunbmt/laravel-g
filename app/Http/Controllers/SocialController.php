@@ -30,32 +30,7 @@ class SocialController extends Controller
 
     public function callback(SocialAccountService $service, $provider)
     {        
-        $driver = Socialite::driver($provider);
-        
-        if($provider=="google")
-        {
-            $user = $driver->user();
-
-            // Установим токен в  Google API PHP Client
-            $google_client_token = [
-                'access_token' => $user->token,
-                'refresh_token' => $user->refreshToken,
-                'expires_in' => $user->expiresIn
-            ];
-        
-            $client = new Google_Client();
-            $client->setApplicationName(env("GOOGLE_APP_NAME"));
-            $client->setDeveloperKey(env('GOOGLE_SERVER_KEY'));
-            $client->setAccessToken(json_encode($google_client_token));
-            // Запросим контакты пользователя
-            $service = new Google_Service_People($client);
-        
-            $optParams = array('requestMask.includeField' => 'person.phone_numbers,person.names,person.email_addresses');
-            $results = $service->people_connections->listPeopleConnections('people/me',$optParams);
-        
-            dd($results);
-        }
-        
+        $driver = Socialite::driver($provider);        
         $user = $service->createOrGetUser($driver, $provider);
         
         if(!$user)
@@ -69,19 +44,10 @@ class SocialController extends Controller
         {
             $token = str_random(256);
             JWTAuth::setToken($token);
-            /*return response()->json([
-                'error' => 'Could not create token',
-            ], 500);*/
         }
    
         $payload = JWTAuth::getPayload($token);
         $expiration = $payload['exp'];
-        
-        /*return response()->json([
-            "token_type" => "Bearer",
-            'token' => $token,
-            'expires_in' => $expiration
-        ], 200);*/
         
         return view('social_callback', [
             "token_type" => "Bearer",

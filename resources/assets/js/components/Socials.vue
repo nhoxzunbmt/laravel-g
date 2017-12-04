@@ -49,6 +49,13 @@ export default {
 </script>
 <style>
 .button-list .btn{
+    margin: 10px; 
+}
+.button-list .btn:first-child{
+    margin-left: 0;  
+}
+
+.auth-form-wrap .button-list .btn{
     margin: 10px 0;
     width: 100%; 
 }

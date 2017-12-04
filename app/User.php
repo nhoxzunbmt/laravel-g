@@ -283,7 +283,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
             'password' => str_random(10),
             'avatar' => $avatar,
             'confirmed' => $confirmed,
-            'active' => $active          
+            'active' => $active,
+            'contacts' => $providerUser->contacts           
         ];                               
         
         return self::create($data);
