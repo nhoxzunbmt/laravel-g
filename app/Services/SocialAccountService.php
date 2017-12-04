@@ -6,6 +6,8 @@ use App\Models\UserSocialAccount;
 use App\User;
 use Illuminate\Http\Request;
 use App\Acme\Helpers\TwitchHelper;
+use Google_Client;
+use Google_Service_People;
 
 class SocialAccountService
 {
