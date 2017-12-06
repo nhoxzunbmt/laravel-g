@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
             
             $fight_teams = FightTeam::where('status', 0)->
                 whereHas('fight', function($fightQuery) use ($time){
-                    $fightQuery->where('created_at', '>=', $time);
+                    $fightQuery->where('start_at', '<=', $time);
                     $fightQuery->where('status', 0);
                 })->with(['fight']);
                 
@@ -44,11 +44,37 @@ class Kernel extends ConsoleKernel
                         'status' => 2
                     ]);
                     
-                    $fightTeam->fight->first()->update([
+                    $fightTeam->fight()->first()->update([
                         'status' => 2,
                         "cancel_text" => "Not all invitation are confirmed 15 minutes before the start of the battle.",
                         "cancel_user_id" => 0
                     ]);
+                }
+            }
+        })->everyFiveMinutes();
+        
+        $schedule->call(function () 
+        {
+            $time = Carbon::now('UTC')->subMinutes(5)->toDateTimeString();
+            
+            $fight_teams = FightTeam::where('status', 1)->
+                whereHas('fight', function($fightQuery) use ($time){
+                    $fightQuery->where('start_at', '<=', $time);
+                    $fightQuery->where('status', 1);
+                })->with(['fight']);
+                
+            if($fight_teams->count()>0)
+            {
+                foreach($fight_teams->get() as $fightTeam)
+                {
+                    if($fightTeam->fight()->first()->streams()->count()<2)
+                    {
+                        $fightTeam->fight->first()->update([
+                            'status' => 2,
+                            "cancel_text" => "Not enough streams for battle.",
+                            "cancel_user_id" => 0
+                        ]);
+                    }
                 }
             }
         })->everyFiveMinutes();

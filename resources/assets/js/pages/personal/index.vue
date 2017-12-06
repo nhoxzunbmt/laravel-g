@@ -39,7 +39,19 @@
                                             <router-link :to="{ name: 'personal.calendar' }" class="nav-link" active-class="active">
                                                 Calendar
                                             </router-link>
-                                        </li>  
+                                        </li> 
+                                        
+                                        <li class="nav-item" v-if="user.type=='player'">
+                                            <router-link :to="{ name: 'personal.stream' }" class="nav-link" active-class="active">
+                                                Streaming
+                                            </router-link>
+                                        </li>
+                                        
+                                        <li class="nav-item">
+                                            <router-link :to="{ name: 'personal.billing' }" class="nav-link" active-class="active">
+                                                Billing
+                                            </router-link>
+                                        </li> 
         							</ul>
         						</div>
                                 

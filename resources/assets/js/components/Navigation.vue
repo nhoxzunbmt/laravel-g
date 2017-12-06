@@ -95,7 +95,16 @@
                             <router-link :to="{ name: 'friends.all' }"><i class="zmdi zmdi-accounts"></i><span>Friends</span></router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'personal.teams' }"><i class="fa fa-users" style="font-size: 14px" aria-hidden="true"></i><span>Teams</span></router-link>
+                            <router-link :to="{ name: 'personal.teams' }" v-if="user.type=='player'"><i class="fa fa-users" style="font-size: 14px" aria-hidden="true"></i><span>Teams</span></router-link>
+                        </li>
+                        <li>
+                            <router-link :to="{ name: 'personal.calendar' }" v-if="user.type=='player'"><i class="fa fa-calendar" style="font-size: 14px" aria-hidden="true"></i><span>Calendar</span></router-link>
+                        </li>
+                        <li>
+                            <router-link :to="{ name: 'personal.stream' }" v-if="user.type=='player'"><i class="fa fa-video-camera" style="font-size: 14px" aria-hidden="true"></i><span>Streaming</span></router-link>
+                        </li>
+                        <li>
+                            <router-link :to="{ name: 'personal.billing' }"><i class="fa fa-money" style="font-size: 14px" aria-hidden="true"></i><span>Billing</span></router-link>
                         </li>
 						<li class="divider"></li>                        
                         <li>

@@ -80,7 +80,9 @@ export default [
             { path: 'info', name: 'profile', component: require('./pages/personal/profile.vue') },
             { path: 'teams', name: 'personal.teams', component: require('./pages/personal/teams.vue') },
             { path: 'calendar', name: 'personal.calendar', component: require('./pages/personal/calendar.vue') },
-            
+            { path: 'stream', name: 'personal.stream', component: require('./pages/personal/stream.vue') },
+            { path: 'billing', name: 'personal.billing', component: require('./pages/personal/billing.vue') },
+
             { path: 'friends', component: require('./pages/personal/friends/index.vue'), children: [
                 { path: '', redirect: { name: 'friends.search' }},
                 { path: 'all', name: 'friends.all', component: require('./pages/personal/friends/_all.vue') },

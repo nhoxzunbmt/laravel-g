@@ -15,6 +15,11 @@
     				<div class="panel-wrapper collapse in">
     					<div class="panel-body">
                             
+                            <div class="mb-20">
+                                <iframe src="//playercdn.cdnvideo.ru/aloha/players/spartagames_player.html" class="center-block"  frameborder="0" width="640" height="360" scrolling="no" style="overflow:hidden;" allowfullscreen> 
+                                </iframe>
+                            </div>
+                            
                             <div class="table-wrap">
                                 <div class="table-responsive">
                                     <table class="table table-hover table-bordered mb-0">
@@ -118,7 +123,8 @@
             getStreams: function()
             {
                 var query = this.ArrayToUrl({
-                    'team_id' : this.user.team_id
+                    'team_id' : this.user.team_id,
+                    'fight_d' : this.$route.params.id
                 });
                 
                 axios.get('/api/streams/?'+query).then((response) => {
