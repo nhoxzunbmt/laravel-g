@@ -118,7 +118,7 @@ export default {
                 },
                 {
                     name: 'Friends',
-                    route: 'friends.all'
+                    route: 'friends.search'
                 }
             ],
             stickyOptions: {

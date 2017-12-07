@@ -142,10 +142,10 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * User's team history.
      * @Relation
      */
-    public function teams()
+    /*public function teams()
     {
         return $this->belongsToMany('App\Models\Team');
-    }
+    }*/
     
     /**
      * User's game
@@ -199,6 +199,15 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function canceledFights()
     {
         return $this->belongsTo('App\Models\Fight', 'cancel_user_id');
+    }
+    
+    /**
+     * SocialAccount
+     * @Relation
+     */
+    public function socialAccount()
+    {
+        return $this->belongsTo('App\Models\UserSocialAccount', 'user_id');
     }
     
     /**

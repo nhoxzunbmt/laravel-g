@@ -92,7 +92,7 @@
                             <router-link :to="{ name: 'profile' }"><i class="zmdi zmdi-account"></i><span>Profile</span></router-link>
                         </li>
                         <li>
-                            <router-link :to="{ name: 'friends.all' }"><i class="zmdi zmdi-accounts"></i><span>Friends</span></router-link>
+                            <router-link :to="{ name: 'friends.search' }"><i class="zmdi zmdi-accounts"></i><span>Friends</span></router-link>
                         </li>
                         <li>
                             <router-link :to="{ name: 'personal.teams' }" v-if="user.type=='player'"><i class="fa fa-users" style="font-size: 14px" aria-hidden="true"></i><span>Teams</span></router-link>

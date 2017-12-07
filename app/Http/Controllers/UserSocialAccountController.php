@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\UserSocialAccount;
+use ApiHandler;
+use App\Acme\Helpers\ApiHelper;
 
 class UserSocialAccountController extends Controller
 {
@@ -11,9 +14,10 @@ class UserSocialAccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request  $request)
     {
-        //
+        $list = new UserSocialAccount();      
+        return ApiHelper::parseMultiple($list, [], $request->all());
     }
 
     /**
@@ -43,9 +47,10 @@ class UserSocialAccountController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id, Request  $request)
+    {      
+        $detail = new UserSocialAccount();
+        return ApiHelper::parseSingle($detail, $id, $request->all());
     }
 
     /**

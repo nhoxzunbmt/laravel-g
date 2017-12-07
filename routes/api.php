@@ -578,4 +578,13 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     
 });
 
-//Route::get('/steam/user/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');
+//Route::get('/steam/{steam_id}/friends/import', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');
+Route::get('/steam/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@getFriends');
+
+/**
+ * @api {get} /userSocialAccounts List all user social accounts
+ * @apiName all
+ * @apiGroup UserSocialAccount
+ * @apiPermission guest:api
+ */
+Route::get('/userSocialAccounts', 'UserSocialAccountController@index');//apiHandler

@@ -16,6 +16,26 @@
             </div>
         </div>
         
+        <div class="row friend-list" v-if="steam_friends.length>0">
+            <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6" v-for="friend in steam_friends">
+    			<div class="panel panel-default card-view pa-0 ml-0 mr-0">
+    				<div class="panel-wrapper collapse in">
+    					<div class="panel-body pa-0">
+    						<article class="col-item">
+    							<div class="photo">
+                                    <img :src="friend.avatarfull" class="img-responsive" />
+    							</div>
+    							<div class="info">
+    								<h6>{{ friend.personaname}}</h6>
+                                    <p>{{ friend.realname}}</p>
+    							</div>
+    						</article>
+    					</div>
+    				</div>	
+    			</div>	
+    		</div>
+        </div>
+        
         <div class="row friend-list">
             <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6" v-for="user in users">
     			<div class="panel panel-default card-view pa-0 ml-0 mr-0">
@@ -78,6 +98,7 @@
 </template>
 
 <script> 
+    import { mapGetters } from 'vuex'
     import axios from 'axios'
     import swal from 'sweetalert2';
        
@@ -87,6 +108,7 @@
         },
         mounted() {
             this.getVueItems();
+            this.getUserSteamAccount(this.user.id);
         },
         data : function() {
             return {
@@ -94,6 +116,8 @@
                 error: false,
                 q: this.$route.query.q || '',
                 users: [],
+                steam_id: null,
+                steam_friends:[],
                 pagination: {
                     total: 0, 
                     per_page: 2,
@@ -129,6 +153,10 @@
                 }
                 return pagesArray;
             },
+            ...mapGetters({
+                user: 'authUser',
+                authenticated: 'authCheck',
+            })
         },
         methods : {       
             getVueItems: function(){
@@ -177,6 +205,26 @@
             search: function(event)
             {
                 this.$router.push(this.$route.path+"?q="+this.q);
+            },
+            getSteamFriends(steam_id)
+            {
+                axios.get('/api/steam/'+steam_id+'/friends').then(response => {
+                    this.$set(this, 'steam_friends', response.data.data);
+                });
+            },
+            getUserSteamAccount(user_id)
+            {
+                var query = this.UrlParamsMerge({
+                    'user_id' : user_id,
+                    'provider' : 'steam'
+                });
+                axios.get('/api/userSocialAccounts?'+query).then(response => {
+                    var accounts = response.data;
+                    if(accounts.length>0)
+                    {
+                        this.getSteamFriends(accounts[0].provider_user_id);
+                    }
+                });
             }
         },
         watch: {
