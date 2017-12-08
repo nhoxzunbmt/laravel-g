@@ -576,6 +576,10 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     Route::get('/friends/getPendingInFriends', 'FriendController@getPendingInFriends');    
     Route::get('/friends/searchPotential', 'FriendController@searchPotentialFriends');
     
+    Route::post('/payment/{driver}/purchase', 'PaymentController@purchase');
+    Route::post('/payment/{driver}/cancel', 'PaymentController@handleCancel');
+    Route::post('/payment/{driver}/success', 'PaymentController@handleSuccess');
+    
 });
 
 //Route::get('/steam/{steam_id}/friends/import', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');

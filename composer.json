@@ -6,14 +6,17 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "alfaproject/omnipay-skrill": "dev-master",
         "camroncade/timezone": "0.1",
         "cmgmyr/messenger": "^2.14",
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
+        "doctrine/inflector": "1.1.0",
         "filp/whoops": "^2.1",
         "giantbomb/giantbomb-php-api": "dev-master",
         "google/apiclient": "2.2",
         "highideas/laravel-users-online": "^2.2",
         "hootlex/laravel-friendships": "^1.0",
+        "ignited/laravel-omnipay": "2.*",
         "intervention/image": "^2.3",
         "jdavidbakr/mail-tracker": "~2.1",
         "laravel/framework": "5.4.*",
@@ -22,6 +25,7 @@
         "laravelcollective/html": "~5.0",
         "marcelgwerder/laravel-api-handler": "dev-master",
         "nicklaw5/twitch-api-php": "^0.1.5",
+        "omnipay/omnipay": "*",
         "predis/predis": "^2.0@dev",
         "pusher/pusher-php-server": "^2.6",
         "sjaakmoes/dotapi2": "~1.0",
@@ -30,7 +34,6 @@
         "socialiteproviders/vkontakte": "^3.0",
         "socialiteproviders/youtube": "dev-master",
         "sofa/eloquence": "~5.4",
-        "symfony/event-dispatcher": "^3.2",
         "tcg/voyager": "^0.11.9",
         "torann/geoip": "^1.0@dev",
         "tymon/jwt-auth": "^0.5.11",
@@ -75,7 +78,8 @@
     "config": {
         "preferred-install": "dist",
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "php": "7.0"
     },
     "minimum-stability": "dev"
 }

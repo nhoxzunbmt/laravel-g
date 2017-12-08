@@ -1,5 +1,10 @@
 <template>
     <nav class="navbar navbar-inverse navbar-fixed-top" v-bind:class="{'navbar-authenticated':authenticated}">
+        
+        <div class="alert alert-success alert-dismissable text-center" v-if="show_cookie_string==true">
+			<button type="button" class="close" @click="setCookie" data-dismiss="alert" aria-hidden="true">×</button>Sparta.Games is using cookies. By using our services, you acknowledge and approve that we use cookies. <a href="#">Read more</a>.
+		</div>
+        
     	<div class="mobile-only-brand pull-left">
     		<div class="nav-header pull-left">
     			<div class="logo-wrap">
@@ -13,6 +18,10 @@
     		<a id="toggle_mobile_search" data-toggle="collapse" data-target="#search_form" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-search"></i></a>
     		<a id="toggle_mobile_nav" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-more"></i></a>
     		
+            <a class="btn btn-info inline-block ml-20 mt-15 pull-left btn-sm btn-outline hidden-xs hidden-sm" @click="showTeamModalCreate">
+                <span class="btn-text">Create Team</span>
+            </a>
+            
             <router-link :to="{ name: 'streams' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Online streams</router-link>
             
             <router-link :to="{ name: 'teams' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Top teams</router-link>
@@ -21,16 +30,8 @@
             
             <router-link :to="{ name: 'investors-info' }" class="btn btn-warning inline-block ml-20 mt-15 pull-left btn-sm btn-outline">For Investors</router-link>
             
-            <!--<form id="search_form" role="search" class="top-nav-search collapse pull-left">
-    			<div class="input-group">
-    				<input type="text" name="example-input1-group2" class="form-control" placeholder="Search">
-    				<span class="input-group-btn">
-    				<button type="button" class="btn  btn-default"  data-target="#search_form" data-toggle="collapse" aria-label="Close" aria-expanded="true"><i class="zmdi zmdi-search"></i></button>
-    				</span>
-    			</div>
-    		</form>-->
     	</div>
-    	<div id="mobile_only_nav" class="mobile-only-nav pull-right">
+    	<div id="mobile_only_nav" class="mobile-only-nav pull-right mr-15">
     		<ul class="nav navbar-right top-nav pull-right">
             
                 <li v-if="!authenticated">
@@ -128,6 +129,11 @@ export default {
         user: 'authUser',
         authenticated: 'authCheck'
     }),
+    data() {
+        return {
+            show_cookie_string:false
+        }
+    },
     mounted: function () {
         Vue.nextTick(function(){
             setTimeout(function(){
@@ -135,6 +141,12 @@ export default {
                 $('.message-box-nicescroll-bar').slimscroll({height:'350px',size: '4px',color: '#878787',disableFadeOut : true,borderRadius:0});
             }, 1000);
         });
+        
+        let confirm_cookie = localStorage.getItem('confirm_cookie');
+        if (confirm_cookie === null) 
+        {
+            this.show_cookie_string = true;
+        }
     },
     methods: {
         showDropdown(event){
@@ -146,6 +158,18 @@ export default {
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace('.', ',')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        },
+        showTeamModalCreate() {
+            if(this.authenticated)
+            {
+                this.$modal.show('teams-create');
+            }else{
+                this.$router.push({ name: 'auth.login' });
+            }
+        },
+        setCookie(){
+            localStorage.setItem('confirm_cookie', true);
+            this.show_cookie_string = false;
         }
     }
 };

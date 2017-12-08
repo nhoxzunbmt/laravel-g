@@ -160,6 +160,7 @@ return [
         Torann\GeoIP\GeoIPServiceProvider::class,
         Camroncade\Timezone\TimezoneServiceProvider::class,
         jdavidbakr\MailTracker\MailTrackerServiceProvider::class,
+        Ignited\LaravelOmnipay\LaravelOmnipayServiceProvider::class,
         
         /*
          * Application Service Providers...
@@ -225,6 +226,7 @@ return [
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'Countries' => Webpatser\Countries\CountriesFacade::class,
         'ApiHandler' => Marcelgwerder\ApiHandler\Facades\ApiHandler::class,
-        'GeoIP' => Torann\GeoIP\Facades\GeoIP::class
+        'GeoIP' => Torann\GeoIP\Facades\GeoIP::class,
+        'Omnipay' => Ignited\LaravelOmnipay\Facades\OmnipayFacade::class
     ],
 ];

@@ -7,6 +7,19 @@
 			<span>left menu</span> 
 			<i class="zmdi zmdi-more"></i>
 		</li>
+        
+        <li class="visible-xs visible-sm">
+            <a class="btn btn-info btn-sm mb-10" @click="showTeamModalCreate">
+                <span class="btn-text">Create Team</span>
+            </a>
+        </li>
+        <li class="visible-xs visible-sm">   
+            <router-link :to="{ name: 'streams' }" class="btn btn-warning btn-sm mb-10">Online streams</router-link>
+        </li>
+        <li class="visible-xs visible-sm">    
+            <router-link :to="{ name: 'investors-info' }" class="btn btn-warning btn-sm mb-10">For Investors</router-link>
+        </li>  
+
         <li>
             <router-link :to="{ name: 'games' }"><div class="pull-left"><i class="fa fa-gamepad mr-20" aria-hidden="true"></i><span class="right-nav-text">Games</span></div><div class="clearfix"></div></router-link>
         </li>
@@ -69,6 +82,16 @@ export default {
         return {
             storagePath: '/storage/'
         }
+    },
+    methods: {
+        showTeamModalCreate() {
+            if(this.authenticated)
+            {
+                this.$modal.show('teams-create');
+            }else{
+                this.$router.push({ name: 'auth.login' });
+            }
+        },
     }
 };
 </script>

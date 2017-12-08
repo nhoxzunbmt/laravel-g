@@ -496,4 +496,8 @@ var setHeightWidth = function () {
     width: 45%;
     display: inline-block;
 }
+
+.navbar.navbar-inverse.navbar-fixed-top{
+    padding: 0;
+}
 </style>
