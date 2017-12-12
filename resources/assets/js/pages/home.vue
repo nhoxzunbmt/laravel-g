@@ -34,7 +34,7 @@
 										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
                                             <router-link :to="{ name: 'players', query: { free_player: 1 } }">
     											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countPlayers"></animated-number></span></span>
-    											<span class="weight-500 uppercase-font txt-light block font-13">Players in teams</span>
+    											<span class="weight-500 uppercase-font txt-light block font-13">Players looking for teams</span>
                                             </router-link>
                                         </div>
 										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
