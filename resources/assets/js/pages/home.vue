@@ -170,7 +170,7 @@ export default {
             var query = this.ArrayToUrl({
                 "active" : 1,
                 'type' : 'player',
-                'free_player' : 0,
+                'free_player' : 1,
                 "_limit" : 0,
                 '_fields' : 'id'
             });
