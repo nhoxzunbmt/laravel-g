@@ -32,9 +32,11 @@
 								<div class="container-fluid">
 									<div class="row">
 										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countPlayers"></animated-number></span></span>
-											<span class="weight-500 uppercase-font txt-light block font-13">Players in teams</span>
-										</div>
+                                            <router-link :to="{ name: 'players', query: { free_player: 1 } }">
+    											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countPlayers"></animated-number></span></span>
+    											<span class="weight-500 uppercase-font txt-light block font-13">Players in teams</span>
+                                            </router-link>
+                                        </div>
 										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
 											<i class="fa fa-user txt-light data-right-rep-icon"></i>
 										</div>
@@ -53,9 +55,11 @@
 								<div class="container-fluid">
 									<div class="row">
 										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countTeamsNeedPlayers"></animated-number></span></span>
-											<span class="weight-500 uppercase-font txt-light block">Teams need players</span>
-										</div>
+                                            <router-link :to="{ name: 'teams', query: { status: 0 } }">
+    											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countTeamsNeedPlayers"></animated-number></span></span>
+    											<span class="weight-500 uppercase-font txt-light block">Teams need players</span>
+                                            </router-link>
+                                        </div>
 										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
 											<i class="fa fa-users txt-light data-right-rep-icon"></i>
 										</div>
@@ -74,8 +78,10 @@
 								<div class="container-fluid">
 									<div class="row">
 										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
-											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countFights"></animated-number></span></span>
-											<span class="weight-500 uppercase-font txt-light block">Fights</span>
+                                            <router-link :to="{ name: 'fights', query: { status: 0 } }">
+    											<span class="txt-light block counter"><span class="counter-anim"><animated-number :number="countFights"></animated-number></span></span>
+    											<span class="weight-500 uppercase-font txt-light block">Fights</span>
+                                            </router-link>
 										</div>
 										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
 											<i class="ti-shield txt-light data-right-rep-icon"></i>

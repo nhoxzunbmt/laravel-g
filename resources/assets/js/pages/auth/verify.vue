@@ -27,9 +27,14 @@
 
 <script>
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 
 export default {
     metaInfo: { titleTemplate: 'Verify email' },
+    computed: mapGetters({
+        user: 'authUser',
+        authenticated: 'authCheck'
+    }),
     mounted() {
         this.verify();
     },
@@ -51,6 +56,12 @@ export default {
                 this.success = true
                 this.error = false
                 this.message = response.data.message
+                
+                if(this.authenticated)
+                {
+                    this.user.confirmed = 1;
+                }
+                
             }).catch(error => {
                 this.response = error.response.data
                 this.error = true

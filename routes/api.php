@@ -354,6 +354,16 @@ Route::resource('fights', 'FightController', ['only' => [
     'index', 'show'
 ]]);
 
+
+/**
+ * @api {get} /email/verify_code/resend Email verify resend
+ * @apiName verify-email-resend
+ * @apiGroup OAuth2
+ * @apiPermission guest:api
+ * @apiDescription Resend verifing email by confirmation code.
+ */
+Route::post('/email/verify_code/resend', 'Auth\AuthController@verifyResend')->middleware('jwt.auth');
+
 /**
  * Login & register
  */

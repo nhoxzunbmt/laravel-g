@@ -7,6 +7,7 @@ import Navbuttons from './NavButtons.vue';
 import Teamcreate from './modals/teams/create.vue';
 import Fightcreate from './modals/fights/create.vue';
 import Usercalendar from './modals/personal/userCalendar.vue';
+import VerifyCodeResend from './modals/verifyCodeResend.vue';
 import CalendarSchedule from './Calendar.vue';
 import CalendarFights from './CalendarFights.vue'
 import PotentialBattles from './modals/fights/potentialBattles.vue'
@@ -25,6 +26,7 @@ Vue.component(CalendarFights.name, CalendarFights)
 Vue.component(PotentialBattles.name, PotentialBattles)
 
 Vue.component(Teamcreate.name, Teamcreate)
+Vue.component(VerifyCodeResend.name, VerifyCodeResend)
 Vue.component(Fightcreate.name, Fightcreate)
 Vue.component(Usercalendar.name, Usercalendar)
 Vue.component(Comments.name, Comments)

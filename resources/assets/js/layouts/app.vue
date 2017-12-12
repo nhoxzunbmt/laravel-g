@@ -22,6 +22,7 @@
             
             <team-create-modal v-if="authenticated && user.type=='player'"></team-create-modal>
             <fight-create-modal v-if="authenticated && user.type=='player'"></fight-create-modal>
+            <verify-code-resend-modal v-if="authenticated && user.confirmed!=1"></verify-code-resend-modal>
 		</div>
     </div>
 </template>

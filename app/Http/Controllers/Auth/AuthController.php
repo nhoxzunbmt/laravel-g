@@ -56,6 +56,41 @@ class AuthController extends Controller
         ], 200);
     }
     
+    /**
+     * Verify code resend
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function verifyResend(Request $request)
+    {
+        $user = $request->user();
+        $email = $request->get('email');
+        $confirmation_code = str_random(100);
+        
+        $data = [
+            'confirmation_code' => $confirmation_code
+        ];
+        
+        if($user->email != $email)
+        {
+            $data['email'] = $email;
+        }
+        
+        $user->update($data);
+
+        $content = [
+    		'url' => url(config('app.url')."/email/verify/".$confirmation_code),
+            'title' => 'Verify your email address',
+    		'button' => 'Click Here'
+  		];
+
+    	Mail::to($email)->send(new EmailVerify($content));
+        
+        return response()->json([
+            'message' => 'We sent you an activation code. Check your email.'
+        ], 200);
+    }
     
     /**
      * Register user by params
