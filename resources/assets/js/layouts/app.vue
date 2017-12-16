@@ -501,4 +501,7 @@ var setHeightWidth = function () {
 .navbar.navbar-inverse.navbar-fixed-top{
     padding: 0;
 }
+.txt-trans-none{
+    text-transform: none !important;
+}
 </style>

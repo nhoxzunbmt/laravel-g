@@ -1,13 +1,12 @@
 <template>
     <div>
     
-        <div class="container-fluid parallax-simple rel mt-30" style="background-image: url(http://spartacoin.com/images/BlizzCon8.jpg);">
+        <!--<div class="container-fluid parallax-simple rel mt-30" style="background-image: url(http://spartacoin.com/images/BlizzCon8.jpg);">
     		<div class="color-overlay-dark"></div>
     		<div class="container">
     		    <div class="row">
                     
     		    	<div class="col-md-12 text-center mb-50">
-                        <!--<h4 class="mb-20">We are presenting platform for</h4>-->
                         <h2 class="mt-40 mb-40">Lead your team into eSports Pro League</h2>
                                          
                         <router-link :to="{ name: 'auth.register', query: { type: 'player' } }" class="btn btn-warning inline-block ml-0">
@@ -21,6 +20,107 @@
                     </div>
     		    </div>
     		</div>
+    	</div>-->
+        
+        <div class="container-fluid parallax-simple rel mt-30" style="background-image: url(http://spartacoin.com/images/BlizzCon8.jpg);">
+    		<div class="color-overlay-dark"></div>
+    		<div class="container">
+        
+                <div class="row mb-30 mt-30">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mb-20">
+                        <h5 class="txt-dark">Who are you?</h5>
+                    </div>
+        			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        				<div class="panel panel-default card-view pa-0">
+        					<div class="panel-wrapper collapse in">
+        						<div class="panel-body pa-0">
+        							<div class="sm-data-box">
+        								<div class="container-fluid">
+        									<div class="row">
+        										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                                    <router-link :to="{ name: 'auth.register', query: { type: 'player' } }">
+                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as Player</span>
+                                                    </router-link>
+                                                </div>
+        										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+                                                    <img src="/images/player.png" class="img-reg-index">
+        										</div>
+        									</div>	
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        				<div class="panel panel-default card-view pa-0">
+        					<div class="panel-wrapper collapse in">
+        						<div class="panel-body pa-0">
+        							<div class="sm-data-box">
+        								<div class="container-fluid">
+        									<div class="row">
+        										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                                    <router-link :to="{ name: 'investors-info'}">
+                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as an Investor</span>
+                                                    </router-link>
+                                                </div>
+        										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+        											<img src="/images/investor.png" class="img-reg-index">
+        										</div>
+        									</div>	
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        				<div class="panel panel-default card-view pa-0">
+        					<div class="panel-wrapper collapse in">
+        						<div class="panel-body pa-0">
+        							<div class="sm-data-box">
+        								<div class="container-fluid">
+        									<div class="row">
+        										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                                    <router-link :to="{ name: 'fights', query: { status: 0 } }">
+            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Coach</span>
+                                                    </router-link>
+        										</div>
+        										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+        											<img src="/images/coach.png" class="img-reg-index"/>
+        										</div>
+        									</div>	
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        				<div class="panel panel-default card-view pa-0">
+        					<div class="panel-wrapper collapse in">
+        						<div class="panel-body pa-0">
+        							<div class="sm-data-box">
+        								<div class="container-fluid">
+        									<div class="row">
+        										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
+                                                    <router-link :to="{ name: 'fights', query: { status: 0 } }">
+            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Judge</span>
+                                                    </router-link>
+        										</div>
+        										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
+        											<img src="/images/referee.png" class="img-reg-index">
+        										</div>
+        									</div>	
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        		</div>
+    
+            </div>
     	</div>
         
         <div class="row  mb-30 mt-30">
@@ -206,3 +306,9 @@ export default {
     
 }
 </script>
+<style>
+.img-reg-index{
+    height: 100px;
+    padding: 7px;
+}
+</style>

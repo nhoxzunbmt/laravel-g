@@ -35,7 +35,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $fillable = [
         'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
-        'overlay', 'description', 'type', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule',
+        'overlay', 'description', 'type', 'subtype', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule',
         'confirmed', 'active', 'timezone', 'ip', 'city', 'geo', 'contacts'
     ];
 
@@ -244,6 +244,42 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function scopeInvestor($query)
     {
         return $query->where('type', '=', 'investor');
+    }
+    
+    /**
+     * Scope a query to only judge scopes.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeJudge($query)
+    {
+        return $query->where('subtype', '=', 'judge');
+    }
+    
+    /**
+     * Scope a query to only commentator scopes.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCommentator($query)
+    {
+        return $query->where('subtype', '=', 'commentator');
+    } 
+    
+    /**
+     * Scope a query to only coach scopes.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCoach($query)
+    {
+        return $query->where('subtype', '=', 'coach');
     }   
     
     
@@ -307,31 +343,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         $email = $providerUser->getNickname()."@".$site;
         return $email;
     }
-    
-    /*public static function getApiUserData($user, $token = false)
-    {
-        $data = [];
-        $meta = [];
-
-        $data['name'] = $user->name;
-        $data['avatar'] = $user->avatar;
-        $data['type'] = $user->type;
-        $data['online'] = $user->isOnline();
-        
-        $data = $user;
-        if($data->avatar)
-            $data->avatar = asset('storage/'.$data->avatar);
-        if($data->overlay)
-            $data->overlay = asset('storage/'.$data->overlay);
-        
-        if($token)
-            $meta['token'] = $token;
-        
-        return [
-            'data' => $data,
-            'meta' => $meta
-        ];
-    }*/
     
     /**
      * @Relation

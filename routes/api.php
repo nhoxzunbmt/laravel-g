@@ -594,6 +594,7 @@ Route::group(['middleware' => 'jwt.auth'], function () {
 
 //Route::get('/steam/{steam_id}/friends/import', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');
 Route::get('/steam/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@getFriends');
+Route::get('/steam/{steam_id}/convertToId32', '\App\Acme\Helpers\SteamHelper@convertSteamid64ToSteamid32');
 
 /**
  * @api {get} /userSocialAccounts List all user social accounts

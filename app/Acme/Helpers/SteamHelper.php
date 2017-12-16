@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Cache;
 use File;
 use Image;
+use App\Acme\Helpers\OpenDotaHelper;
 
 class SteamHelper{
     
@@ -161,5 +162,16 @@ class SteamHelper{
         ];                               
         
         return User::create($data);
+    }
+    
+    public static function convertSteamid64ToSteamid32($id)
+    {
+        $result = substr($id, 3) - 61197960265728;
+        
+        $openDota = new OpenDotaHelper(['returnJson' => true], []);
+        return $openDota->getPlayerTotal(125304246);
+        
+        
+        return (string) $result;
     }
 }
