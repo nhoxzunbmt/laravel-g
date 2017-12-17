@@ -167,11 +167,13 @@ class SteamHelper{
     public static function convertSteamid64ToSteamid32($id)
     {
         $result = substr($id, 3) - 61197960265728;
-        
-        $openDota = new OpenDotaHelper(['returnJson' => true], []);
-        return $openDota->getPlayerTotal(125304246);
-        
-        
         return (string) $result;
     }
+    
+    public static function getDota2PlayerTotal($steam_id32)
+    {
+        $openDota = new OpenDotaHelper(['returnJson' => true], []);
+        return $openDota->getPlayerTotal($steam_id32);
+    }        
+        
 }

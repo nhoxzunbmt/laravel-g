@@ -139,7 +139,25 @@ Route::get('/users/{id}/team', 'UserController@team');
  * @apiParam {Number} id User unique ID.
  */
 Route::get('/users/{id}/friends', 'UserController@friends');
+/**
+ * @api {get} /users/:id/teams User's teams from history
+ * @apiName teams
+ * @apiGroup User
+ * @apiPermission guest:api
+ * @apiDescription Get data of user's teams.
+ * 
+ * @apiParam {Number} id User unique ID.
+ */
 Route::get('/users/{id}/teams', 'UserController@teams');//apiHandler
+/**
+ * @api {get} /users/:id/fights User's fights
+ * @apiName fights
+ * @apiGroup User
+ * @apiPermission guest:api
+ * @apiDescription Get data of user's fights.
+ * 
+ * @apiParam {Number} id User unique ID.
+ */
 Route::get('/users/{id}/fights', 'UserController@fights');//apiHandler
 /*************************************************************************************************************************/
 
@@ -212,7 +230,7 @@ Route::resource('games', 'GameController', ['only' => [
  * @api {get} /timezones Get list all
  * @apiName index
  * @apiGroup Timezone
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Get list of timezones.
  */
 Route::get('/timezones', 'TimezoneController@index');
@@ -242,6 +260,7 @@ Route::resource('news', 'NewsController', ['only' => [
     'index', 'show'
 ]]);//apiHandler
 
+/*************************************************************************************************************************/
 
 /**
  * Teams
@@ -251,7 +270,7 @@ Route::resource('news', 'NewsController', ['only' => [
  * @apiName show
  * @apiGroup Team
  * 
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Get data of team by slug or id.
  * 
  * @apiParam {String} param Team unique slug or id.
@@ -262,7 +281,7 @@ Route::get('/teams/{param}', 'TeamController@show');//apiHandler
  * @api {get} /teams Get list all
  * @apiName index
  * @apiGroup Team
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Get list of teams.
  */
 Route::get('/teams', 'TeamController@index');//apiHandler
@@ -271,19 +290,91 @@ Route::get('/teams', 'TeamController@index');//apiHandler
  * @api {get} /teams/:id/invitations Invitations to team
  * @apiName invitations
  * @apiGroup Team
- * @apiPermission none
+ * @apiPermission guest:api
  * @apiDescription Get invitations to the team by id.
  * 
  * @apiParam {Number} param Team unique id.
  */
 Route::get('/teams/{id}/invitations', 'TeamController@invitations');
 
+/**
+ * @api {get} /teams/:id/fights Team's fights
+ * @apiName fights
+ * @apiGroup Team
+ * 
+ * @apiPermission guest:api
+ * @apiDescription Get data of team's fights id.
+ * 
+ * @apiParam {Number} param Team unique id.
+ */
 Route::get('/teams/{id}/fights', 'TeamController@fights');
+
+/**
+ * @api {get} /teams/:id/fights/calendar Calendar of possible matches.
+ * @apiName calendar
+ * @apiGroup Team
+ * 
+ * @apiPermission guest:api
+ * @apiDescription Calendar of team. List of possible matches with other teams.
+ * 
+ * @apiParam {Number} param Team unique id.
+ */
 Route::get('/teams/{id}/fights/calendar', 'TeamController@findTeamsAgainst');
+
+/**
+ * @api {get} /teams/{id}/fights/invitations/in Invitatios to matches (IN)
+ * @apiName fights-invitations-in
+ * @apiGroup Team
+ * 
+ * @apiPermission guest:api
+ * @apiDescription List of invitations to matches from other teams.
+ * 
+ * @apiParam {Number} param Team unique id.
+ */
 Route::get('/teams/{id}/fights/invitations/in', 'TeamController@fightInvitationsIn');
+
+/**
+ * @api {get} /teams/{id}/fights/invitations/out Invitatios to matches (OUT)
+ * @apiName fights-invitations-out
+ * @apiGroup Team
+ * 
+ * @apiPermission guest:api
+ * @apiDescription List of invitations to matches to other teams.
+ * 
+ * @apiParam {Number} param Team unique id.
+ */
 Route::get('/teams/{id}/fights/invitations/out', 'TeamController@fightInvitationsOut');
+
+/*************************************************************************************************************************/
+
+
+/**
+ * FightTeam
+ */
+/**
+ * @api {get} /fight_team All figths and teams connections.
+ * @apiName index
+ * @apiGroup FightTeam
+ * 
+ * @apiPermission guest:api
+ * @apiDescription List of fights figths and teams connections.
+ */
 Route::get('/fight_team', 'FightTeamController@index');//apiHandler
+
+/**
+ * @api {put} /fight_team/:id Update team and fight connection.
+ * @apiName update
+ * @apiGroup FightTeam
+ * 
+ * @apiPermission Authenticated User
+ * 
+ * @apiParam {Number} param Fight and team connection unique id.
+ */
 Route::put('/fight_team/{id}', 'FightTeamController@update')->middleware('jwt.auth');
+
+/*************************************************************************************************************************/
+
+
 /**
  * TeamUsers (Invitations)
  */
@@ -295,6 +386,8 @@ Route::put('/fight_team/{id}', 'FightTeamController@update')->middleware('jwt.au
  * @apiDescription Get all users & teams connections with statuses. Uses for team's & user's history.  _With: user,sender,team
  */
 Route::get('/team_user', 'TeamUserController@index');//apiHandler
+/*************************************************************************************************************************/
+
 
 /**
  * Twitch & streams
@@ -346,9 +439,10 @@ Route::get('/twitch/', '\App\Acme\Helpers\TwitchHelper@getFeaturedStreams');
  */
 Route::get('/twitch/search/{game}', '\App\Acme\Helpers\TwitchHelper@searchStreamsByGame');
 Route::get('/twitch/{channel}', '\App\Acme\Helpers\TwitchHelper@channelShow');
+/*************************************************************************************************************************/
 
 /**
- * Figths
+ * Matches
  */
 Route::resource('fights', 'FightController', ['only' => [
     'index', 'show'
@@ -500,7 +594,10 @@ Route::group(['middleware' => 'guest:api'], function () {
     Route::get('/social/{provider}/callback', 'SocialController@callback');
 });
 
+
 Route::get('/comments/{pageId}', 'CommentController@index');
+
+
 
 Route::group(['middleware' => 'jwt.auth'], function () {
     
@@ -592,9 +689,49 @@ Route::group(['middleware' => 'jwt.auth'], function () {
     
 });
 
+
+/*************************************************************************************************************************/
+
+
+/**
+ * Steam
+ */
+/**
+ * @api {get} /steam/:steam_id/friends Get steam users by steam_id
+ * @apiName friends
+ * @apiGroup Steam
+ * 
+ * @apiPermission guest:api
+ * 
+ * @apiParam {Number} steam_id id (64)
+ */
 //Route::get('/steam/{steam_id}/friends/import', '\App\Acme\Helpers\SteamHelper@importUsersFromFriends');
 Route::get('/steam/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@getFriends');
+/**
+ * @api {get} /steam/:steam_id/convertToId32 Convert id64 to id 32
+ * @apiName convert-to-id32
+ * @apiGroup Steam
+ * 
+ * @apiPermission guest:api
+ * @apiDescription Need for search info in Dota2.
+ * 
+ * @apiParam {Number} steam_id id (64)
+ */
 Route::get('/steam/{steam_id}/convertToId32', '\App\Acme\Helpers\SteamHelper@convertSteamid64ToSteamid32');
+
+/**
+ * @api {get} /dota2/:steam_id32/getPlayerTotal Get total player
+ * @apiName player-total
+ * @apiGroup Dota2
+ * 
+ * @apiPermission guest:api
+ * 
+ * @apiParam {Number} steam_id32 id (32), use converting from steam_id64!
+ */
+Route::get('/dota2/{steam_id32}/getPlayerTotal', '\App\Acme\Helpers\SteamHelper@getDota2PlayerTotal');
+
+/*************************************************************************************************************************/
+
 
 /**
  * @api {get} /userSocialAccounts List all user social accounts

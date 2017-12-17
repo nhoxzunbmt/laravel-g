@@ -53,6 +53,78 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/dota2/:steam_id32/getPlayerTotal",
+    "title": "Get total player",
+    "name": "player_total",
+    "group": "Dota2",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "steam_id32",
+            "description": "<p>id (32), use converting from steam_id64!</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Dota2"
+  },
+  {
+    "type": "get",
+    "url": "/fight_team",
+    "title": "All figths and teams connections.",
+    "name": "index",
+    "group": "FightTeam",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>List of fights figths and teams connections.</p>",
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "FightTeam"
+  },
+  {
+    "type": "put",
+    "url": "/fight_team/:id",
+    "title": "Update team and fight connection.",
+    "name": "update",
+    "group": "FightTeam",
+    "permission": [
+      {
+        "name": "Authenticated User"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>Fight and team connection unique id.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "FightTeam"
+  },
+  {
+    "type": "get",
     "url": "/games/import",
     "title": "Import games",
     "name": "import",
@@ -120,6 +192,51 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "routes/api.php",
     "groupTitle": "Game"
+  },
+  {
+    "type": "get",
+    "url": "/news",
+    "title": "Get list all",
+    "name": "index",
+    "group": "News",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get  list of all news.</p>",
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "News"
+  },
+  {
+    "type": "get",
+    "url": "/news/:param",
+    "title": "Get detail",
+    "name": "show",
+    "group": "News",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get data of news.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>News unique slug.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "News"
   },
   {
     "type": "post",
@@ -405,6 +522,22 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/email/verify_code/resend",
+    "title": "Email verify resend",
+    "name": "verify_email_resend",
+    "group": "OAuth2",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Resend verifing email by confirmation code.</p>",
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "OAuth2"
+  },
+  {
+    "type": "get",
     "url": "/social/:provider",
     "title": "Login",
     "name": "login",
@@ -469,6 +602,63 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "routes/api.php",
     "groupTitle": "SocialAuth"
+  },
+  {
+    "type": "get",
+    "url": "/steam/:steam_id/convertToId32",
+    "title": "Convert id64 to id 32",
+    "name": "convert_to_id32",
+    "group": "Steam",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Need for search info in Dota2.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "steam_id",
+            "description": "<p>id (64)</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Steam"
+  },
+  {
+    "type": "get",
+    "url": "/steam/:steam_id/friends",
+    "title": "Get steam users by steam_id",
+    "name": "friends",
+    "group": "Steam",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "steam_id",
+            "description": "<p>id (64)</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Steam"
   },
   {
     "type": "post",
@@ -588,13 +778,129 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/teams/:id/fights/calendar",
+    "title": "Calendar of possible matches.",
+    "name": "calendar",
+    "group": "Team",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Calendar of team. List of possible matches with other teams.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>Team unique id.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Team"
+  },
+  {
+    "type": "get",
+    "url": "/teams/:id/fights",
+    "title": "Team's fights",
+    "name": "fights",
+    "group": "Team",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get data of team's fights id.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>Team unique id.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Team"
+  },
+  {
+    "type": "get",
+    "url": "/teams/{id}/fights/invitations/in",
+    "title": "Invitatios to matches (IN)",
+    "name": "fights_invitations_in",
+    "group": "Team",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>List of invitations to matches from other teams.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>Team unique id.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Team"
+  },
+  {
+    "type": "get",
+    "url": "/teams/{id}/fights/invitations/out",
+    "title": "Invitatios to matches (OUT)",
+    "name": "fights_invitations_out",
+    "group": "Team",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>List of invitations to matches to other teams.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "param",
+            "description": "<p>Team unique id.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Team"
+  },
+  {
+    "type": "get",
     "url": "/teams",
     "title": "Get list all",
     "name": "index",
     "group": "Team",
     "permission": [
       {
-        "name": "none"
+        "name": "guest:api"
       }
     ],
     "description": "<p>Get list of teams.</p>",
@@ -610,7 +916,7 @@ define({ "api": [
     "group": "Team",
     "permission": [
       {
-        "name": "none"
+        "name": "guest:api"
       }
     ],
     "description": "<p>Get invitations to the team by id.</p>",
@@ -639,7 +945,7 @@ define({ "api": [
     "group": "Team",
     "permission": [
       {
-        "name": "none"
+        "name": "guest:api"
       }
     ],
     "description": "<p>Get data of team by slug or id.</p>",
@@ -659,6 +965,22 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "routes/api.php",
     "groupTitle": "Team"
+  },
+  {
+    "type": "get",
+    "url": "/timezones",
+    "title": "Get list all",
+    "name": "index",
+    "group": "Timezone",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get list of timezones.</p>",
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Timezone"
   },
   {
     "type": "get",
@@ -707,6 +1029,21 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/userSocialAccounts",
+    "title": "List all user social accounts",
+    "name": "all",
+    "group": "UserSocialAccount",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "UserSocialAccount"
+  },
+  {
+    "type": "get",
     "url": "/users",
     "title": "List all users",
     "name": "all",
@@ -716,6 +1053,35 @@ define({ "api": [
         "name": "guest:api"
       }
     ],
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/users/:id/fights",
+    "title": "User's fights",
+    "name": "fights",
+    "group": "User",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get data of user's fights.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User unique ID.</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "routes/api.php",
     "groupTitle": "User"
@@ -814,6 +1180,35 @@ define({ "api": [
       }
     ],
     "description": "<p>Get data of user's team.</p>",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>User unique ID.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/users/:id/teams",
+    "title": "User's teams from history",
+    "name": "teams",
+    "group": "User",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "description": "<p>Get data of user's teams.</p>",
     "parameter": {
       "fields": {
         "Parameter": [
