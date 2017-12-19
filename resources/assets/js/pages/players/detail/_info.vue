@@ -14,7 +14,7 @@
                             description = "Lead your team into eSports Pro League"
                         inline-template>
                         
-                            <div class="button-list mb-15">
+                            <div class="button-list mb-5">
                                 <network network="facebook">
                                     <button class="btn btn-facebook btn-icon-anim btn-square"><i class="fa fa-facebook"></i></button>
                                 </network>
@@ -80,6 +80,49 @@
              </div>
         </div>
     
+        <div class="col-lg-12 col-md-12 col-xs-12" v-if="player.extern_statistic!=null">
+        
+            <div class="panel panel-default card-view">
+				<div class="panel-wrapper collapse in">
+                    
+                    <div class="panel-body sm-data-box-1">
+						<span class="uppercase-font weight-500 font-14 block text-center txt-dark">Dota2 statistics</span>	
+						<div class="cus-sat-stat weight-500 txt-success text-center mt-5">
+							<span class="counter-anim">{{player.extern_statistic.winrate}}</span><span>%</span>
+						</div>
+						<div class="progress-anim mt-20">
+							<div class="progress">
+								<div class="progress-bar progress-bar-success wow animated progress-animated" role="progressbar" :aria-valuenow="player.extern_statistic.winrate" aria-valuemin="0" aria-valuemax="100" :style="'width: '+player.extern_statistic.winrate+'%;'"></div>
+							</div>
+						</div>
+						<ul class="flex-stat mt-5">
+							<li>
+								<span class="block">Wins</span>
+								<span class="block weight-500 font-16 text-success">{{player.extern_statistic.win}}</span>
+							</li>
+							<li>
+								<span class="block">Losses</span>
+								<span class="block weight-500 font-16 text-danger">{{player.extern_statistic.loss}}</span>
+							</li>
+							<li v-for="stat_field in player.extern_statistic.important">
+								<span class="block">{{stat_field.title}}</span>
+								<span class="block weight-500 font-16 text-primary">
+									{{stat_field.value}}
+								</span>
+							</li>
+						</ul>
+                        
+                        <div class="col-lg-2 col-md-2 col-xs-12 mt-20" v-for="stat_field in player.extern_statistic.other">
+							<span class="block">{{stat_field.title}}</span>
+							<span class="block txt-dark weight-500 font-15">
+								{{stat_field.value}}
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    
     	<div class="col-lg-12 col-md-12 col-xs-12">
         
             <div class="panel panel-default card-view">
@@ -138,17 +181,13 @@ export default {
             authenticated: 'authCheck',
         })     
     },
-    ready() {
-        Event.listen('playerDetailLoad', event => {
-            this.player = event.player;
-        });
-    },
     data() {
         return {
             success: false,
             error: false,
             player: null,
             response: null,
+            win_loss: [],
             copyData: window.location.href//this.$route.fullPath
         }
     },
@@ -160,9 +199,16 @@ export default {
                 this.player = event.player;
             });
             
-            this.player = this.$parent.player;
+            this.player = this.$parent.player;                
         }
-    
+           
+        /*var _self = this;
+        Vue.nextTick(function(){
+            setTimeout(function(){
+                if(_self.player!=null)
+                    _self.getDota2Statistics(_self.player.id);
+            }, 1000);
+        });*/
     },
     methods: {       
         beFriend: function()
@@ -201,6 +247,27 @@ export default {
                     })
                 }
             });
+        },
+        getDota2Statistics(user_id)
+        {
+            var query = this.UrlParamsMerge({
+                'user_id' : user_id,
+                'provider' : 'steam'
+            });
+            axios.get('/api/userSocialAccounts?'+query).then(response => {
+                var accounts = response.data;
+                if(accounts.length>0)
+                {
+                    this.getDota2PlayerWinLoss(accounts[0].provider_user_id);
+                }
+            });
+        },
+        getDota2PlayerWinLoss(steam_id)
+        {
+            axios.get('/api/dota2/'+steam_id+'/getPlayerWinLoss').then(response => {
+                this.$set(this, 'win_loss', response.data);
+            });
+            
         }
     },
 }

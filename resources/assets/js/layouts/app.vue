@@ -504,4 +504,10 @@ var setHeightWidth = function () {
 .txt-trans-none{
     text-transform: none !important;
 }
+.flex-stat-other li{
+    float: left;
+    width: 10%;
+    text-align: center;
+    margin-bottom: 20px;
+}
 </style>

@@ -720,7 +720,27 @@ Route::get('/steam/{steam_id}/friends', '\App\Acme\Helpers\SteamHelper@getFriend
 Route::get('/steam/{steam_id}/convertToId32', '\App\Acme\Helpers\SteamHelper@convertSteamid64ToSteamid32');
 
 /**
- * @api {get} /dota2/:steam_id32/getPlayerTotal Get total player
+ * @api {get} /dota2/:steam_id32/getPlayer Get player
+ * @apiName player
+ * @apiGroup Dota2
+ * 
+ * @apiPermission guest:api
+ * 
+ * @apiParam {Number} steam_id32 id (32), use converting from steam_id64!
+ */
+Route::get('/dota2/{steam_id32}/getPlayer', '\App\Acme\Helpers\SteamHelper@getDota2Player');
+/**
+ * @api {get} /dota2/:steam_id32/getPlayerWinLoss  Get winloss player info
+ * @apiName player-winloss
+ * @apiGroup Dota2
+ * 
+ * @apiPermission guest:api
+ * 
+ * @apiParam {Number} steam_id32 id (32), use converting from steam_id64!
+ */
+Route::get('/dota2/{steam_id32}/getPlayerWinLoss', '\App\Acme\Helpers\SteamHelper@getDota2PlayerWinLoss');
+/**
+ * @api {get} /dota2/:steam_id32/getPlayerTotal  Get total player
  * @apiName player-total
  * @apiGroup Dota2
  * 
@@ -729,6 +749,9 @@ Route::get('/steam/{steam_id}/convertToId32', '\App\Acme\Helpers\SteamHelper@con
  * @apiParam {Number} steam_id32 id (32), use converting from steam_id64!
  */
 Route::get('/dota2/{steam_id32}/getPlayerTotal', '\App\Acme\Helpers\SteamHelper@getDota2PlayerTotal');
+
+Route::get('/extern_statistic/import', '\App\Acme\Helpers\ExternStatisticHelper@import');
+
 
 /*************************************************************************************************************************/
 

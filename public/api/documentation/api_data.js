@@ -53,9 +53,65 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/dota2/:steam_id32/getPlayer",
+    "title": "Get player",
+    "name": "player",
+    "group": "Dota2",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "steam_id32",
+            "description": "<p>id (32), use converting from steam_id64!</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Dota2"
+  },
+  {
+    "type": "get",
     "url": "/dota2/:steam_id32/getPlayerTotal",
     "title": "Get total player",
     "name": "player_total",
+    "group": "Dota2",
+    "permission": [
+      {
+        "name": "guest:api"
+      }
+    ],
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "steam_id32",
+            "description": "<p>id (32), use converting from steam_id64!</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/api.php",
+    "groupTitle": "Dota2"
+  },
+  {
+    "type": "get",
+    "url": "/dota2/:steam_id32/getPlayerWinLoss",
+    "title": "Get winloss player info",
+    "name": "player_winloss",
     "group": "Dota2",
     "permission": [
       {

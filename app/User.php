@@ -36,7 +36,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     protected $fillable = [
         'name', 'email', 'password', 'nickname', 'phone', 'last_name', 'second_name', 'avatar', 'min_sponsor_fee', 
         'overlay', 'description', 'type', 'subtype', 'country_id', 'confirmation_code', 'team_id', 'game_id', 'streams', 'free_player', 'schedule',
-        'confirmed', 'active', 'timezone', 'ip', 'city', 'geo', 'contacts'
+        'confirmed', 'active', 'timezone', 'ip', 'city', 'geo', 'contacts', 'extern_statistic'
     ];
 
     /**
@@ -58,7 +58,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         'streams' => 'array',
         'schedule' => 'array',
         'geo' => 'array',
-        'contacts' => 'array'
+        'contacts' => 'array',
+        'extern_statistic' => 'array'
     ];
     
     protected $searchableColumns = [

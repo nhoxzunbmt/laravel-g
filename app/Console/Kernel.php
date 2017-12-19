@@ -28,6 +28,11 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () 
         {
+            \App\Acme\Helpers\ExternStatisticHelper::import();
+        })->everyThirtyMinutes();
+        
+        $schedule->call(function () 
+        {
             $time = Carbon::now('UTC')->subMinutes(15)->toDateTimeString();
             
             $fight_teams = FightTeam::where('status', 0)->

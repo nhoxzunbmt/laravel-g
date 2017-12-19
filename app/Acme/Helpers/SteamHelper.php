@@ -134,8 +134,6 @@ class SteamHelper{
         $confirmed = 0;
         $active = 0;
             
-        //dd($steamAccount);
-            
         $avatar = $steamAccount->avatarfull;
         if(!empty($avatar))
         {
@@ -170,10 +168,30 @@ class SteamHelper{
         return (string) $result;
     }
     
+    public static function getDota2Player($steam_id32)
+    {
+        if(strlen((string)$steam_id32)>14)
+            $steam_id32 = self::convertSteamid64ToSteamid32($steam_id32);
+        
+        $openDota = new OpenDotaHelper(['returnJson' => true], []);
+        return $openDota->getPlayer($steam_id32);
+    }
+    
+    public static function getDota2PlayerWinLoss($steam_id32)
+    {
+        if(strlen((string)$steam_id32)>14)
+            $steam_id32 = self::convertSteamid64ToSteamid32($steam_id32);
+        
+        $openDota = new OpenDotaHelper(['returnJson' => true], []);
+        return $openDota->getPlayerWinLoss($steam_id32);
+    } 
+    
     public static function getDota2PlayerTotal($steam_id32)
     {
+        if(strlen((string)$steam_id32)>14)
+            $steam_id32 = self::convertSteamid64ToSteamid32($steam_id32);
+        
         $openDota = new OpenDotaHelper(['returnJson' => true], []);
         return $openDota->getPlayerTotal($steam_id32);
-    }        
-        
+    }  
 }
