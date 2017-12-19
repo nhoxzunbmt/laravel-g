@@ -16,7 +16,7 @@
             </div>
         </div>
         
-        <div class="row friend-list" v-if="steam_friends.length>0">
+        <div class="row friend-list" v-if="steam_friends!=undefined && steam_friends.length>0">
             <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6" v-for="friend in steam_friends">
     			<div class="panel panel-default card-view pa-0 ml-0 mr-0">
     				<div class="panel-wrapper collapse in">
@@ -163,7 +163,7 @@
                 
                 console.log(this.q);
                 
-                if(this.q.length<2 && this.$route.query.q!=undefined && this.q.length>0)
+                if(this.q!=undefined && this.q.length<2 && this.$route.query.q!==undefined && this.q.length>0)
                     return false;
                 
                 console.log('search success');
