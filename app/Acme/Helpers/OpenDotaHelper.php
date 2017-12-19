@@ -243,5 +243,8 @@ class OpenDotaHelper{
         return $this->get('players/'.$account_id."/totals", $params);
     }
     
-    //recentMatches
+    public function getMatch($match_id)
+    {
+        return $this->get('matches/'.$match_id, []);
+    }
 }

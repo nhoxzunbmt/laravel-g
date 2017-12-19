@@ -10,12 +10,12 @@
     						<div class="form-wrap">
                                 <div class="alert alert-warning alert-dismissable" v-if="user.type==null">
 									<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You should set person's type. </p>
+									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">Please set person's type. </p>
 									<div class="clearfix"></div>
 								</div>
                                 
     							<form autocomplete="off" @submit="save">
-                                    <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Person's Profile</h6>
+                                    <h6 class="txt-dark capitalize-font"><i class="zmdi zmdi-account mr-10"></i>Your Profile</h6>
                                     <hr class="light-grey-hr">
                                     <div class="row">
     									<div class="col-md-6" v-if="type==null">
@@ -29,19 +29,6 @@
                                                         </span>
                                                     </div>
 												</div>
-                                            </div>
-    									</div>
-                                        
-                                        <div class="col-md-6" v-if="user.type=='player' && (user.schedule==null || user.schedule.length==0)">
-    										<div class="form-group">
-                                                <label class="control-label mb-10">Calendar of games</label>
-										          
-                                                <div class="alert alert-warning alert-dismissable">
-                									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">You should fill in <router-link :to="{ name: 'personal.calendar' }"><u>Calendar</u>
-                                                    </router-link> of future games. </p>
-                									<div class="clearfix"></div>
-                								</div>
-                                                
                                             </div>
     									</div>
                                     </div>     
@@ -58,16 +45,16 @@
                                                 <span class="help-block" v-if="error && response.game_id">{{ response.game_id[0] }}</span>
                                             </div>
     									</div>
-                                        <div class="col-md-6">
-                                            <div class="form-group" :class="{ 'has-error': error && response.streams }">
-                                                <label class="control-label mb-10">Streams</label>
-                                                <div v-for="stream in streams">
-                                                    <input type="text" class="form-control" v-model="stream.value" :disabled="user.team_id!=null && user.team!=null && user.team.status==1 ? 'disabled' : null">
-                                                </div>
-                                                <button type="button" v-if="user.team_id==null || user.team_id!=null && user.team!=null &&  user.team.status!=1" class="btn btn-primary btn-xs form-control" @click="addAnother"><i class="fa fa-plus-circle"></i></button>
-                                                <span class="help-block" v-if="error && response.streams">{{ response.streams[0] }}</span>
+                                        <div class="col-md-6" v-if="(user.schedule==null || user.schedule.length==0)">
+    										<div class="form-group">
+                                                <label class="control-label mb-10">Calendar of games</label>
+                                                <div class="alert alert-warning alert-dismissable">
+                									<i class="zmdi zmdi-alert-circle-o pr-15 pull-left"></i><p class="pull-left">Please fill in <router-link :to="{ name: 'personal.calendar' }"><u>Calendar</u>
+                                                    </router-link> of future games. </p>
+                									<div class="clearfix"></div>
+                								</div>
                                             </div>
-                                        </div>
+    									</div>
                                     </div>                                     
                                     <div class="row">
                                         <div class="col-md-6" :class="{ 'has-error': error && response.nickname }">
@@ -77,28 +64,6 @@
                                                 <span class="help-block" v-if="error && response.nickname">{{ response.nickname[0] }}</span>
     										</div>
                                         </div>
-    									<div class="col-md-6">
-    										<div class="form-group">
-                                                <label class="control-label mb-10">Name</label>
-                                                <input type="text" class="form-control" placeholder="name" v-model="user.name">
-    										</div>
-    									</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="control-label mb-10">Surnname</label>
-    											<input type="text" class="form-control" placeholder="Surnname" v-model="user.last_name">
-    										</div>
-    									</div>
-                                        <div class="col-md-6">
-    										<div class="form-group">
-                                                <label class="control-label mb-10">Middle name</label>
-    											<input type="text" class="form-control" placeholder="Middle name" v-model="user.second_name">
-    										</div>
-    									</div>
-                                    </div>
-                                    <div class="row">
     									<div class="col-md-6" :class="{ 'has-error': error && response.email }">
     										<div class="form-group">
                                                 <label class="control-label mb-10">Email address*</label>
@@ -106,13 +71,6 @@
                                                 <span class="help-block" v-if="error && response.email">{{ response.email[0] }}</span>
                                                 
                                                 <!--<button type="button" v-if="!user.confirmed" @click="sendEmailLinkConfirm" class="btn btn-primary btn-xs form-control">Send code to verify email</button>-->
-                                            </div>
-                                        </div>
-    									<div class="col-md-6" :class="{ 'has-error': error && response.phone }">
-    										<div class="form-group">
-                                                <label class="control-label mb-10">Contact number</label>
-    											<input type="text" class="form-control" v-model="user.phone">
-                                                <span class="help-block" v-if="error && response.phone">{{ response.phone[0] }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -129,19 +87,20 @@
     									</div>
                                         <div class="col-md-6">
     										<div class="form-group">
-                                                <label class="control-label mb-10">Timezone</label>
-    											<select v-model="user.timezone" class='form-control' data-style="form-control btn-default btn-outline" id="timezone_list">
-                                                    <option v-for="(index, timezone) in timezones" v-bind:value="index" v-html="timezone">
-                                                    </option>
-                                                </select>
-                                            </div>
-    									</div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-    										<div class="form-group">
                                                 <label class="control-label mb-10">City</label>
     											<input type="text" class="form-control" v-model="user.city">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" v-if="user.type=='player'">
+                                        <div class="col-md-6">
+                                            <div class="form-group" :class="{ 'has-error': error && response.streams }">
+                                                <label class="control-label mb-10">Streams</label>
+                                                <div v-for="stream in streams">
+                                                    <input type="text" class="form-control" v-model="stream.value" :disabled="user.team_id!=null && user.team!=null && user.team.status==1 ? 'disabled' : null">
+                                                </div>
+                                                <button type="button" v-if="user.team_id==null || user.team_id!=null && user.team!=null &&  user.team.status!=1" class="btn btn-primary btn-xs form-control" @click="addAnother"><i class="fa fa-plus-circle"></i></button>
+                                                <span class="help-block" v-if="error && response.streams">{{ response.streams[0] }}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -236,21 +195,21 @@ export default {
         this.getUserTeam();
         this.getGames();
         this.getCountries();
-        this.getTimezones();
+        //this.getTimezones();
         
         this.type = this.user.type;
         
         var self = this;
         Vue.nextTick(function(){ 
             
-            $("#timezone_list").select2({
+            /*$("#timezone_list").select2({
                 placeholder: "Select timezone",
                 allowClear: true
             }).on("select2:select", function(e) { 
                 self.user.game_id = $(e.currentTarget).find("option:selected").val();
             }).on("select2:unselecting", function (e) {
                 self.user.game_id = 0;
-            });
+            });*/
             
             $("#game_list").select2({
                 placeholder: "Select game",

@@ -188,7 +188,7 @@ class AuthController extends Controller
             });*/
             
             return response()->json([
-                'error' => 'You didn\'t confirm email. Check your email box, you should recieve email with confirmation link.',
+                'error' => 'You didn\'t confirm email. Check your email box, you\'ll recieve email with confirmation link.',
                 //'user' => $request->user()
             ], 401);
         }

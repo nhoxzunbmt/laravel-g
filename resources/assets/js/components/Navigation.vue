@@ -18,7 +18,7 @@
     		<a id="toggle_mobile_search" data-toggle="collapse" data-target="#search_form" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-search"></i></a>
     		<a id="toggle_mobile_nav" class="mobile-only-view" href="javascript:void(0);"><i class="zmdi zmdi-more"></i></a>
     		
-            <a class="btn btn-info inline-block ml-20 mt-15 pull-left btn-sm btn-outline hidden-xs hidden-sm" @click="showTeamModalCreate">
+            <a class="btn btn-info inline-block ml-20 mt-15 pull-left btn-sm hidden-xs hidden-sm" @click="showTeamModalCreate">
                 <span class="btn-text">Create Team</span>
             </a>
             
@@ -35,10 +35,10 @@
     		<ul class="nav navbar-right top-nav pull-right">
             
                 <li v-if="!authenticated">
-                    <router-link :to="{ name: 'auth.login' }" class="btn btn-primary inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Login</router-link>
+                    <router-link :to="{ name: 'auth.login' }" class="btn btn-primary inline-block ml-20 mt-15 pull-left btn-sm"><i class="fa fa-sign-in" aria-hidden="true"></i>&nbsp;&nbsp;Login</router-link>
                 </li>
                 <li v-if="!authenticated">
-                    <router-link :to="{ name: 'auth.register' }" class="btn btn-danger inline-block ml-20 mt-15 pull-left btn-sm btn-outline">Register</router-link>
+                    <router-link :to="{ name: 'auth.register' }" class="btn btn-danger inline-block ml-20 mt-15 pull-left btn-sm">Register</router-link>
                 </li>
 				<li class="dropdown alert-drp" v-if="authenticated">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" @click="showDropdown"><i class="zmdi zmdi-notifications top-nav-icon"></i><span class="top-nav-icon-badge">0</span></a>

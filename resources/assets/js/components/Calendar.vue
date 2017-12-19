@@ -20,7 +20,7 @@
                 
                 <div class="alert alert-warning alert-dismissable" v-if="blockHours.length==0">
 					<i class="zmdi zmdi-info-outline pr-15 pull-left"></i>
-                    <p class="pull-left" v-if="editable!='false'">You need fill {{blockSize}}-hours blocks!</p>
+                    <p class="pull-left" v-if="editable!='false'">Please fill {{blockSize}}-hours blocks!</p>
                     <p class="pull-left" v-else>The team doesn't have crossed blocks! The team will not be able to participate in the battles!</p>
 					<div class="clearfix"></div>
 				</div>

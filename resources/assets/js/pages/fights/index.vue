@@ -3,7 +3,7 @@
     
         <div class="row heading-bg">
         	<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h5 class="txt-dark">Battles</h5>
+                <h5 class="txt-dark">Matches</h5>
         	</div>
         </div>
         
@@ -45,7 +45,7 @@
     
     export default {
         metaInfo: {
-            title: 'Battles',
+            title: 'Matches',
             titleTemplate: null
         },
         computed: {
@@ -67,7 +67,7 @@
                         route: 'fights.calendar'
                     },
                     {
-                        name: 'Confirmed battles',
+                        name: 'Confirmed matches',
                         route: 'fights.confirmed'
                     },
                     {

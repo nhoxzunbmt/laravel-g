@@ -1,6 +1,6 @@
 <template>
     <div  v-if="user!==null && fights.length>0">
-        <h4 class="mb-10">Battles</h4>
+        <h4 class="mb-10">Matches</h4>
                        
         <div class="table-wrap">
             <div class="table-responsive">

@@ -28,7 +28,7 @@
         
                 <div class="row mb-30 mt-30">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mb-20">
-                        <h5 class="txt-dark">Who are you?</h5>
+                        <h4 class="txt-dark txt-shadow">Welcome to SPARTA.GAMES !<br />The First Crowdsourcing eSports Platform in the World!</h4>
                     </div>
         			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
         				<div class="panel panel-default card-view pa-0">
@@ -39,7 +39,7 @@
         									<div class="row">
         										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
                                                     <router-link :to="{ name: 'auth.register', query: { type: 'player' } }">
-                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as Player</span>
+                                                        <span class="weight-500 uppercase-font txt-light block mt-40 txt-shadow">Start as a Player</span>
                                                     </router-link>
                                                 </div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
@@ -68,7 +68,7 @@
                                                 </div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
         											<router-link :to="{ name: 'investors-info'}">
-                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as an Investor</span>
+                                                        <span class="weight-500 uppercase-font txt-light block mt-40 txt-shadow">Start as an Investor</span>
                                                     </router-link>
         										</div>
         									</div>	
@@ -87,7 +87,7 @@
         									<div class="row">
         										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
                                                     <router-link :to="{ name: 'fights', query: { status: 0 } }">
-            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Coach</span>
+            											<span class="weight-500 uppercase-font txt-light block mt-40 txt-shadow">Start as a Coach</span>
                                                     </router-link>
         										</div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
@@ -116,7 +116,7 @@
         										</div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
                                                     <router-link :to="{ name: 'fights', query: { status: 0 } }">
-            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Judge</span>
+            											<span class="weight-500 uppercase-font txt-light block mt-25 txt-shadow">Start as a Referee<br /> or a Commentator</span>
                                                     </router-link>
         										</div>
         									</div>	
@@ -318,5 +318,8 @@ export default {
 .img-reg-index{
     height: 100px;
     padding: 7px;
+}
+.txt-shadow{
+    text-shadow: 2px 4px 3px rgba(0,0,0,0.3);
 }
 </style>
