@@ -15,23 +15,26 @@ class ExternStatisticHelper{
         $socialAccounts = UserSocialAccount::all();
         foreach($socialAccounts as $socialAccount)
         {
-            $user = $socialAccount->user()->first();
-            $game_title = '';
-            if($user->game_id>0)
-            {
-                $game = $user->game()->first();
-                $game_title = $game->title;
-            }
-            $statistic = self::getStatistic($socialAccount, $game_title);
-            
-            if(count($statistic)>0)
+            if($socialAccount->user_id>0)
             {
                 $user = $socialAccount->user()->first();
-                $user->update([
-                    'extern_statistic' => $statistic
-                ]);
+                $game_title = '';
+                if($user->game_id>0)
+                {
+                    $game = $user->game()->first();
+                    $game_title = $game->title;
+                }
+                $statistic = self::getStatistic($socialAccount, $game_title);
                 
-                usleep(250000); // sleeps for 0.25 seconds
+                if(count($statistic)>0)
+                {
+                    $user = $socialAccount->user()->first();
+                    $user->update([
+                        'extern_statistic' => $statistic
+                    ]);
+                    
+                    usleep(250000); // sleeps for 0.25 seconds
+                }
             }
         }
     }
