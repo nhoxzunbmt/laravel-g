@@ -43,7 +43,9 @@
                                                     </router-link>
                                                 </div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-                                                    <img src="/images/player.png" class="img-reg-index">
+                                                    <router-link :to="{ name: 'auth.register', query: { type: 'player' } }">
+                                                        <img src="/images/player.png" class="img-reg-index">
+                                                    </router-link>
         										</div>
         									</div>	
         								</div>
@@ -61,11 +63,13 @@
         									<div class="row">
         										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
                                                     <router-link :to="{ name: 'investors-info'}">
-                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as an Investor</span>
+                                                        <img src="/images/investor.png" class="img-reg-index">
                                                     </router-link>
                                                 </div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-        											<img src="/images/investor.png" class="img-reg-index">
+        											<router-link :to="{ name: 'investors-info'}">
+                                                        <span class="weight-500 uppercase-font txt-light block mt-40">Start as an Investor</span>
+                                                    </router-link>
         										</div>
         									</div>	
         								</div>
@@ -87,7 +91,9 @@
                                                     </router-link>
         										</div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-        											<img src="/images/coach.png" class="img-reg-index"/>
+        											<router-link :to="{ name: 'fights', query: { status: 0 } }">
+                                                        <img src="/images/coach.png" class="img-reg-index"/>
+                                                    </router-link>
         										</div>
         									</div>	
         								</div>
@@ -105,11 +111,13 @@
         									<div class="row">
         										<div class="col-xs-6 text-center pl-0 pr-0 data-wrap-left">
                                                     <router-link :to="{ name: 'fights', query: { status: 0 } }">
-            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Judge</span>
+                                                        <img src="/images/referee.png" class="img-reg-index">
                                                     </router-link>
         										</div>
         										<div class="col-xs-6 text-center  pl-0 pr-0 data-wrap-right">
-        											<img src="/images/referee.png" class="img-reg-index">
+                                                    <router-link :to="{ name: 'fights', query: { status: 0 } }">
+            											<span class="weight-500 uppercase-font txt-light block mt-40">Start as Judge</span>
+                                                    </router-link>
         										</div>
         									</div>	
         								</div>

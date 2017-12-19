@@ -17,12 +17,13 @@ class ExternStatisticHelper{
         {
             if($socialAccount->user_id>0)
             {
+                $user = $socialAccount->user();
                 $user = $socialAccount->user()->first();
                 $game_title = '';
-                if($user->game_id>0)
+                if($user['game_id']>0)
                 {
                     $game = $user->game()->first();
-                    $game_title = $game->title;
+                    $game_title = $game['title'];
                 }
                 $statistic = self::getStatistic($socialAccount, $game_title);
                 

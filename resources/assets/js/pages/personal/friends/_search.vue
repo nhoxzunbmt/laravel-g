@@ -161,8 +161,12 @@
         methods : {       
             getVueItems: function(){
                 
+                console.log(this.q);
+                
                 if(this.q.length<2 && this.$route.query.q!=undefined && this.q.length>0)
                     return false;
+                
+                console.log('search success');
                 
                 this.error = false;
                 this.loading = true;

@@ -350,6 +350,12 @@ class TeamController extends Controller
             $input = $request->all();
             $TeamUser->update($input);
             
+            //delete team_id from user field
+            if($TeamUser->status==2 && $user['team_id']==$teamId)
+            {
+                $user->update(['team_id' => 0]);
+            }
+            
             //update User team_id
             if(isset($input['status']) && $input['status']==1)
             {                
